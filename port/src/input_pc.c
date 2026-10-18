@@ -31,6 +31,7 @@
 
 #include <SDL.h>
 #include "port_console.h" /* the tilde console: fixed keys feed it below */
+extern s32 portInputDeviceIniKey(s32 dev, const char *name, char *buf, s32 len);
 static const char *inputDevRecPath(const char *id);   /* per-device records, below */
 
 #define INPUT_MAX_PADS 4

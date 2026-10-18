@@ -1,4 +1,6 @@
 #include <ultra64.h>
+#include <math.h>
+extern float tanf(float); /* the IDO math.h hides float prototypes from clang/gcc */
 #include <memp.h>
 #include "sky.h"
 
@@ -17,6 +19,7 @@
 #include "othermodemicrocode.h"
 #include "fr.h"
 #include "image_bank.h"
+#include "math.h"
 
 #define SKYABS(val) (val >= 0.0f ? (val) : -(val))
 
@@ -1155,7 +1158,7 @@ Gfx *skyRender(Gfx *gdl)
                        * the REAL format (texSelect reads it, not the entry) */
                         extern void ge_dbg_gfxdump(const char *tag, void *gdl, int count);
                         extern struct tex *texFindInPool(s32 texturenum, struct texpool *pool);
-                        u16 texnum = ((u16 *)ent->index)[-4];
+                        u16 texnum = ((u16 *)(uintptr_t)ent->index)[-4]; /* TODO(64bit): u32 index holds a pointer */
                         struct tex *rec = texFindInPool(texnum, NULL);
                         f32 w2[2];
                         w2[0] = (f32)texnum;

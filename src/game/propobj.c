@@ -7,6 +7,7 @@
   ---------------------------------------------------------------------*/
 
 #include <ultra64.h>
+#include <string.h>
 #ifndef TARGET_N64
 #include <stdio.h> /* GE_DUMP_BOND glass hit-path probes */
 #include <stdlib.h>
@@ -54,6 +55,16 @@
 #include "tex.h"
 #include "textrelated.h"
 #include "vtxstore.h"
+#include "gunfire.h"
+#include "chrObjRandom.h"
+#include "chrprop.h"
+#include "dyn.h"
+#include "debugmenu_handler.h"
+#include "front.h"
+#include "line_tri_intersect.h"
+#include "loadobjectmodel.h"
+#include "objective_status2.h"
+#include "othermodemicrocode.h"
 #ifndef TARGET_N64
 #include "frametiming.h"   /* portAnimTicks / portLagStep: sub-field smoothing */
 #include "cheat.h"         /* cheatIsActive(CHEAT_PORT_UNLOCK_DOORS) - propdoorInteract */
@@ -200,10 +211,11 @@ f32 g_SoloAmmoMultiplier = 1.0;
 
 extern struct ModelAnimation *animation_table_ptrs2[];
 
+/* one word per entry; words are pointer-sized (scripts hold pointers) */
 struct tvcmd {
-    u32 type;
-    s32 time;
-    u32 arg2;
+    uintptr_t type;
+    intptr_t time;
+    uintptr_t arg2;
 };
 
 // Forward declarations.
@@ -2488,7 +2500,7 @@ ModelRenderData D_80030B34 = {NULL,
 
 
 //[80030B74	00	Bond]
-u32 monAnim00Bond[] = {
+uintptr_t monAnim00Bond[] = {
     MONUSEIMAGE(IMGBOND),
     MONHORZSCROLL(0x400, 20),
     MONHOLDTIME(20),
@@ -2504,7 +2516,7 @@ u32 monAnim00Bond[] = {
 };
 
 //[80030C00	01	Desktops, Satellite]
-u32 monAnim01DesktopsSatellite[] = {
+uintptr_t monAnim01DesktopsSatellite[] = {
      MONUSEIMAGE(IMG2DMATH),
      MONHORZSCROLL(0x400, 20),
      MONHOLDTIME(20),
@@ -2553,7 +2565,7 @@ u32 monAnim01DesktopsSatellite[] = {
 };
 
 //[80030E24	02	10 screens: astrological]
-u32 monAnim02Astrological[] = {
+uintptr_t monAnim02Astrological[] = {
      MONUSEIMAGE(IMGSHUTTLE1), MONHOLDTIME(80),
      MONUSEIMAGE(IMGSHUTTLE2), MONHOLDTIME(80),
      MONUSEIMAGE(IMGEARTHFULL1), MONHOLDTIME(80),
@@ -2568,7 +2580,7 @@ u32 monAnim02Astrological[] = {
 };
 
 //[80030EC8	0F	7 screens: satellite, targetting, ]
-u32 monAnim0FSatelliteTargeting[] = {
+uintptr_t monAnim0FSatelliteTargeting[] = {
      MONUSEIMAGE(IMGEARTH), MONHOLDTIME(80),
      MONUSEIMAGE(IMGDESKTOPBANG), MONHOLDTIME(80),
      MONUSEIMAGE(IMGHEATMAP), MONHOLDTIME(80),
@@ -2581,7 +2593,7 @@ u32 monAnim0FSatelliteTargeting[] = {
 };
 
 //[80030F44	03	3 wave patterns]
-u32 monAnim03ThreeWavePattern[] = {
+uintptr_t monAnim03ThreeWavePattern[] = {
      MONRGBA(COLOR_MINESHAFT3, 1),
      MONUSEIMAGE(IMGSINE),
      MONHORZSCROLL(0x800, 120),
@@ -2605,7 +2617,7 @@ u32 monAnim03ThreeWavePattern[] = {
 };
 
 //[80031018	04	wave pattern]
-u32 monAnim04WavePattern[] = {
+uintptr_t monAnim04WavePattern[] = {
      MONRGBA(COLOR_MINESHAFT3, 1),
      MONUSEIMAGE(IMGSINE),
      MONZOOMWIDTH(0x80, 1),
@@ -2618,7 +2630,7 @@ u32 monAnim04WavePattern[] = {
 };
 
 //[80031074	05	green text up]
-u32 monAnim05GreenTextUp[] = {
+uintptr_t monAnim05GreenTextUp[] = {
      MONUSEIMAGE(IMGTEXT),
      MONRGBA(COLOR_BARELYGREENOPAQUE, 1),
      MONVERTSCROLL(0xFFFFFE00, 80),
@@ -2635,7 +2647,7 @@ u32 monAnim05GreenTextUp[] = {
 };
 
 //[800310F0	06	red text down]
-u32 monAnim06RedTextDown[] = {
+uintptr_t monAnim06RedTextDown[] = {
      MONUSEIMAGE(IMGTEXT),
      MONRGBA(COLOR_DIESEL, 1),
      MONVERTSCROLL(0x200, 80),
@@ -2655,7 +2667,7 @@ u32 monAnim06RedTextDown[] = {
 };
 
 //[8003118C	07	d. green text down]
-u32 monAnim07GreenTextDown[] = {
+uintptr_t monAnim07GreenTextDown[] = {
      MONUSEIMAGE(IMGTEXT),
      MONRGBA(COLOR_DEEPFIR, 1),
      MONVERTSCROLL(0x200, 80),
@@ -2674,7 +2686,7 @@ u32 monAnim07GreenTextDown[] = {
 };
 
 //[8003121C	08	red bar graph +]
-u32 monAnim08RedBarGraph[] = {
+uintptr_t monAnim08RedBarGraph[] = {
      MONUSEIMAGE(IMGBARS),
      MONRGBA(COLOR_VERDUNGREEN, 1),
      MONHORZSCROLL(0x280, 1),
@@ -2683,7 +2695,7 @@ u32 monAnim08RedBarGraph[] = {
 };
 
 //[80031248	09	blue bar graph +]
-u32 monAnim09BlueBarGraph[] = {
+uintptr_t monAnim09BlueBarGraph[] = {
      MONUSEIMAGE(IMGBARS),
      MONRGBA(COLOR_CYPRUS, 1),
      MONHORZSCROLL(0x280, 1),
@@ -2692,7 +2704,7 @@ u32 monAnim09BlueBarGraph[] = {
 };
 
 //[80031274	0A	green bar graph -]
-u32 monAnim0AGreenBarGraph[] = {
+uintptr_t monAnim0AGreenBarGraph[] = {
      MONUSEIMAGE(IMGBARS),
      MONRGBA(COLOR_TOMTHUMB, 1),
      MONHORZSCROLL(0xFFFFFD80, 1),
@@ -2701,19 +2713,19 @@ u32 monAnim0AGreenBarGraph[] = {
 };
 
 //[800312A0	subroutine	used by radar]
-u32 monAnimRadarSub1[] = {
+uintptr_t monAnimRadarSub1[] = {
      MONRGBA(COLOR_GREEN, 20),
      MONJUMPTO(monAnimRadarSub3)
 };
 
 //[800312B4	subroutine	used by radar]
-u32 monAnimRadarSub2[] = {
+uintptr_t monAnimRadarSub2[] = {
      MONRGBA(COLOR_SANFELIX, 20),
      MONJUMPTO(monAnimRadarSub3)
 };
 
 //[800312C8	subroutine	used by radar]
-u32 monAnimRadarSub3[] = {
+uintptr_t monAnimRadarSub3[] = {
      MONROTATEIMAGE(0xB6),
      MONHOLDTIME(1),
      MONJUMPCHANCE(monAnimRadarSub1, TWO_PERCENT_CHANCE),
@@ -2722,14 +2734,14 @@ u32 monAnimRadarSub3[] = {
 };
 
 //[800312F4	0B	radar]
-u32 monAnim0BRadar[] = {
+uintptr_t monAnim0BRadar[] = {
      MONUSEIMAGE(IMGTRIANGLE),
      MONRGBA(COLOR_ALMOSTDARKGREEN, 1),
      MONJUMPTO(monAnimRadarSub2)
 };
 
 //[80031310	0C	spinning cube]
-u32 monAnim0CSpinningCube[] = {
+uintptr_t monAnim0CSpinningCube[] = {
      MONUSEIMAGE(IMGCUBE1),
      MONRGBA(COLOR_MINSK, 30),
      MONHOLDTIME(5),
@@ -2743,7 +2755,7 @@ u32 monAnim0CSpinningCube[] = {
 };
 
 //[80031360	10	global map]
-u32 monAnim10GlobalMap[] = {
+uintptr_t monAnim10GlobalMap[] = {
      MONUSEIMAGE(IMGWORLDMAP),
      MONRGBA(COLOR_SEAGREEN, 30),
      MONHORZSCROLL(0xFFFFFC00, 1024),
@@ -2775,7 +2787,7 @@ u32 monAnim10GlobalMap[] = {
 };
 
 //[80031490	0D	3 screens: location, weapon armed, ]
-u32 monAnim0DLocWeapArmed[] = {
+uintptr_t monAnim0DLocWeapArmed[] = {
      MONRGBA(COLOR_BLACK, 1),
      MONRGBA(COLOR_SILVER, 400),
      MONUSEIMAGE(1),
@@ -2791,7 +2803,7 @@ u32 monAnim0DLocWeapArmed[] = {
 };
 
 //[800314F8	0E	red target]
-u32 monAnim0ERedTarget[] = {
+uintptr_t monAnim0ERedTarget[] = {
      MONZOOMSQUARE(0x400, 1),
      MONRGBA(COLOR_THUNDERBIRD, 1),
      MONUSEIMAGE(6),
@@ -2806,7 +2818,7 @@ u32 monAnim0ERedTarget[] = {
 };
 
 //[8003156C	11	Karl yelling]
-u32 monAnim11KarlYelling[] = {
+uintptr_t monAnim11KarlYelling[] = {
      MONRGBA(COLOR_DARKGREEN, 0),
      MONUSEIMAGE(IMGTALK1),
      MONHOLDTIME(5),
@@ -2822,7 +2834,7 @@ u32 monAnim11KarlYelling[] = {
 };
 
 //[800315CC	12	skateboard]
-u32 monAnim12Skateboard[] = {
+uintptr_t monAnim12Skateboard[] = {
      MONUSEIMAGE(IMGSKATEBOARD4),
      MONRGBA(COLOR_DARKGREEN, 0),
      MONHOLDTIME(3),
@@ -2891,7 +2903,7 @@ u32 monAnim12Skateboard[] = {
 };
 
 //[80031848	13	police guy]
-u32 monAnim13PoliceGuy[] = {
+uintptr_t monAnim13PoliceGuy[] = {
     MONRGBA(COLOR_DARKGREEN2, 0),
     MONUSEIMAGE(IMGFIST1),
     MONHOLDTIME(5),
@@ -2905,7 +2917,7 @@ u32 monAnim13PoliceGuy[] = {
 };
 
 //[80031898	14	'off']
-u32 monAnim14Off[] = {
+uintptr_t monAnim14Off[] = {
     MONUSEIMAGE(IMGSINE),
     MONRGBA(COLOR_BARELYGREEN, 1),
     MONHOLDTIME(5),
@@ -2913,7 +2925,7 @@ u32 monAnim14Off[] = {
 };
 
 //[800318B8	15	randomly select one of seven animations]
-u32 monAnim15RandomSeven[] = {
+uintptr_t monAnim15RandomSeven[] = {
     MONJUMPCHANCE(monAnim04WavePattern, TEN_PERCENT_CHANCE),
     MONJUMPCHANCE(monAnim11KarlYelling, TEN_PERCENT_CHANCE),
     MONJUMPCHANCE(monAnim08RedBarGraph, TEN_PERCENT_CHANCE),
@@ -2926,7 +2938,7 @@ u32 monAnim15RandomSeven[] = {
 };
 
 //[8003191C	16	randomly select random screens + random effects or boring]
-u32 monAnim16RandomFour[] = {
+uintptr_t monAnim16RandomFour[] = {
     MONJUMPCHANCE(monAnim03ThreeWavePattern, TWO_PERCENT_CHANCE),
     MONJUMPCHANCE(monAnim08RedBarGraph, TWO_PERCENT_CHANCE),
     MONJUMPCHANCE(monAnim05GreenTextUp, TWO_PERCENT_CHANCE),
@@ -2935,7 +2947,7 @@ u32 monAnim16RandomFour[] = {
 };
 
 //[80031950	17	Base Function for random screens + random effects]
-u32 monAnim17RandImageEffect[] = {
+uintptr_t monAnim17RandImageEffect[] = {
     MONJUMPCHANCE(monRandEffectChanceSHUTTLE1, TEN_PERCENT_CHANCE),
     MONJUMPCHANCE(monRandEffectChanceSHUTTLE2, TEN_PERCENT_CHANCE),
     MONJUMPCHANCE(monRandEffectChanceEARTHFULL1, TEN_PERCENT_CHANCE),
@@ -2951,77 +2963,77 @@ u32 monAnim17RandImageEffect[] = {
 };
 
 //[800319D4	18	random screens + random effects - set image]
-u32 monRandEffectChanceSHUTTLE1[] = {
+uintptr_t monRandEffectChanceSHUTTLE1[] = {
     MONUSEIMAGE(IMGSHUTTLE1),
     MONHOLDTIME(20),
     MONJUMPCHANCE(monRandChanceScrollOrZoomRandRGBN, HUNDRED_PERCENT_CHANCE)
 };
 
 //[800319F0	19	random screens + random effects - set image]
-u32 monRandEffectChanceSHUTTLE2[] = {
+uintptr_t monRandEffectChanceSHUTTLE2[] = {
     MONUSEIMAGE(IMGSHUTTLE2),
     MONHOLDTIME(20),
     MONJUMPCHANCE(monRandChanceScrollOrZoomRandRGBN, HUNDRED_PERCENT_CHANCE)
 };
 
 //[80031A0C	1A	random screens + random effects - set image]
-u32 monRandEffectChanceEARTHFULL1[] = {
+uintptr_t monRandEffectChanceEARTHFULL1[] = {
     MONUSEIMAGE(IMGEARTHFULL1),
     MONHOLDTIME(20),
     MONJUMPCHANCE(monRandChanceScrollOrZoomRandRGBN, HUNDRED_PERCENT_CHANCE)
 };
 
 //[80031A28	1B	random screens + random effects - set image]
-u32 monRandEffectChanceEARTHFULL2[] = {
+uintptr_t monRandEffectChanceEARTHFULL2[] = {
     MONUSEIMAGE(IMGEARTHFULL2),
     MONHOLDTIME(20),
     MONJUMPCHANCE(monRandChanceScrollOrZoomRandRGBN, HUNDRED_PERCENT_CHANCE)
 };
 
 //[80031A44	1C	random screens + random effects - set image]
-u32 monRandEffectChanceBLUESTARS[] = {
+uintptr_t monRandEffectChanceBLUESTARS[] = {
     MONUSEIMAGE(IMGBLUESTARS),
     MONHOLDTIME(20),
     MONJUMPCHANCE(monRandChanceScrollOrZoomRandRGBN, HUNDRED_PERCENT_CHANCE)
 };
 
 //[80031A60	1D	random screens + random effects - set image]
-u32 monRandEffectChanceGALAXY1[] = {
+uintptr_t monRandEffectChanceGALAXY1[] = {
     MONUSEIMAGE(IMGGALAXY1),
     MONHOLDTIME(20),
     MONJUMPCHANCE(monRandChanceScrollOrZoomRandRGBN, HUNDRED_PERCENT_CHANCE)
 };
 
 //[80031A7C	1E	random screens + random effects - set image]
-u32 monRandEffectChanceGALAXY2[] = {
+uintptr_t monRandEffectChanceGALAXY2[] = {
     MONUSEIMAGE(IMGGALAXY2),
     MONHOLDTIME(20),
     MONJUMPCHANCE(monRandChanceScrollOrZoomRandRGBN, HUNDRED_PERCENT_CHANCE)
 };
 
 //[80031A98	1F	random screens + random effects - set image]
-u32 monRandEffectChanceEARTHTEXT[] = {
+uintptr_t monRandEffectChanceEARTHTEXT[] = {
     MONUSEIMAGE(IMGEARTHTEXT),
     MONHOLDTIME(20),
     MONJUMPCHANCE(monRandChanceScrollOrZoomRandRGBN, HUNDRED_PERCENT_CHANCE)
 };
 
 //[80031AB4	20	random screens + random effects - set image]
-u32 monRandEffectChanceTARGETEARTH[] = {
+uintptr_t monRandEffectChanceTARGETEARTH[] = {
     MONUSEIMAGE(IMGTARGETEARTH),
     MONHOLDTIME(20),
     MONJUMPCHANCE(monRandChanceScrollOrZoomRandRGBN, HUNDRED_PERCENT_CHANCE)
 };
 
 //[80031AD0	21	random screens + random effects - set image]
-u32 monRandEffectChanceGALAXY3[] = {
+uintptr_t monRandEffectChanceGALAXY3[] = {
     MONUSEIMAGE(IMGGALAXY3),
     MONHOLDTIME(20),
     MONJUMPCHANCE(monRandChanceScrollOrZoomRandRGBN, HUNDRED_PERCENT_CHANCE)
 };
 
 //[80031AEC	22	random screens + random effects - colourizer]
-u32 monRandChanceScrollOrZoomRandRGBN[] = {
+uintptr_t monRandChanceScrollOrZoomRandRGBN[] = {
     MONJUMPCHANCE(monRandChanceScrollOrZoomRed, TEN_PERCENT_CHANCE),
     MONJUMPCHANCE(monRandChanceScrollOrZoomGreen, TEN_PERCENT_CHANCE),
     MONJUMPCHANCE(monRandChanceScrollOrZoomBlue, TEN_PERCENT_CHANCE),
@@ -3030,22 +3042,22 @@ u32 monRandChanceScrollOrZoomRandRGBN[] = {
 };
 
 //[80031B24	23	random screens + random effects - colourizer]
-u32 monRandChanceScrollOrZoomRed[] = {
+uintptr_t monRandChanceScrollOrZoomRed[] = {
     MONRGBA(COLOR_PERSIANRED, 60),
     MONJUMPTO(monRandChanceScrollOrZoom)
 };
 
-u32 monRandChanceScrollOrZoomGreen[] = {
+uintptr_t monRandChanceScrollOrZoomGreen[] = {
     MONRGBA(COLOR_APPLE, 60),
     MONJUMPTO(monRandChanceScrollOrZoom)
 };
 
-u32 monRandChanceScrollOrZoomBlue[] = {
+uintptr_t monRandChanceScrollOrZoomBlue[] = {
     MONRGBA(COLOR_GOVERNORBAY, 60),
     MONJUMPTO(monRandChanceScrollOrZoom)
 };
 
-u32 monRandChanceScrollOrZoom[] = {
+uintptr_t monRandChanceScrollOrZoom[] = {
     MONHOLDTIME(50),
     MONJUMPCHANCE(monAnim27RandomEffectScrollRight, TEN_PERCENT_CHANCE),
     MONJUMPCHANCE(monAnim28RandomEffectScrollUpFast, TEN_PERCENT_CHANCE),
@@ -3058,28 +3070,28 @@ u32 monRandChanceScrollOrZoom[] = {
 
 
 //[80031BB4	27	random screens + random effects - scroll right]
-u32 monAnim27RandomEffectScrollRight[] = {
+uintptr_t monAnim27RandomEffectScrollRight[] = {
     MONHORZSCROLL(0x800, 120),
     MONHOLDTIME(120),
     MONJUMPTO(monAnim2CRandEffectWaitRoute)
 };
 
 //[80031BD0	28	random screens + random effects - scroll up fast]
-u32 monAnim28RandomEffectScrollUpFast[] = {
+uintptr_t monAnim28RandomEffectScrollUpFast[] = {
     MONVERTSCROLL(0x2000, 50),
     MONHOLDTIME(200),
     MONJUMPTO(monAnim2CRandEffectWaitRoute)
 };
 
 //[80031BEC	29	random screens + random effects - scroll up]
-u32 monAnim29RandomEffectScrollUp[] = {
+uintptr_t monAnim29RandomEffectScrollUp[] = {
     MONVERTSCROLL(0x2000, 200),
     MONHOLDTIME(200),
     MONJUMPTO(monAnim2CRandEffectWaitRoute)
 };
 
 //[80031C08	2A	random screens + random effects - scroll and zoom]
-u32 monAnim2ARandEffectScrollZoom1[] = {
+uintptr_t monAnim2ARandEffectScrollZoom1[] = {
     MONHORZSCROLLNA(0x288, 300),
     MONVERTSCROLLNA(0x3AA, 300),
     MONZOOMSQUARE(0x80, 200),
@@ -3092,7 +3104,7 @@ u32 monAnim2ARandEffectScrollZoom1[] = {
 };
 
 //[80031C80	2B	random screens + random effects - scroll and zoom]
-u32 monAnim2ARandEffectScrollZoom2[] = {
+uintptr_t monAnim2ARandEffectScrollZoom2[] = {
     MONHORZSCROLLNA(0x320, 400),
     MONVERTSCROLLNA(0x190, 400),
     MONZOOMSQUARE(0x80, 200),
@@ -3109,7 +3121,7 @@ u32 monAnim2ARandEffectScrollZoom2[] = {
 };
 
 //[80031D30	2C	random screens + random effects - wait and route]
-u32 monAnim2CRandEffectWaitRoute[] = {
+uintptr_t monAnim2CRandEffectWaitRoute[] = {
     MONHOLDTIME(50),
     MONJUMPCHANCE(monRandChanceScrollOrZoomRandRGBN, TEN_PERCENT_CHANCE),
     MONJUMPCHANCE(monAnim2DRandEffectFlash, TWENTY_PERCENT_CHANCE),
@@ -3117,7 +3129,7 @@ u32 monAnim2CRandEffectWaitRoute[] = {
 };
 
 //[80031D58	2D	random screens + random effects - flash]
-u32 monAnim2DRandEffectFlash[] = {
+uintptr_t monAnim2DRandEffectFlash[] = {
     MONHOLDTIME(50),
     MONRGBA(COLOR_WHITE, 10),
     MONRGBA(COLOR_BLACK, 5),
@@ -3129,7 +3141,7 @@ u32 monAnim2DRandEffectFlash[] = {
 };
 
 //[80031DA8	2E	red brightening screen]
-u32 monAnim2ERedBrightening[] = {
+uintptr_t monAnim2ERedBrightening[] = {
      MONUSEIMAGE(IMGKEYBOARDKEY),
      MONZOOMSQUARE(0x200, 0),
      MONRGBA(COLOR_ALIZARINCRIMSON, 60),
@@ -3140,7 +3152,7 @@ u32 monAnim2ERedBrightening[] = {
 };
 
 //[80031DF4	2F	green brightening screen]
-u32 monAnim2FGreenBrightening[] = {
+uintptr_t monAnim2FGreenBrightening[] = {
      MONUSEIMAGE(IMGKEYBOARDKEY),
      MONZOOMSQUARE(0x200, 0),
      MONRGBA(COLOR_APPLE, 60),
@@ -3151,7 +3163,7 @@ u32 monAnim2FGreenBrightening[] = {
 };
 
 //[80031E40	30	grey solid]
-u32 monAnim30GreySolid[] = {
+uintptr_t monAnim30GreySolid[] = {
      MONUSEIMAGE(IMGKEYBOARDKEY),
      MONZOOMSQUARE(0x200, 0),
      MONRGBA(COLOR_MINESHAFT2, 10),
@@ -3160,7 +3172,7 @@ u32 monAnim30GreySolid[] = {
 };
 
 //[80031E78	31	red solid]
-u32 monAnim31RedSolid[] = {
+uintptr_t monAnim31RedSolid[] = {
      MONUSEIMAGE(IMGKEYBOARDKEY),
      MONZOOMSQUARE(0x200, 0),
      MONRGBA(COLOR_ALIZARINCRIMSON, 10),
@@ -3169,7 +3181,7 @@ u32 monAnim31RedSolid[] = {
 };
 
 //[80031EB0	32	green solid]
-u32 monAnim32GreenSolid[] = {
+uintptr_t monAnim32GreenSolid[] = {
      MONUSEIMAGE(IMGKEYBOARDKEY),
      MONZOOMSQUARE(0x200, 0),
      MONRGBA(COLOR_APPLE, 10),
@@ -3178,14 +3190,14 @@ u32 monAnim32GreenSolid[] = {
 };
 
 //[80031EE8	33	black solid]
-u32 monAnim33BlackSolid[] = {
+uintptr_t monAnim33BlackSolid[] = {
      MONUSEIMAGE(0),
      MONRGBA(COLOR_BLACK, 0),
      MONSTOPANIM()
 };
 
 //[80031F00	34	???	Not Included in Normal List - linked @ 0x9544]
-u32 monAnim34[] = {
+uintptr_t monAnim34[] = {
      MONZOOMSQUARE(0x400, 0),
      MONHOLDTIME(1),
      MONZOOMSQUARE(0x1000, 20),
@@ -3194,7 +3206,7 @@ u32 monAnim34[] = {
 };
 
 //[80031F44	35	Taser	Not Included in Normal List!]
-u32 monAnim35Taser[] = {
+uintptr_t monAnim35Taser[] = {
      MONUSEIMAGE(IMGBOND),
      MONHORZSCROLL(0x400, 20), MONHOLDTIME(20),
      MONVERTSCROLL(0x400, 20), MONRGBA(COLOR_BLACK, 20), MONHOLDTIME(20),
@@ -3945,7 +3957,7 @@ s32 sub_GAME_7F0448A8(struct PropRecord *argProp)
     f32 radius;
     f32 ground;
     PropRecord *propss;
-    ObjectRecord *temp_v0_2;
+    ChrRecord *temp_v0_2;
     struct rect4f *polygon;
     s32 edges;
     f32 top;
@@ -3971,8 +3983,9 @@ s32 sub_GAME_7F0448A8(struct PropRecord *argProp)
         {
             if ((prop->type == PROP_TYPE_VIEWER) || (prop->type == PROP_TYPE_CHR))
             {
-                temp_v0_2 = prop->obj;
-                if ((temp_v0_2 == NULL) || !((s32) temp_v0_2->model & 0x400))
+                /* was obj->model & 0x400: same offset as chr->chrflags */
+                temp_v0_2 = prop->chr;
+                if ((temp_v0_2 == NULL) || !(temp_v0_2->chrflags & CHRFLAG_HIDDEN))
                 {
                     chrpropGetCollisionBounds(prop, &radius, &height, &arbitratyNumber);
 
@@ -6831,164 +6844,164 @@ void save_ptr_monitor_ani_code_to_obj_ani_slot(MonitorRecord *mon, void *image)
 
 void monitorSetImageByNum(MonitorRecord *mon, s32 monAnimID)
 {
-    s32 *image = &monAnim00Bond;
+    uintptr_t *image = monAnim00Bond;
     switch (monAnimID)
     {
          default:
          case 0:
             break;
          case 1:
-            image = &monAnim01DesktopsSatellite;
+            image = monAnim01DesktopsSatellite;
             break;
         case 2:
-            image = &monAnim02Astrological;
+            image = monAnim02Astrological;
             break;
         case 3:
-            image = &monAnim03ThreeWavePattern;
+            image = monAnim03ThreeWavePattern;
             break;
         case 4:
-            image = &monAnim04WavePattern;
+            image = monAnim04WavePattern;
             break;
         case 5:
-            image = &monAnim05GreenTextUp;
+            image = monAnim05GreenTextUp;
             break;
         case 6:
-            image = &monAnim06RedTextDown;
+            image = monAnim06RedTextDown;
             break;
         case 7:
-            image = &monAnim07GreenTextDown;
+            image = monAnim07GreenTextDown;
             break;
         case 8:
-            image = &monAnim08RedBarGraph;
+            image = monAnim08RedBarGraph;
             break;
         case 9:
-            image = &monAnim09BlueBarGraph;
+            image = monAnim09BlueBarGraph;
             break;
         case 10:
-            image = &monAnim0AGreenBarGraph;
+            image = monAnim0AGreenBarGraph;
             break;
         case 11:
-            image = &monAnim0BRadar;
+            image = monAnim0BRadar;
             break;
         case 12:
-            image = &monAnim0CSpinningCube;
+            image = monAnim0CSpinningCube;
             break;
         case 13:
-            image = &monAnim0DLocWeapArmed;
+            image = monAnim0DLocWeapArmed;
             break;
         case 14:
-            image = &monAnim0ERedTarget;
+            image = monAnim0ERedTarget;
             break;
         case 15:
-            image = &monAnim0FSatelliteTargeting;
+            image = monAnim0FSatelliteTargeting;
             break;
         case 16:
-            image = &monAnim10GlobalMap;
+            image = monAnim10GlobalMap;
             break;
         case 17:
-            image = &monAnim11KarlYelling;
+            image = monAnim11KarlYelling;
             break;
         case 18:
-            image = &monAnim12Skateboard;
+            image = monAnim12Skateboard;
             break;
         case 19:
-            image = &monAnim13PoliceGuy;
+            image = monAnim13PoliceGuy;
             break;
         case 20:
-            image = &monAnim14Off;
+            image = monAnim14Off;
             break;
         case 21:
-            image = &monAnim15RandomSeven;
+            image = monAnim15RandomSeven;
             break;
         case 22:
-            image = &monAnim16RandomFour;
+            image = monAnim16RandomFour;
             break;
         case 23:
-            image = &monAnim17RandImageEffect;
+            image = monAnim17RandImageEffect;
             break;
         case 24:
-            image = &monRandEffectChanceSHUTTLE1;
+            image = monRandEffectChanceSHUTTLE1;
             break;
         case 25:
-            image = &monRandEffectChanceSHUTTLE2;
+            image = monRandEffectChanceSHUTTLE2;
             break;
         case 26:
-            image = &monRandEffectChanceEARTHFULL1;
+            image = monRandEffectChanceEARTHFULL1;
             break;
         case 27:
-            image = &monRandEffectChanceEARTHFULL2;
+            image = monRandEffectChanceEARTHFULL2;
             break;
         case 28:
-            image = &monRandEffectChanceBLUESTARS;
+            image = monRandEffectChanceBLUESTARS;
             break;
         case 29:
-            image = &monRandEffectChanceGALAXY1;
+            image = monRandEffectChanceGALAXY1;
             break;
         case 30:
-            image = &monRandEffectChanceGALAXY2;
+            image = monRandEffectChanceGALAXY2;
             break;
         case 31:
-            image = &monRandEffectChanceEARTHTEXT;
+            image = monRandEffectChanceEARTHTEXT;
             break;
         case 32:
-            image = &monRandEffectChanceTARGETEARTH;
+            image = monRandEffectChanceTARGETEARTH;
             break;
         case 33:
-            image = &monRandEffectChanceGALAXY3;
+            image = monRandEffectChanceGALAXY3;
             break;
         case 34:
-            image = &monRandChanceScrollOrZoomRandRGBN;
+            image = monRandChanceScrollOrZoomRandRGBN;
             break;
         case 35:
-            image = &monRandChanceScrollOrZoomRed;
+            image = monRandChanceScrollOrZoomRed;
             break;
         case 36:
-            image = &monRandChanceScrollOrZoomGreen;
+            image = monRandChanceScrollOrZoomGreen;
             break;
         case 37:
-            image = &monRandChanceScrollOrZoomBlue;
+            image = monRandChanceScrollOrZoomBlue;
             break;
         case 38:
-            image = &monRandChanceScrollOrZoom;
+            image = monRandChanceScrollOrZoom;
             break;
         case 39:
-            image = &monAnim27RandomEffectScrollRight;
+            image = monAnim27RandomEffectScrollRight;
             break;
         case 40:
-            image = &monAnim28RandomEffectScrollUpFast;
+            image = monAnim28RandomEffectScrollUpFast;
             break;
         case 41:
-            image = &monAnim29RandomEffectScrollUp;
+            image = monAnim29RandomEffectScrollUp;
             break;
         case 42:
-            image = &monAnim2ARandEffectScrollZoom1;
+            image = monAnim2ARandEffectScrollZoom1;
             break;
         case 43:
-            image = &monAnim2ARandEffectScrollZoom2;
+            image = monAnim2ARandEffectScrollZoom2;
             break;
         case 44:
-            image = &monAnim2CRandEffectWaitRoute;
+            image = monAnim2CRandEffectWaitRoute;
             break;
         case 45:
-            image = &monAnim2DRandEffectFlash;
+            image = monAnim2DRandEffectFlash;
             break;
         case 46:
-            image = &monAnim2ERedBrightening;
+            image = monAnim2ERedBrightening;
             break;
         case 47:
-            image = &monAnim2FGreenBrightening;
+            image = monAnim2FGreenBrightening;
             break;
         case 48:
-            image = &monAnim30GreySolid;
+            image = monAnim30GreySolid;
             break;
         case 49:
-            image = &monAnim31RedSolid;
+            image = monAnim31RedSolid;
             break;
         case 50:
-            image = &monAnim32GreenSolid;
+            image = monAnim32GreenSolid;
             break;
         case 51:
-            image = &monAnim33BlackSolid;
+            image = monAnim33BlackSolid;
             break;
     }
     save_ptr_monitor_ani_code_to_obj_ani_slot(mon,  image);
@@ -7066,7 +7079,7 @@ Gfx *process_monitor_animation_microcode(Model *model, ModelNode *node, MonitorR
                 screen->offset += 3;
                 break;
             case TVCMD_SETTEXTURE:
-                save_img_index_to_obj_ani_slot(screen, m->time);
+                save_img_index_to_obj_ani_slot(screen, (void *)m->time);
                 screen->offset += 2;
                 break;
             case TVCMD_PAUSE:
@@ -7094,12 +7107,12 @@ Gfx *process_monitor_animation_microcode(Model *model, ModelNode *node, MonitorR
                 }
                 break;
             case TVCMD_SETCMDLIST:
-                save_ptr_monitor_ani_code_to_obj_ani_slot(screen, (u32 *) m->time);
+                save_ptr_monitor_ani_code_to_obj_ani_slot(screen, (uintptr_t *) m->time);
                 break;
             case TVCMD_RANDSETCMDLIST:
                 if ((randomGetNext() >> 16) < m->arg2) 
                 {
-                    save_ptr_monitor_ani_code_to_obj_ani_slot(screen, (u32 *) m->time);
+                    save_ptr_monitor_ani_code_to_obj_ani_slot(screen, (uintptr_t *) m->time);
                 } 
                 else 
                 {
@@ -7254,9 +7267,9 @@ Gfx *process_monitor_animation_microcode(Model *model, ModelNode *node, MonitorR
         vertices[2] = rodata->DisplayListCollisions.Vertices[2];
         vertices[3] = rodata->DisplayListCollisions.Vertices[3];
 
-        if ((u32)screen->tconfig < 100) 
+        if ((uintptr_t)screen->tconfig < 100) 
         {
-            tconfig = &monitorimages[(s32)screen->tconfig];
+            tconfig = &monitorimages[(uintptr_t)screen->tconfig];
         } 
         else 
         {
@@ -7408,8 +7421,8 @@ void sub_GAME_7F04AC20(PropRecord *prop, ModelRenderData *mrData, s32 arg2)
 
         if (destroyed)
         {
-            destroyed = get_BONDdata_field_10E0();
-            destroyed = destroyed != 0;
+            /* 10E0 is a matrix pointer; only its nullness matters */
+            destroyed = get_BONDdata_field_10E0() != 0;
         }
 
         gdl = mrData->gdl;
@@ -8781,15 +8794,15 @@ bool bgTestHitOnObj(coord3d *arg0, coord3d *arg1, coord3d *arg2, Gfx *gdl, Gfx *
              * host pointers are used directly. */
             op = (gdl->words.w0 >> 16) & 0xf;
             {
-                u32 vaddr = gdl->words.w1;
+                uintptr_t vaddr = gdl->words.w1;
 
                 if (vaddr >= 0x10000000u)
                 {
-                    vtxbase = (Vertex *) (((u8 *) (uintptr_t) vaddr) - (op << 4));
+                    vtxbase = (Vertex *) (((u8 *) vaddr) - (op << 4));
                 }
                 else
                 {
-                    vtxbase = (Vertex *) ((((s32) vertices) + (vaddr & 0x00ffffff)) - (op << 4));
+                    vtxbase = (Vertex *) ((((uintptr_t) vertices) + (vaddr & 0x00ffffff)) - (op << 4));
                 }
             }
 #endif
@@ -8906,7 +8919,7 @@ bool bgTestHitOnObj(coord3d *arg0, coord3d *arg1, coord3d *arg2, Gfx *gdl, Gfx *
                          * keep a raw segment word instead of a host pointer.
                          * Use the default material unless it is a real pointer
                          * or an IMAGESEG tag (0xABCDxxxx). */
-                        u32 timg = tcmd->words.w1;
+                        uintptr_t timg = tcmd->words.w1;
 
                         if (timg >= 0x10000000u && (timg >> 16) != 0xABCDu)
                         {
@@ -8998,7 +9011,7 @@ bool bgTestHitOnObj(coord3d *arg0, coord3d *arg1, coord3d *arg2, Gfx *gdl, Gfx *
                 else
                 {
                     idx2[0] = (gdl->words.w1 >> 24) & 0xf;
-                    idx2[1] = gdl->words.w1 >> 28;
+                    idx2[1] = (gdl->words.w1 >> 28) & 0xf;
                     idx2[2] = (gdl->words.w0 >> 12) & 0xf;
                 }
 #endif
@@ -9090,7 +9103,7 @@ bool bgTestHitOnObj(coord3d *arg0, coord3d *arg1, coord3d *arg2, Gfx *gdl, Gfx *
                         else
                         {
                             /* see the G_TRI1 twin above */
-                            u32 timg = tcmd->words.w1;
+                            uintptr_t timg = tcmd->words.w1;
 
                             if (timg >= 0x10000000u && (timg >> 16) != 0xABCDu)
                             {
@@ -9947,7 +9960,7 @@ dummy_label_995911:
                     }
                 }
 
-                chrpropAddBulletHit(hitinfo, prop, -pos.z, hitpart, node, &hit, mtxindex, (s32) hitnode, model, penetrates, (obj->flags2 & PROPFLAG2_00100000) != FALSE);
+                chrpropAddBulletHit(hitinfo, prop, -pos.z, hitpart, node, &hit, mtxindex, hitnode, model, penetrates, (obj->flags2 & PROPFLAG2_00100000) != FALSE);
             }
         }
     }
@@ -15547,7 +15560,7 @@ void sub_GAME_7F056690(void)
                 if (sub_GAME_7F04B590(s1->model->obj, t0) != 0)
                 {
                     new_var = &s3->datas[s0->RwDataIndex];
-                    if ((s32)s0->Vertices != (s32)*new_var)
+                    if ((uintptr_t)s0->Vertices != (uintptr_t)*new_var)
                     {
                         objFreePermanently(s1, 1);
                         return;

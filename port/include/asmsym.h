@@ -26,4 +26,14 @@
 #define ASM_SYM(name) name
 #endif
 
+/* Section switches for the same blocks. Mach-O has no `.section .bss`;
+ * the zero-filled blocks are small, so they go in plain .data there. */
+#ifdef __APPLE__
+#define ASM_SECTION_DATA "    .data\n"
+#define ASM_SECTION_BSS "    .data\n"
+#else
+#define ASM_SECTION_DATA "    .section .data\n"
+#define ASM_SECTION_BSS "    .section .bss\n"
+#endif
+
 #endif /* PORT_ASMSYM_H */

@@ -1,5 +1,6 @@
 #include <ultra64.h>
 #include <math.h>
+extern float fabsf(float); /* the IDO math.h hides float prototypes from clang/gcc */
 #include <bondtypes.h>
 #include <boss.h>
 #include <fr.h>
@@ -191,6 +192,15 @@ static s32 s_PortIntroSkipArmed = 0;
 #define FLOAT_TEN_B 10.00f
 
 #include "bondview_internal.h"
+#include "bondview2.h"
+#include "ramromreplay.h"
+#include "chrprop.h"
+#include "radar.h"
+#include "dyn.h"
+#include "bgfog.h"
+#include "gunfire.h"
+#include "ob.h"
+extern s32 portInputShowInput(void);
 
 #define a8s "%8s"
 #define aX4_0f "x %4.0f"
@@ -366,6 +376,7 @@ void solo_char_load(void)
     s32                         size0;
     s32                         size1;
     s32                         helddst;
+    u8                         *helddstptr; /* helddst reused as a pointer */
     WeaponObjRecord             weapon;
     struct player             **pp;
     s32                         prop;
@@ -626,7 +637,7 @@ void solo_char_load(void)
             if (getPlayerCount() == 1)
             {
                 helddst      = cursor;
-                helddst      = ((s32)weaponbuf0) + helddst;
+                helddstptr   = weaponbuf0 + helddst;
                 cursor       = ALIGN64_V3(cursor + 0xc7);
                 pitemheader  = get_ptr_itemheader_in_hand(GUNLEFT);
                 *pitemheader = *PitemZ_entries[prop].header;
@@ -636,11 +647,11 @@ void solo_char_load(void)
             }
             else
             {
-                helddst     = 0;
+                helddstptr  = NULL;
                 pitemheader = NULL;
             }
 
-            something_with_generating_object(self, prop, item, 0, (WeaponObjRecord *)helddst, (ItemModelFileRecord *)pitemheader);
+            something_with_generating_object(self, prop, item, 0, (WeaponObjRecord *)helddstptr, (ItemModelFileRecord *)pitemheader);
         }
 
         chrlvMergeKneelToStand(self, 0.0f);
@@ -884,7 +895,7 @@ void bondviewSetCameraMode(s32 arg0)
             solo_char_load();
 
             // HACK: ptr_animation_table->data regalloc is backwards
-            sp38 = (struct ModelAnimation *)((s32)stage_intro_anim_table[g_IntroAnimationIndex].anonymous_0 + (s32)&ptr_animation_table->data);
+            sp38 = (struct ModelAnimation *)((intptr_t)stage_intro_anim_table[g_IntroAnimationIndex].anonymous_0 + (intptr_t)&ptr_animation_table->data);
             sp78 = stage_intro_anim_table[g_IntroAnimationIndex].anonymous_2;
             ftemp_1 = stage_intro_anim_table[g_IntroAnimationIndex].anonymous_1;
             ftemp_3 = stage_intro_anim_table[g_IntroAnimationIndex].anonymous_3;
@@ -1215,7 +1226,7 @@ void bondviewCalcIntroSwirlCamera(s32 index, f32 time, coord3d *pos, coord3d *lo
 
         base = swirl;
         scale = base->scale.fval;
-        base = (void *)(index << 5);
+        base = (void *)(intptr_t)(index << 5);
 
         coord3dCubicSplineInterp((coord3d *) &pointbuf[0], (coord3d *) &pointbuf[3], (coord3d *) &pointbuf[6], (coord3d *) &pointbuf[9], frac, scale, pos);
 
@@ -1227,7 +1238,7 @@ void bondviewCalcIntroSwirlCamera(s32 index, f32 time, coord3d *pos, coord3d *lo
         lookat->y = g_CurrentPlayer->field_3C8;
         lookat->z = g_CurrentPlayer->field_3CC;
 
-        swirl = (void *)(((u32) g_IntroSwirl) + (u32) base);
+        swirl = (void *)(((uintptr_t) g_IntroSwirl) + (uintptr_t) base);
 
         if (!(swirl->bitflags & 4))
         {
@@ -2325,9 +2336,9 @@ s32 bondviewTryMoveToStan(struct coord3d *arg0, StandTile **stan)
             {
                 f32 v[6];
                 once++;
-                v[0] = (f32) (u32) g_CurrentPlayer;
-                v[1] = (f32) (u32) g_CurrentPlayer->prop;
-                v[2] = (f32) (u32) (g_CurrentPlayer->prop ? g_CurrentPlayer->prop->stan : (void *) 0xdead);
+                v[0] = (f32) (uintptr_t) g_CurrentPlayer;
+                v[1] = (f32) (uintptr_t) g_CurrentPlayer->prop;
+                v[2] = (f32) (uintptr_t) (g_CurrentPlayer->prop ? g_CurrentPlayer->prop->stan : (void *) 0xdead);
                 v[3] = (f32) g_CurrentPlayer->cameramode;
                 v[4] = g_CurrentPlayer->field_488.collision_position.f[0];
                 v[5] = g_CurrentPlayer->field_488.collision_position.f[2];
@@ -3251,7 +3262,7 @@ void bondviewCalcUpdatePlayerCollision(struct coord3d *offset, s32 allow_scoot)
             temp_f2 = (farr5[4] - farr5[3]) * obj->model->scale;
 
             if (g_PlayerIsInTank == 1
-                || (chrpropTestPointInPolygon(&g_CurrentPlayer->field_488.collision_position, &tank_objrecord->rect, (s32)tank_objrecord->collision) != 0))
+                || (chrpropTestPointInPolygon(&g_CurrentPlayer->field_488.collision_position, &tank_objrecord->rect, tank_objrecord->collision) != 0))
             {
                 temp_f2 += (farr6[4] - farr6[3]) * obj->model->scale;
                 g_BondCanEnterTank = 1;
@@ -4018,10 +4029,12 @@ void sub_GAME_7F07E7CC(void) {
         return_null();
     }
 #endif
-    animInit((Model *)((u8 *)g_CurrentPlayer + 0x230), itemheader, (u32 *)((u8 *)g_CurrentPlayer + 0x2ec));
-    modelSetScale((Model *)((u8 *)g_CurrentPlayer + 0x230), c_item_entries[41].scale * 0.10000001f);
-    modelSetAnimation((Model *)((u8 *)g_CurrentPlayer + 0x230), (ModelAnimation *)&ptr_animation_table->data[PTR_ANIM_bond_watch], 0, 0.0f, 0.5f * watch_transition_time, 0.0f);
-    *(s32 *)((u8 *)g_CurrentPlayer + 0x220) = 0;
+    /* PORT: were (u8 *)g_CurrentPlayer + 0x230 / 0x2ec / 0x220; named fields keep
+     * N64 offsets and follow the 64-bit layout. */
+    animInit((Model *)&g_CurrentPlayer->something_with_watch_object_instance, itemheader, (u32 *)&g_CurrentPlayer->field_2EC);
+    modelSetScale((Model *)&g_CurrentPlayer->something_with_watch_object_instance, c_item_entries[41].scale * 0.10000001f);
+    modelSetAnimation((Model *)&g_CurrentPlayer->something_with_watch_object_instance, (ModelAnimation *)&ptr_animation_table->data[PTR_ANIM_bond_watch], 0, 0.0f, 0.5f * watch_transition_time, 0.0f);
+    g_CurrentPlayer->step_in_view_watch_animation = 0;
 }
 
 
@@ -4039,7 +4052,7 @@ void bondviewSetPauseWatchRelated(f32 arg0)
     }
     else
     {
-        g_CurrentPlayer->pause_watch_related_scaled = (20.0f - g_CurrentPlayer->pause_watch_related_adjust) / arg0;
+        g_CurrentPlayer->pause_watch_related_scaled = (20.0f - g_CurrentPlayer->something_with_watch_object_instance.animframe1) / arg0;
     }
 
     g_CurrentPlayer->step_in_view_watch_animation = 1;
@@ -4060,7 +4073,7 @@ void bondviewSetPauseWatchRelatedAlt(f32 arg0)
     }
     else
     {
-        g_CurrentPlayer->pause_watch_related_scaled = g_CurrentPlayer->pause_watch_related_adjust / arg0;
+        g_CurrentPlayer->pause_watch_related_scaled = g_CurrentPlayer->something_with_watch_object_instance.animframe1 / arg0;
     }
 
     g_CurrentPlayer->step_in_view_watch_animation = 2;
@@ -4494,7 +4507,7 @@ void bondviewWatchAnimationTick(void)
 
                 if ((g_CurrentPlayer->step_in_view_watch_animation != 0) && (g_CurrentPlayer->step_in_view_watch_animation != 3))
                 {
-                    sp30 = ((20.0f - g_CurrentPlayer->pause_watch_related_adjust) * 40.0f) / 20.0f;
+                    sp30 = ((20.0f - g_CurrentPlayer->something_with_watch_object_instance.animframe1) * 40.0f) / 20.0f;
                 }
 
                 if ((g_CurrentPlayer->pause_state == 0) || (g_CurrentPlayer->pause_state == 2) || (g_CurrentPlayer->pause_state == 3))
@@ -4618,7 +4631,7 @@ void bondviewWatchAnimationTick(void)
 
                 if ((g_CurrentPlayer->step_in_view_watch_animation != 0) && (g_CurrentPlayer->step_in_view_watch_animation != 3))
                 {
-                    sp28 = (g_CurrentPlayer->pause_watch_related_adjust * 40.0f) / 20.0f;
+                    sp28 = (g_CurrentPlayer->something_with_watch_object_instance.animframe1 * 40.0f) / 20.0f;
                 }
 
                 sp20 = sp28 + 20.0f;
@@ -5380,7 +5393,7 @@ void bondviewMoveAnimationTick(f32 speed, f32 speedforwards, f32 speedsideways)
             // HACK: ptr_animation_table dereference addition is backwards.
             // this should be:
             // ptr_animation_table->data[g_bondviewBondDeathAnimations[((u32) randomGetNext() % (u32) g_bondviewBondDeathAnimationsCount)]]
-            bheadStartDeathAnimation((struct ModelAnimation *) ((s32)g_bondviewBondDeathAnimations[((u32) randomGetNext() % (u32) g_bondviewBondDeathAnimationsCount)] + (s32)&ptr_animation_table->data[0]), randomGetNext() & 1, 0.0f, 1.0f);
+            bheadStartDeathAnimation((struct ModelAnimation *) ((intptr_t)g_bondviewBondDeathAnimations[((u32) randomGetNext() % (u32) g_bondviewBondDeathAnimationsCount)] + (intptr_t)&ptr_animation_table->data[0]), randomGetNext() & 1, 0.0f, 1.0f);
             g_CurrentPlayer->startnewbonddie = FALSE;
         }
 
@@ -11146,7 +11159,7 @@ void bondviewMovePlayerUpdateViewport(s8 stick_x, s8 stick_y, u16 buttons)
 
     if ((cameraBufferToggle != 0) && (viGetFrameBuf2() == (u8*)(cfb_16[1])))
     {
-        viSetFrameBuf2((u8 *) resolution);
+        viSetFrameBuf2(resolution);
     }
 
 #ifdef VERSION_EU
@@ -11427,20 +11440,20 @@ void bondviewUpdateCameraMatrices(coord3d* cam_pos, coord3d* cam_look_dir, coord
 	}
 
     guMtxF2L((f32 (*)[4]) &sp60, temp_s0);
-    set_BONDdata_field_10E0((s32) temp_s0);
+    set_BONDdata_field_10E0(temp_s0);
 
     scale = bgGetLevelVisibilityScale();
 
     matrix_scalar_multiply(scale, spC4.m[0]);
     guMtxF2L((f32 (*)[4]) &spC4, (Mtx* ) g_CurrentPlayer->field_5C);
-    sub_GAME_7F059334((s32* ) g_CurrentPlayer->field_5C, (s32* ) g_CurrentPlayer->field_60);
+    sub_GAME_7F059334((Mtx* ) g_CurrentPlayer->field_5C, (Mtx* ) g_CurrentPlayer->field_60);
 
     currentPlayerSetMatrix10C8((Mtx* ) g_CurrentPlayer->field_5C);
     currentPlayerSetMatrix10C4((Mtx* ) g_CurrentPlayer->field_60);
     currentPlayerSetMatrix10CC((Mtxf* ) g_CurrentPlayer->field_64);
     currentPlayerSetViewToWorldMtxf((Mtxf* ) g_CurrentPlayer->field_68);
 
-    sub_GAME_7F078464((s32) lookat);
+    sub_GAME_7F078464(lookat);
     bondviewUpdateFrustumPlanes();
     store_BONDdata_curpos_to_previous();
 }
@@ -11585,7 +11598,7 @@ void bondviewSelectCuff(Model *model, ModelFileHeader *header, s32 switchindex)
 
     index = switchindex + 1;
 
-    if (((void *) (index * 0)) != base[1])
+    if (((void *) (intptr_t) (index * 0)) != base[1])
     {
         node = switches[index];
         rwdata = (s32 *) modelGetNodeRwData(model, node);
@@ -11732,7 +11745,7 @@ Gfx *bondviewRenderWatch(Gfx *gdl)
         guPerspective(perspmtx, &perspNorm, g_CurrentPlayer->zoominfovy, waspect, 10.0f, 300.0f, 1.0f);
     }
  
-    gSPMatrix(gdl++, OS_PHYSICAL_TO_K0((u32) perspmtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+    gSPMatrix(gdl++, OS_PHYSICAL_TO_K0(perspmtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
     gSPPerspNormalize(gdl++, perspNorm);
 
     // Keep this nested block for matching.
@@ -11772,16 +11785,16 @@ Gfx *bondviewRenderWatch(Gfx *gdl)
         subcalcmatrices(&renderdata, (Model *) (&g_CurrentPlayer->something_with_watch_object_instance));
         nodepos = (f32 *) objheader->Switches[0]->Data;
         time = watch_time_0;
-        t = g_CurrentPlayer->pause_watch_related_adjust / 20.0f;
+        t = g_CurrentPlayer->something_with_watch_object_instance.animframe1 / 20.0f;
     
         if (t > 1.0f)
         {
             t = 1.0f;
         }
     
-        targetpos.x = matrices->m[3][0] + (((g_CurrentPlayer->field_1D4 - (nodepos[0] * g_CurrentPlayer->watch_scale_destination)) - matrices->m[3][0]) * t);
-        targetpos.y = matrices->m[3][1] + (((g_CurrentPlayer->field_1D8 + (nodepos[2] * g_CurrentPlayer->watch_scale_destination)) - matrices->m[3][1]) * t);
-        targetpos.z = matrices->m[3][2] + (((g_CurrentPlayer->pause_watch_position - (nodepos[1] * g_CurrentPlayer->watch_scale_destination)) - matrices->m[3][2]) * t);
+        targetpos.x = matrices->m[3][0] + (((g_CurrentPlayer->field_1D4 - (nodepos[0] * g_CurrentPlayer->something_with_watch_object_instance.scale)) - matrices->m[3][0]) * t);
+        targetpos.y = matrices->m[3][1] + (((g_CurrentPlayer->field_1D8 + (nodepos[2] * g_CurrentPlayer->something_with_watch_object_instance.scale)) - matrices->m[3][1]) * t);
+        targetpos.z = matrices->m[3][2] + (((g_CurrentPlayer->pause_watch_position - (nodepos[1] * g_CurrentPlayer->something_with_watch_object_instance.scale)) - matrices->m[3][2]) * t);
     
         matrix_4x4_set_basis_and_position_target(&targetmtx, 0.0f, 0.0f, 0.0f, g_CurrentPlayer->field_1E0, g_CurrentPlayer->field_1E4, g_CurrentPlayer->field_1E8, g_CurrentPlayer->field_1EC, g_CurrentPlayer->field_1F0, g_CurrentPlayer->field_1F4);
         matrix_4x4_get_rotation_around_xyz(matrices, &currot);
@@ -11792,7 +11805,7 @@ Gfx *bondviewRenderWatch(Gfx *gdl)
         quaternion_slerp(quat1, quat2, t, quat3);
         quaternion_to_matrix(quat3, matrices->m);
         matrix_4x4_set_position(&targetpos, matrices);
-        matrix_scalar_multiply(g_CurrentPlayer->watch_scale_destination, (f32 *) matrices);
+        matrix_scalar_multiply(g_CurrentPlayer->something_with_watch_object_instance.scale, (f32 *) matrices);
         total_seconds = time / 60;
         seconds = total_seconds % 60;
         total_minutes = total_seconds / 60;
@@ -11858,7 +11871,7 @@ Gfx *bondviewRenderWatch(Gfx *gdl)
         matrix_4x4_7F058C88();
         gdl = draw_watch_current_page(gdl, finalmtx, (g_CurrentPlayer->watch_animation_state == 5) || (g_CurrentPlayer->watch_animation_state == 12));
         matrix_4x4_7F058C64();
-        bondviewTransformManyPosToViewMatrix(g_CurrentPlayer->field_23C, objheader->numMatrices);
+        bondviewTransformManyPosToViewMatrix(g_CurrentPlayer->something_with_watch_object_instance.render_pos, objheader->numMatrices);
         matrix_4x4_7F058C88();
     }
  
@@ -11884,11 +11897,11 @@ Gfx *bondviewRenderGaugeBars(Gfx *gdl)
 
     //Set up armor bars.
     hudMakeDamageSegments(&g_CurrentPlayer->armor_display_values[0].items[0], 0x2e, 1, g_CurrentPlayer->apparentarmour);
-    buildGaugeBarDL((Gfx *)&g_CurrentPlayer->watch_body_armor_bar_gdl, OS_PHYSICAL_TO_K0(&g_CurrentPlayer->armor_display_values[0].items[0]), 0x2e);
+    buildGaugeBarDL((Gfx *)&g_CurrentPlayer->watch_body_armor_bar_gdl, (uintptr_t)OS_PHYSICAL_TO_K0(&g_CurrentPlayer->armor_display_values[0].items[0]), 0x2e);
 
     // Set up health bars.
     hudMakeDamageSegments(&g_CurrentPlayer->health_display_values[0].items[0], 0x2e, -1, g_CurrentPlayer->apparenthealth);
-    buildGaugeBarDL((Gfx *)&g_CurrentPlayer->watch_health_bar_gdl, OS_PHYSICAL_TO_K0(&g_CurrentPlayer->health_display_values[0].items[0]), 0x2e);
+    buildGaugeBarDL((Gfx *)&g_CurrentPlayer->watch_health_bar_gdl, (uintptr_t)OS_PHYSICAL_TO_K0(&g_CurrentPlayer->health_display_values[0].items[0]), 0x2e);
 
     // Create an orthographic render state for the gauge.
     lookatmtx = dynAllocateMatrix();
@@ -12047,7 +12060,7 @@ void mp_respawn_handler(void)
 {
     coord3d start_pos = ZeroCoordSpawnPos;
     f32 start_look_angle;
-    s32 start_stan;
+    StandTile *start_stan;
     s32 pad;
     f32 stan_height;
     s32 var_v0;
@@ -12132,7 +12145,7 @@ void mp_respawn_handler(void)
         fprintf(stderr,
                 "ge: mp spawn p%d pad=%d (%s) stanroom=%d pos=(%.0f %.0f %.0f)\n",
                 get_cur_playernum(), var_v1, g_Startpad[var_v1]->plink,
-                (start_stan != 0) ? getTileRoom((StandTile *) start_stan) : -1,
+                (start_stan != NULL) ? getTileRoom(start_stan) : -1,
                 start_pos.f[0], start_pos.f[1], start_pos.f[2]);
         fflush(stderr);
     }
@@ -12162,7 +12175,7 @@ void mp_respawn_handler(void)
             switch (INTRO_TYPE(intro_record))
             {
                 case 0: // INTROTYPE_SPAWN
-                    intro_record = (struct SetupIntroEmpty*)((s32)intro_record + sizeof(struct SetupIntroSpawn));
+                    intro_record = (struct SetupIntroEmpty*)((intptr_t)intro_record + sizeof(struct SetupIntroSpawn));
                     break;
                 case 1: // INTROTYPE_ITEM
                     if (check_ramrom_flags() == ((struct SetupIntroAmmo*)intro_record)->is_demo_playback) {
@@ -12172,28 +12185,28 @@ void mp_respawn_handler(void)
                             bondinvAddInvItem(((struct SetupIntroItem*)intro_record)->item_right);
                         }
                     }
-                    intro_record = (struct SetupIntroEmpty*)((s32)intro_record + sizeof(struct SetupIntroItem));
+                    intro_record = (struct SetupIntroEmpty*)((intptr_t)intro_record + sizeof(struct SetupIntroItem));
                     break;
                 case 2: // INTROTYPE_AMMO
                     if (check_ramrom_flags() == ((struct SetupIntroAmmo*)intro_record)->is_demo_playback) {
                         give_cur_player_ammo(((struct SetupIntroAmmo*)intro_record)->ammo_type, ((struct SetupIntroAmmo*)intro_record)->ammo_amount);
                     }
-                    intro_record = (struct SetupIntroEmpty*)((s32)intro_record + sizeof(struct SetupIntroAmmo));
+                    intro_record = (struct SetupIntroEmpty*)((intptr_t)intro_record + sizeof(struct SetupIntroAmmo));
                     break;
                 case 3: // INTROTYPE_SWIRL
-                    intro_record = (struct SetupIntroEmpty*)((s32)intro_record + sizeof(struct SetupIntroSwirl));
+                    intro_record = (struct SetupIntroEmpty*)((intptr_t)intro_record + sizeof(struct SetupIntroSwirl));
                     break;
                 case 4: // INTROTYPE_ANIM
-                    intro_record = (struct SetupIntroEmpty*)((s32)intro_record + sizeof(struct SetupIntroAnim));
+                    intro_record = (struct SetupIntroEmpty*)((intptr_t)intro_record + sizeof(struct SetupIntroAnim));
                     break;
                 case 5: // INTROTYPE_CUFF
-                    intro_record = (struct SetupIntroEmpty*)((s32)intro_record + sizeof(struct SetupIntroCuff));
+                    intro_record = (struct SetupIntroEmpty*)((intptr_t)intro_record + sizeof(struct SetupIntroCuff));
                     break;
                 case 6: // INTROTYPE_CAMERA
-                    intro_record = (struct SetupIntroEmpty*)((s32)intro_record + sizeof(struct SetupIntroCamera));
+                    intro_record = (struct SetupIntroEmpty*)((intptr_t)intro_record + sizeof(struct SetupIntroCamera));
                     break;
                 default: // INTROTYPE_WATCH, INTROTYPE_CREDITS
-                    intro_record = (struct SetupIntroEmpty*)((s32)intro_record + sizeof(struct SetupIntroEmpty));
+                    intro_record = (struct SetupIntroEmpty*)((intptr_t)intro_record + sizeof(struct SetupIntroEmpty));
                     break;
             }
     #ifdef DEBUG
@@ -13448,7 +13461,7 @@ void hudmsgsSetOff(s32 flags)
 
 
 #ifdef VERSION_US
-void setFontTables(s32 arg0, s32 arg1)
+void setFontTables(struct fontchar *arg0, struct font *arg1)
 {
     copy_2ndfonttable = arg0;
     copy_1stfonttable = arg1;
@@ -13689,7 +13702,7 @@ Gfx* hudmsgBottomRender(Gfx* arg0)
                 PORT_HUD_ANCHOR(arg0, PORT_HUD_ANCHOR_LEFT);
             }
 #endif
-            arg0 = draw_blackbox_to_screen(arg0, (s32) &view_left, (s32) &view_vert, (s32) &view_horiz, (s32) &view_top);
+            arg0 = draw_blackbox_to_screen(arg0, &view_left, &view_vert, &view_horiz, &view_top);
             arg0 = combiner_bayer_lod_perspective(textRenderOutlined(arg0, &view_left, &view_vert, stringbuffer_lowerleft[status_bar_text_buffer_index], BONDVIEW_2ND_FONTTABLE(status_bar_text_buffer_index), BONDVIEW_1ST_FONTTABLE(status_bar_text_buffer_index), -1, 0x646464FFU, (s16) (s32) viGetX(), (s16) viGetY(), 0, 0));
 #ifndef TARGET_N64
             if (portMsgAnchor)
@@ -14009,7 +14022,7 @@ s32 playerTick(PropRecord *prop)
      * are read) */
     f32 mtx[16];
     s32 tailret;
-    s32 anim;
+    intptr_t anim;
     f32 angle;
     f32 frame;
     f32 local90;
@@ -14021,7 +14034,7 @@ s32 playerTick(PropRecord *prop)
     coord3d off;
     s32 i;
     s32 found;
-    s32 cur;
+    intptr_t cur;
     PropRecord *rightprop;
     struct WeaponObjRecord *leftobj;
     struct WeaponObjRecord *rightobj;
@@ -14133,7 +14146,7 @@ s32 playerTick(PropRecord *prop)
             {
                 cur = ppointers[index]->players_cur_animation;
  
-                if (cur == (g_bondviewBondDeathAnimations[i] + ((s32) ptr_animation_table)))
+                if (cur == (g_bondviewBondDeathAnimations[i] + ((intptr_t) ptr_animation_table)))
                 {
                     found = 1;
                 }
@@ -14146,7 +14159,7 @@ s32 playerTick(PropRecord *prop)
             }
             else
             {
-                anim = g_bondviewBondDeathAnimations[randomGetNext() % g_bondviewBondDeathAnimationsCount] + ((s32) ptr_animation_table);
+                anim = g_bondviewBondDeathAnimations[randomGetNext() % g_bondviewBondDeathAnimationsCount] + ((intptr_t) ptr_animation_table);
                 angle = 0.5f;
             }
  
@@ -14328,7 +14341,7 @@ lean_return_to_centre:
  
             if (fa->anim != 0)
             {
-                anim = fa->anim + (s32) ptr_animation_table;
+                anim = fa->anim + (intptr_t) ptr_animation_table;
             }
  
             angle *= fa->x;
@@ -14341,7 +14354,7 @@ lean_return_to_centre:
 join_768:
         if ((firingtable != NULL) && (anim == 0))
         {
-            anim = *((s32 *) firingtable);
+            anim = (intptr_t) firingtable->anim.anim;
         }
  
         if (anim != cur)
@@ -14602,7 +14615,7 @@ void sub_GAME_7F08BEEC(Mtxf *matrices, s32 count)
 
     for (i = 0, j = 0; i < count; i++, j += sizeof(Mtxf))
     {
-        matrix_4x4_multiply_homogeneous(currentPlayerGetViewToWorldMtxf(), (Mtxf *)((u32)matrices + j), &sp40);
+        matrix_4x4_multiply_homogeneous(currentPlayerGetViewToWorldMtxf(), (Mtxf *)((uintptr_t)matrices + j), &sp40);
 
         sp40.m[3][0] -= g_CurrentPlayer->current_model_pos.f[0];
         sp40.m[3][1] -= g_CurrentPlayer->current_model_pos.f[1];

@@ -1,4 +1,5 @@
 #include <ultra64.h>
+#include <string.h>
 #include "macro.h"
 #include "ob.h"
 #include <deb.h>
@@ -24,6 +25,8 @@ s32 ob_c_debug_notice_list_entry = 0;
 
 
 #include <assets/obseg/file_resource_table.inc.c>
+#include "ramrom.h"
+extern int printf(const char *fmt, ...); /* PC bring-up logging */
 /* struct fileentry file_resource_table[] =
    {
        blah;
@@ -152,7 +155,7 @@ void obInit(void)
 #if !defined(LEFTOVERDEBUG)
 /* VERSION_EU */
 /* same as below version, shuffled in EU */
-void obLoadBGFileBytesAtOffset(u8 *bgname, u8 *target, s32 offset, s32 len)
+void obLoadBGFileBytesAtOffset(u8 *bgname, u8 *target, intptr_t offset, s32 len)
 {
   s32 index;
    fileentry *fileentry;
@@ -167,7 +170,11 @@ void obLoadBGFileBytesAtOffset(u8 *bgname, u8 *target, s32 offset, s32 len)
     {
       while (1){};
     }
+#ifdef TARGET_N64
     romCopy(target, &fileentry->hw_address[offset], len, fileentry);
+#else
+    romCopy(target, &fileentry->hw_address[offset], len);
+#endif
   }
 
 }
@@ -216,7 +223,7 @@ u8 *obGetBGFileData(u8 *bgname)
 }
 #endif
 
-void obLoadBGFileBytesAtOffset(u8 *bgname, u8 *target, s32 offset, s32 len)
+void obLoadBGFileBytesAtOffset(u8 *bgname, u8 *target, intptr_t offset, s32 len)
 {
   s32 index;
    fileentry *fileentry;
@@ -233,12 +240,21 @@ void obLoadBGFileBytesAtOffset(u8 *bgname, u8 *target, s32 offset, s32 len)
    * straight out of the linked blob, undoing the 0xF1000000 segment strip the
    * room loaders apply so real host pointers read their data directly. */
   {
-    u32 cand = (u32) offset + 0x0F000000u;
+    /* undo the strip: same as offset + 0x0F000000 mod 2^32, but also exact
+     * for a 64-bit pointer passed as ptr + 0xF1000000 without wrapping */
+    uintptr_t cand = (uintptr_t) offset - 0xF1000000u;
+    s32 hostptr = TRUE; /* a value wider than 32 bits can only be a host pointer */
 
-    /* pointer-vs-offset test must not assume a 0x10000000 address floor
-     * (Windows image base is 0x400000) - same classification as
-     * BG_SEG_IS_OFFSET: genuine offsets are small or 0x0F-tagged */
-    if (cand >= 0x00400000u && (cand >> 24) != 0x0Fu)
+    if (offset == (s32) offset || offset == (intptr_t) (u32) offset)
+    {
+      /* pointer-vs-offset test must not assume a 0x10000000 address floor
+       * (Windows image base is 0x400000) - same classification as
+       * BG_SEG_IS_OFFSET: genuine offsets are small or 0x0F-tagged */
+      cand = (u32) cand;
+      hostptr = (cand >= 0x00400000u && (cand >> 24) != 0x0Fu);
+    }
+
+    if (hostptr)
     {
       /* The room binaries are u32 arrays of big-endian words, but the 1172/zlib
        * decompressors read bytes, so swap32-copy to rebuild the N64 byte image
@@ -258,7 +274,7 @@ void obLoadBGFileBytesAtOffset(u8 *bgname, u8 *target, s32 offset, s32 len)
       return;
     }
   }
-  romCopy(target, &fileentry->hw_address[offset], len, fileentry);
+  romCopy(target, &fileentry->hw_address[offset], len);
   return;
 #endif
 
@@ -269,7 +285,11 @@ void obLoadBGFileBytesAtOffset(u8 *bgname, u8 *target, s32 offset, s32 len)
     {
       while (1){};
     }
+#ifdef TARGET_N64
     romCopy(target, &fileentry->hw_address[offset], len, fileentry);
+#else
+    romCopy(target, &fileentry->hw_address[offset], len);
+#endif
   }
 
 }

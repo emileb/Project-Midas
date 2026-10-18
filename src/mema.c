@@ -41,7 +41,7 @@
 #endif
 
 typedef struct memaspace {
-    s32 addr;
+    intptr_t addr;
     u32 size;
 } memaspace;
 
@@ -61,14 +61,14 @@ struct memaheap {
 	struct memaspace end2;
 };
 
-s32 g_MemaHeapStart;
+intptr_t g_MemaHeapStart;
 s32 g_MemaHeapSize;
 struct memaheap g_MemoryAllocations;
 void *g_MemoryAllocationDebugData = NULL;
 
 // Swap two allocations.
 void memaSwap(memaspace *a, memaspace *b) {
-    u32 tempaddr = a->addr;
+    uintptr_t tempaddr = a->addr;
     u32 tempsize = a->size;
     a->addr = b->addr;
     a->size = b->size;
@@ -92,7 +92,7 @@ s32 memaDefragPass(struct memaheap *heap) {
 	struct memaspace *curr = &heap->spaces[0];
 	struct memaspace *last = &heap->spaces[ALLOCATIONS_LENGTH - 2];
 
-    u32 addr = 0;
+    uintptr_t addr = 0;
     while (curr <= last) {
         if (curr->size != 0) {
             if (curr->addr < addr) {
@@ -142,7 +142,7 @@ memaspace *memaSearch(struct memaheap *heap)
                 return curr;
             }
 
-            if ((u32)curr[1].addr < (u32)curr[0].addr) {
+            if ((uintptr_t)curr[1].addr < (uintptr_t)curr[0].addr) {
                 memaSwap(&curr[0], &curr[1]);
             }
 
@@ -186,7 +186,7 @@ memaspace *memaSearch(struct memaheap *heap)
  * bytes. */
 extern s32 portRoomAuditEnabled(void);
 
-static void memaAuditFree(s32 addr, s32 size)
+static void memaAuditFree(intptr_t addr, s32 size)
 {
     s32 i;
 
@@ -194,12 +194,12 @@ static void memaAuditFree(s32 addr, s32 size)
         return;
     }
 
-    fprintf(stderr, "roomaudit: mema free  %08x +%06x\n", addr, size);
+    fprintf(stderr, "roomaudit: mema free  %08lx +%06x\n", (unsigned long)addr, size);
 
     if (addr < g_MemaHeapStart || (addr + size) > (g_MemaHeapStart + g_MemaHeapSize)) {
         fprintf(stderr,
-                "roomaudit: *** MEMA FREE OUT OF HEAP %08x +%06x (heap %08x +%06x)\n",
-                addr, size, g_MemaHeapStart, g_MemaHeapSize);
+                "roomaudit: *** MEMA FREE OUT OF HEAP %08lx +%06x (heap %08lx +%06x)\n",
+                (unsigned long)addr, size, (unsigned long)g_MemaHeapStart, g_MemaHeapSize);
     }
 
     for (i = 0; i < ALLOCATIONS_LENGTH - 1; i++) {
@@ -208,17 +208,17 @@ static void memaAuditFree(s32 addr, s32 size)
         if (s->size == 0) {
             continue;
         }
-        if (addr < (s32)(s->addr + s->size) && s->addr < (u32)(addr + size)) {
+        if (addr < (intptr_t)(s->addr + s->size) && (uintptr_t)s->addr < (uintptr_t)(addr + size)) {
             fprintf(stderr,
-                    "roomaudit: *** MEMA DOUBLE/BAD FREE %08x +%06x overlaps free space %08x +%06x\n",
-                    addr, size, s->addr, s->size);
+                    "roomaudit: *** MEMA DOUBLE/BAD FREE %08lx +%06x overlaps free space %08lx +%06x\n",
+                    (unsigned long)addr, size, (unsigned long)s->addr, s->size);
         }
     }
     fflush(stderr);
 }
 #endif /* !TARGET_N64 */
 
-void _memaFree(s32 addr, s32 size)
+void _memaFree(intptr_t addr, s32 size)
 {
 #ifndef TARGET_N64
     memaAuditFree(addr, size);
@@ -228,7 +228,7 @@ void _memaFree(s32 addr, s32 size)
 	// estimate and doesn't need to be any particular index, but the defrag
 	// function tries to order the spaces by address so the closer we get to it
 	// the less work the defrag function will have to do should it be called.
-    s32 index = ((addr - g_MemaHeapStart) * (ALLOCATIONS_LENGTH-1)) / g_MemaHeapSize;
+    s32 index = (s32)(((addr - g_MemaHeapStart) * (ALLOCATIONS_LENGTH-1)) / g_MemaHeapSize);
     struct memaspace *curr = &g_MemoryAllocations.spaces[index];
 
     // If the entry is taken, keep moving forward until a zero is found.
@@ -270,9 +270,9 @@ void memaReset(void *heapaddr, u32 heapsize)
 	g_MemoryAllocations.start.addr = 0;
 	g_MemoryAllocations.start.size = 0;
 
-	g_MemoryAllocations.end1.addr = 0xffffffff;
+	g_MemoryAllocations.end1.addr = -1;
 	g_MemoryAllocations.end1.size = 0;
-	g_MemoryAllocations.end2.addr = 0xffffffff;
+	g_MemoryAllocations.end2.addr = -1;
 	g_MemoryAllocations.end2.size = 0xffffffff;
 
 	for (space = &g_MemoryAllocations.spaces[0]; space <= &g_MemoryAllocations.spaces[ALLOCATIONS_LENGTH - 2]; space++) {
@@ -280,14 +280,14 @@ void memaReset(void *heapaddr, u32 heapsize)
 		space->size = 0;
 	}
 
-	g_MemoryAllocations.spaces[0].addr = g_MemaHeapStart = (uintptr_t) heapaddr;
+	g_MemoryAllocations.spaces[0].addr = g_MemaHeapStart = (intptr_t) heapaddr;
 	g_MemoryAllocations.spaces[0].size = g_MemaHeapSize = heapsize;
 
 #ifndef TARGET_N64
     {
         extern void portRoomAuditOnHeapReset(void);
         if (portRoomAuditEnabled()) {
-            fprintf(stderr, "roomaudit: mema reset %08x +%06x\n", g_MemaHeapStart, g_MemaHeapSize);
+            fprintf(stderr, "roomaudit: mema reset %08lx +%06x\n", (unsigned long)g_MemaHeapStart, g_MemaHeapSize);
             fflush(stderr);
         }
         portRoomAuditOnHeapReset(); /* all shadows are stale now */
@@ -306,7 +306,7 @@ void memaSingleDefragPass(void)
 // large enough. If this also fails, then do 8 merge iterations and then look through
 // entire buffer again. If successful, return the address to the freed memory, otherwise 0.
 void *memaAlloc(u32 amount) {
-    s32 addr;
+    intptr_t addr;
     u32 diff;
     s32 i;
 
@@ -325,7 +325,7 @@ void *memaAlloc(u32 amount) {
             continue;
         }
 
-        if (curr->addr == 0xffffffff) {
+        if (curr->addr == -1) {
             break;
         }
 
@@ -345,7 +345,7 @@ void *memaAlloc(u32 amount) {
             curr++;
         }
 
-        if (curr->addr == 0xffffffff) {
+        if (curr->addr == -1) {
             for (i = 0; i < 8; i++) {
                 memaDefragPass(&g_MemoryAllocations);
             }
@@ -356,7 +356,7 @@ void *memaAlloc(u32 amount) {
                 curr++;
             }
 
-            if (curr->addr == 0xffffffff) {
+            if (curr->addr == -1) {
 #ifndef TARGET_N64
                 if (portRoomAuditEnabled()) {
                     fprintf(stderr, "roomaudit: *** MEMA ALLOC FAILED +%06x\n", amount);
@@ -380,7 +380,7 @@ void *memaAlloc(u32 amount) {
 
 #ifndef TARGET_N64
     if (portRoomAuditEnabled()) {
-        fprintf(stderr, "roomaudit: mema alloc %08x +%06x\n", addr, amount);
+        fprintf(stderr, "roomaudit: mema alloc %08lx +%06x\n", (unsigned long)addr, amount);
         fflush(stderr);
     }
 #endif
@@ -390,12 +390,12 @@ void *memaAlloc(u32 amount) {
 
 // Find the memaspace of the given address and reduce its size by the given
 // amount. If successful, return the same address, otherwise 0.
-s32 memaGrow(u32 addr, u32 amount)
+intptr_t memaGrow(uintptr_t addr, u32 amount)
 {
     u32        size = 0;
-    s32        new_addr;
+    intptr_t   new_addr;
     memaspace *curr;
-    short      __unused_1 = addr + 3;
+    short      __unused_1 = (short)(addr + 3);
     u32        __unused_2;
     s32        __unused_3;
     short      __unused_4;
@@ -448,7 +448,7 @@ found:
 
 void memaFree(void *addr, s32 size)
 {
-	_memaFree((uintptr_t) addr, size);
+	_memaFree((intptr_t) addr, size);
 }
 
 
@@ -564,7 +564,7 @@ void memaDumpPrePostMerge(void) {
     memaDump();
 }
 
-void mema7000A2F8(void (*func)(u32, memaspace*)) {
+void mema7000A2F8(void (*func)(uintptr_t, memaspace*)) {
     memaspace *curr = &g_MemoryAllocations.spaces[0];
     while (curr->addr != -1) {
         func((curr->addr + curr->size), curr);
@@ -606,7 +606,7 @@ s32 memaGetLongestFree(void)
  * 
  * US address 7000A3DC.
 */
-s32 memaRealloc(s32 addr, u32 oldsize, u32 newsize)
+s32 memaRealloc(intptr_t addr, u32 oldsize, u32 newsize)
 {
     if ((newsize > oldsize))
     {
@@ -640,7 +640,7 @@ s32 memaRealloc(s32 addr, u32 oldsize, u32 newsize)
 
     if ((oldsize > newsize))
     {
-        memaFree(addr + newsize, oldsize - newsize);
+        memaFree((void *)(addr + newsize), oldsize - newsize);
     }
     
 	return 1;

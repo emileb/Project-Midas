@@ -36,6 +36,9 @@
 #include "objective_status.h"
 #include "stan.h"
 #include "tex.h"
+#include "gunfire.h"
+#include "lightfixture.h"
+#include "bondview2.h"
 
 
 // bss
@@ -1313,7 +1316,7 @@ void chraiDefaultWeaponFireHandler(s32 hand)
  * Hitscans gather candidate hits along the bullet path. This function records each candidate hit into shotdata
  * and enforces pentration limits and removes hits that should be blocked by closer objects.
  */
-void chrpropAddBulletHit(struct ShotData *shotdata, PropRecord *prop, f32 dist, s32 hitpart, ModelNode *node, struct HitThing *hitthing, s32 room, s32 unk44, Model *model, bool countsAsPenetration, s32 blocksFurtherHits)
+void chrpropAddBulletHit(struct ShotData *shotdata, PropRecord *prop, f32 dist, s32 hitpart, ModelNode *node, struct HitThing *hitthing, s32 room, ModelNode *unk44, Model *model, bool countsAsPenetration, s32 blocksFurtherHits)
 {
     s32 pad;
     s32 i;

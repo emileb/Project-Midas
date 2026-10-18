@@ -1,4 +1,5 @@
 #include <os_extension.h>
+#include <string.h>
 #ifndef TARGET_N64
 #include <stdio.h> /* frontDrawCursor GE_DUMP_BOND probe */
 #endif
@@ -48,6 +49,16 @@
 #include "ob.h"
 #include "gbi_extension.h"
 #include "model.h"
+#include "gunfire.h"
+#include "gun.h"
+#include "debugmenu_handler.h"
+#include "ramromreplay.h"
+#include "propobj.h"
+#include "bondwalk2.h"
+#include "options.h"
+#include "viewport.h"
+extern s32 portOptSetIni(s32 i, const char *text);
+extern s32 portOptValueIni(s32 i, char *buf, s32 n);
 
 
 /**
@@ -361,7 +372,7 @@ s32 is_cheat_menu_available = FALSE;
  * docs/port/port-options-menu.md */
 
 u8 * ptr_logo_and_walletbond_DL = NULL;
-s32 ptr_menu_videobuffer = 0;
+u8 *ptr_menu_videobuffer = NULL;
 struct Model *logoinst = NULL;
 struct Model * walletinst[] = { NULL, NULL, NULL, NULL};
 
@@ -1081,14 +1092,14 @@ Gfx *constructor_menu19_spectrum(Gfx *DL);
 void disable_all_switches(Model *arg0);
 void set_item_visibility_in_objinstance(Model* objinstance, s32 item, s32 mode);
 void set_cursor_to_stage_solo(LEVEL_SOLO_SEQUENCE level);
-Gfx *display_aligned_white_text_to_screen(Gfx *dl, s32 arg1, s32 arg2, s32 halign, s32 valign, u8 *arg5, s32 arg6, s32 arg7);
+Gfx *display_aligned_white_text_to_screen(Gfx *dl, s32 arg1, s32 arg2, s32 halign, s32 valign, u8 *arg5, struct fontchar *arg6, struct font *arg7);
 void setCursorPOSforMode(int mode);
 void set_cursor_pos_difficulty(int difficulty);
 
 // end forward declarations.
 
 
-Gfx *frontPrintText(Gfx *gdl, s32 *x, s32 *y, s8 *text, s32 second_font_table, s32 first_font_table, s32 arg6, s32 view_x, s32 view_y, s32 arg9, s32 arga)
+Gfx *frontPrintText(Gfx *gdl, s32 *x, s32 *y, s8 *text, struct fontchar *second_font_table, struct font *first_font_table, s32 arg6, s32 view_x, s32 view_y, s32 arg9, s32 arga)
 {
     if (j_text_trigger != 0)
     {
@@ -1264,8 +1275,8 @@ s32 frontCheckIfCheatIsUnlocked(s32 cheat)
 }
 
 
-int frontGetPlayersFavoriteWeaponInHand(int player,int hand) {
-    return get_ptr_long_watch_text_for_item(array_favweapon[player][hand]);
+char *frontGetPlayersFavoriteWeaponInHand(int player,int hand) {
+    return (char *)get_ptr_long_watch_text_for_item(array_favweapon[player][hand]);
 }
 
 
@@ -1469,8 +1480,8 @@ Gfx *frontDrawCursor(Gfx *DL)
         if (dump && (calls++ % 61) == 0)
         {
             fprintf(stderr,
-                    "cursor: opt=%d img=%08x idx=%08x w=%d h=%d fmt=%d copyidx=%08x\n",
-                    option, (u32) image, image->index, image->width,
+                    "cursor: opt=%d img=%p idx=%08x w=%d h=%d fmt=%d copyidx=%08x\n",
+                    option, (void *) image, image->index, image->width,
                     image->height, image->format,
                     (mainfolderimages + IMG_COPY)->index);
             fflush(stderr);
@@ -1769,7 +1780,7 @@ void interface_menu00_legalscreen(void)
 /**
  * Render a string of standard text on the legal screen e.g. "TWYCROSS BOARD OF GAME CLASSIFICATION"
  */
-Gfx *display_aligned_white_text_to_screen(Gfx *dl, s32 arg1, s32 arg2, s32 halign, s32 valign, u8 *text, s32 arg6, s32 arg7)
+Gfx *display_aligned_white_text_to_screen(Gfx *dl, s32 arg1, s32 arg2, s32 halign, s32 valign, u8 *text, struct fontchar *arg6, struct font *arg7)
 {
     s32 sp4C;
     s32 sp48;
@@ -1865,7 +1876,7 @@ Gfx *constructor_menu00_legalscreen(Gfx *DL)
 
         sprintf(line, "Project Midas %s: Build %s\n", portPlatformName(), portBuildString());
         DL = display_aligned_white_text_to_screen(DL, 220, 16, CENTER_ALIGN, CENTER_ALIGN, (u8 *) line,
-                                                  (s32) ptrFontZurichBoldChars, (s32) ptrFontZurichBold);
+                                                  ptrFontZurichBoldChars, ptrFontZurichBold);
     }
 #endif
 
@@ -2571,7 +2582,7 @@ void frontCleanUpWalletBond(void)
 void init_menu05_fileselect(void)
 {
     s32 size = 0x6e000;
-    Gfx* DL = (s32)(ptr_logo_and_walletbond_DL) + (s32)(4096*10);
+    Gfx* DL = (Gfx *)(ptr_logo_and_walletbond_DL + (4096*10));
     int i;
 
     prev_keypresses = FALSE;
@@ -16239,7 +16250,7 @@ void load_briefing_text_for_stage(void)
 #endif
 
     // what is this
-    temp_s0 = (s32)(ptr_logo_and_walletbond_DL) + (s32)(4096*10);
+    temp_s0 = (Gfx *)(ptr_logo_and_walletbond_DL + (4096*10));
 
     // alright
     argg = 0x200;
@@ -17515,7 +17526,7 @@ Gfx *constructor_menu16_nocontrollers(Gfx *DL)
     s32 x2;
     s32 x;
     s32 y;
-    s32 text;
+    char *text;
     s32 conConnected = joyGetConnectedControllers();
     s32 numContCon = 0;
 
@@ -17532,7 +17543,7 @@ Gfx *constructor_menu16_nocontrollers(Gfx *DL)
 
 
     if ((numContCon == 0) || (numContCon == 1) || (numContCon == 2) || (numContCon == 3)) {
-        text = langGet(getStringID(LTITLE, TITLE_STR_118_NOCONT)); //NO CONTROLLER IN CONTROLLER SOCKET 1
+        text = (char *)langGet(getStringID(LTITLE, TITLE_STR_118_NOCONT)); //NO CONTROLLER IN CONTROLLER SOCKET 1
     }
     textMeasure(&y2, &x2, text, ptrFontZurichBoldChars, ptrFontZurichBold, 0);
     x = 0xDC - (x2 >> 1);
@@ -17550,7 +17561,7 @@ Gfx *constructor_menu16_nocontrollers(Gfx *DL)
 
 
     if ((numContCon == 0) || (numContCon == 1) || (numContCon == 2) || (numContCon == 3)) {
-        text = langGet(getStringID(LTITLE, TITLE_STR_119_ATTACHCONT)); //PLEASE POWER OFF AND ATTACH A CONTROLLER
+        text = (char *)langGet(getStringID(LTITLE, TITLE_STR_119_ATTACHCONT)); //PLEASE POWER OFF AND ATTACH A CONTROLLER
     }
     textMeasure(&y2, &x2, text, ptrFontZurichBoldChars, ptrFontZurichBold, 0);
     x = 0xDC - (x2 >> 1);

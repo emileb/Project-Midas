@@ -5,6 +5,7 @@
 #include "thread_config.h"
 #include "bondgame.h"
 #include "speed_graph.h"
+#include "init.h"
 
 /**
  * EU .data, offset from start of data_seg : 0x23A0
@@ -64,7 +65,7 @@ typedef struct DMABuffer_s {
     /**
      * 0x8.
      */
-    int startAddr;
+    intptr_t startAddr;
 
     /**
      * 0xc.
@@ -314,7 +315,7 @@ OSMesg g_DmaMessageBuffer[AUDIO_DMA_QUEUE_SIZE];
 
 
 // Forward declarations
-s32 amDmaCallback(s32 addr, s32 len, void* state);
+intptr_t amDmaCallback(intptr_t addr, s32 len, void* state);
 void amClearDmaBuffers(void);
 void amHandleFrameMessage(AudioInfo *info, AudioInfo *lastInfo);
 void amHandleDoneMessage(AudioInfo *info);
@@ -435,7 +436,7 @@ void amMain(void* arg)
 	s16 *msg = NULL;
 	AudioInfo *info = NULL;
 
-	osScAddClient(&os_scheduler, &g_AudioClient[0], &g_AudioManager.frameMessageQueue, 1);
+	osScAddClient(&os_scheduler, &g_AudioClient[0], &g_AudioManager.frameMessageQueue, (OSScClient *)1);
 
 	while (!done) {
 		osRecvMesg(&g_AudioManager.frameMessageQueue, (OSMesg *) &msg, OS_MESG_BLOCK);
@@ -546,10 +547,10 @@ void amHandleFrameMessage(AudioInfo *info, AudioInfo *lastInfo)
     info->task.msg = info;
     info->task.flags = OS_SC_NEEDS_RSP;
     info->task.list.t.data_ptr = (u64*)(g_AudioManager.cmdList[g_CurrentAcmdList]);
-    info->task.list.t.data_size = (((s32)cmdlp - (s32)g_AudioManager.cmdList[g_CurrentAcmdList]) >> 3) * sizeof(Acmd);
+    info->task.list.t.data_size = (u32)((cmdlp - g_AudioManager.cmdList[g_CurrentAcmdList]) * sizeof(Acmd));
     info->task.list.t.type = M_AUDTASK;
     info->task.list.t.ucode_boot = (u64*)rspbootTextStart;
-    info->task.list.t.ucode_boot_size = ((s32)gsp3DTextStart - (s32)rspbootTextStart);
+    info->task.list.t.ucode_boot_size = (u32)((intptr_t)gsp3DTextStart - (intptr_t)rspbootTextStart);
     info->task.list.t.flags = 0; // 1c
     info->task.list.t.ucode = (u64*)aspMainTextStart;
     info->task.list.t.ucode_data = (u64*)aspMainDataStart;
@@ -628,13 +629,13 @@ void amHandleDoneMessage(AudioInfo *info)
  * @param state unused.
  * @return result from call to osVirtualToPhysical
  */
-s32 amDmaCallback(s32 addr, s32 len, void* state)
+intptr_t amDmaCallback(intptr_t addr, s32 len, void* state)
 {
     void *freeBuffer;
     s32 delta;
     DMABuffer *dmaPtr;
-    s32 addrEnd;
-    s32 buffEnd;
+    intptr_t addrEnd;
+    intptr_t buffEnd;
     DMABuffer *lastDmaPtr;
 
 #ifndef TARGET_N64
@@ -659,7 +660,7 @@ s32 amDmaCallback(s32 addr, s32 len, void* state)
 
         /* since buffers are ordered */
         /* abort if past possible */
-        if ((u32)dmaPtr->startAddr > (u32)addr)
+        if ((uintptr_t)dmaPtr->startAddr > (uintptr_t)addr)
         {
             break;
         }
@@ -727,8 +728,8 @@ s32 amDmaCallback(s32 addr, s32 len, void* state)
     dmaPtr->startAddr = addr;
     dmaPtr->lastFrame = g_AudioFrameCount;
 
-    osPiStartDma(&g_DmaIOMessageBuffer[g_NextDMa++], OS_MESG_PRI_HIGH, OS_READ, (u32)addr, freeBuffer, AUDIO_DMA_MAX_BUFFER_LENGTH, &g_DmaMessageQueue);
-    return (s32)osVirtualToPhysical(freeBuffer) + delta;
+    osPiStartDma(&g_DmaIOMessageBuffer[g_NextDMa++], OS_MESG_PRI_HIGH, OS_READ, (uintptr_t)addr, freeBuffer, AUDIO_DMA_MAX_BUFFER_LENGTH, &g_DmaMessageQueue);
+    return (intptr_t)osVirtualToPhysical(freeBuffer) + delta;
 }
 
 /**

@@ -118,7 +118,7 @@ typedef struct ALLink_s {
 void    alUnlink(ALLink *element);
 void    alLink(ALLink *element, ALLink *after);
 
-typedef s32 (*ALDMAproc)(s32 addr, s32 len, void *state);
+typedef intptr_t (*ALDMAproc)(intptr_t addr, s32 len, void *state); /* PC: addr/result are host ptrs */
 typedef ALDMAproc (*ALDMANew)(void *state);
 
 void    alCopy(void *src, void *dest, s32 len);
@@ -903,7 +903,7 @@ typedef struct {
     ALEventQueue        evtq;
     ALEvent             nextEvent;
     ALSynth             *drvr;          /* reference to the client driver   */
-    s32                 target;
+    void               *target;
     void                *sndState;
     s32                 maxSounds;
     ALMicroTime         frameTime;

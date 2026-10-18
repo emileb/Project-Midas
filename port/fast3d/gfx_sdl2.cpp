@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <SDL.h>
 #include <unistd.h>
+#include <string.h>
 #include <time.h>
 
 #include "platform.h"
@@ -20,6 +21,8 @@ __declspec(dllexport) unsigned long NvOptimusEnablement = 1;
 __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
 #endif
+
+extern "C" const char *portRootPath(const char *name); /* main.c: <exe dir>/name */
 
 static SDL_Window* wnd;
 static SDL_GLContext ctx;
@@ -287,6 +290,34 @@ static void gfx_sdl_init(const struct GfxWindowInitSettings *set) {
     }
 #endif
 
+    /* GLES (always under GE_GLES, else with GE_GLES=1 in the environment):
+     * desktop SDL needs its EGL path for an ES context, and on macOS EGL/GLES
+     * are ANGLE's libEGL.dylib/libGLESv2.dylib beside the executable. */
+#ifdef GE_GLES
+    const bool want_es = true;
+#else
+    const char *es_env = SDL_getenv("GE_GLES");
+    const bool want_es = es_env != NULL && es_env[0] == '1';
+#endif
+    if (want_es) {
+        SDL_SetHint(SDL_HINT_OPENGL_ES_DRIVER, "1");
+#ifdef __APPLE__
+        static char egl_path[1200], gles_path[1200];
+        snprintf(egl_path, sizeof(egl_path), "%s", portRootPath("libEGL.dylib"));
+        snprintf(gles_path, sizeof(gles_path), "%s", portRootPath("libGLESv2.dylib"));
+        if (access(egl_path, R_OK) == 0 && access(gles_path, R_OK) == 0) {
+            /* SDL3 (under sdl2-compat) reads these hints, plain SDL2 the env vars */
+            SDL_SetHint("SDL_EGL_LIBRARY", egl_path);
+            SDL_SetHint("SDL_OPENGL_LIBRARY", gles_path);
+            setenv("SDL_VIDEO_EGL_DRIVER", egl_path, 1);
+            setenv("SDL_VIDEO_GL_DRIVER", gles_path, 1);
+            sysLogPrintf(LOG_NOTE, "SDL: GLES via ANGLE: %s", egl_path);
+        } else {
+            sysLogPrintf(LOG_WARNING, "SDL: GLES requested but no libEGL.dylib/libGLESv2.dylib beside the executable");
+        }
+#endif
+    }
+
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         sysFatalError("Could not init SDL:\n%s", SDL_GetError());
     }
@@ -393,7 +424,7 @@ static void gfx_sdl_init(const struct GfxWindowInitSettings *set) {
     };
 
     u32 verstart = 1;
-    const u32 verend = sizeof(glver) / sizeof(*glver);
+    u32 verend = sizeof(glver) / sizeof(*glver);
     const char *verstr = sysArgGetString("--gl-version");
     if (verstr && *verstr) {
         // user override
@@ -404,6 +435,14 @@ static void gfx_sdl_init(const struct GfxWindowInitSettings *set) {
         if (glver[0][0] >= 1 && glver[0][0] <= 4 && glver[0][1] < 9) {
             verstart = 0;
         }
+    }
+    if (want_es && verstart != 0) {
+        /* ES only: Android drivers and ANGLE return their newest ES 3.x for this */
+        glver[0][0] = 3;
+        glver[0][1] = 0;
+        glver[0][2] = SDL_GL_CONTEXT_PROFILE_ES;
+        verstart = 0;
+        verend = 1;
     }
 
     ctx = NULL;
@@ -791,22 +830,23 @@ static void gfx_sdl_maybe_screenshot(void) {
     }
     size_t stride = (size_t)w * 3;
     size_t padded = (stride + 3) & ~3u; /* BMP rows are 4-byte aligned */
+    /* read RGBA: the only format GLES guarantees for glReadPixels */
+    uint8_t *rgba = (uint8_t *)SDL_calloc(1, (size_t)w * 4 * h);
     uint8_t *px = (uint8_t *)SDL_calloc(1, padded * h);
-    if (!px) return;
+    if (!px || !rgba) { SDL_free(px); SDL_free(rgba); return; }
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
-    glReadPixels(0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, px);
-    /* repack in place bottom-up rows into padded stride, RGB->BGR */
-    for (int y = h - 1; y >= 0; y--) {
-        uint8_t *src = px + (size_t)y * stride;
-        uint8_t row[4096 * 3];
-        memcpy(row, src, stride);
+    glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+    /* bottom-up rows into the padded stride, RGBA->BGR */
+    for (int y = 0; y < h; y++) {
+        const uint8_t *src = rgba + (size_t)y * w * 4;
         uint8_t *dst = px + (size_t)y * padded;
         for (int x = 0; x < w; x++) {
-            dst[x * 3 + 0] = row[x * 3 + 2];
-            dst[x * 3 + 1] = row[x * 3 + 1];
-            dst[x * 3 + 2] = row[x * 3 + 0];
+            dst[x * 3 + 0] = src[x * 4 + 2];
+            dst[x * 3 + 1] = src[x * 4 + 1];
+            dst[x * 3 + 2] = src[x * 4 + 0];
         }
     }
+    SDL_free(rgba);
     char name[64];
     SDL_snprintf(name, sizeof(name), "shot_%05d.bmp", framenum);
     FILE *f = fopen(name, "wb");

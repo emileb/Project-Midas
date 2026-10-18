@@ -18,7 +18,7 @@
 
 void cleanupObjects(s32 stage)
 {
-    u32 *obj = (u32)g_CurrentSetup.propDefs;
+    u32 *obj = (u32 *)g_CurrentSetup.propDefs;
 
     if (obj)
     {
@@ -80,6 +80,7 @@ void cleanupObjects(s32 stage)
                 
             }
 
+            /* TODO(64bit) layout: N64 word stride over in-place propdefs, which embed pointer slots */
             obj =  obj + sizepropdef(obj) ;
         }
     }

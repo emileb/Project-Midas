@@ -350,7 +350,7 @@ static struct ShaderProgram* gfx_opengl_create_and_load_new_shader(uint64_t shad
     vs_len += sprintf(vs_buf + vs_len, "#version %s\n", gl_glsl_version_str);
 
     if (gl_es) {
-        append_line(vs_buf, &vs_len, "precision mediump float;");
+        append_line(vs_buf, &vs_len, "precision highp float;");
     }
 
     if (gl_glsl_version >= 130) {
@@ -464,7 +464,7 @@ static struct ShaderProgram* gfx_opengl_create_and_load_new_shader(uint64_t shad
     fs_len += sprintf(fs_buf + fs_len, "#version %s\n", gl_glsl_version_str);
 
     if (gl_es) {
-        append_line(fs_buf, &fs_len, "precision mediump float;");
+        append_line(fs_buf, &fs_len, "precision highp float;");
     }
 
     if (gl_glsl_version >= 130) {
@@ -483,7 +483,7 @@ static struct ShaderProgram* gfx_opengl_create_and_load_new_shader(uint64_t shad
 
     append_line(fs_buf, &fs_len, "#define TEX_OFFSET(tex, uv, texSize, off) SAMPLE_TEX(tex, uv - (off)/texSize)");
 
-    // append_line(fs_buf, &fs_len, "precision mediump float;");
+    // append_line(fs_buf, &fs_len, "precision highp float;");
     for (int i = 0; i < 2; i++) {
         if (cc_features.used_textures[i]) {
             fs_len += sprintf(fs_buf + fs_len, "INPUT vec2 vTexCoord%d;\n", i);
@@ -571,7 +571,7 @@ static struct ShaderProgram* gfx_opengl_create_and_load_new_shader(uint64_t shad
     } else {
         if (current_filter_mode == FILTER_THREE_POINT) {
             append_line(fs_buf, &fs_len, "vec4 hookTexture2D(in sampler2D tex, in vec2 uv, in vec2 texSize, in int three_point_filter) {");
-            append_line(fs_buf, &fs_len, "    return mix(SAMPLE_TEX(tex, uv), filter3point(tex, uv, texSize), three_point_filter);");
+            append_line(fs_buf, &fs_len, "    return mix(SAMPLE_TEX(tex, uv), filter3point(tex, uv, texSize), float(three_point_filter));");
             append_line(fs_buf, &fs_len, "}");
         } else {
             append_line(fs_buf, &fs_len, "vec4 hookTexture2D(in sampler2D tex, in vec2 uv, in vec2 texSize) {");
@@ -1451,7 +1451,12 @@ static void *gl_load_proc(const char *name) {
         }
     }
 
-    sysLogPrintf(LOG_ERROR, "GL: could not find function: %s", name);
+    /* core and ES contexts (macOS, ANGLE, Android) lack the legacy entry points: not an error */
+    int prof = 0;
+    SDL_GL_GetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, &prof);
+    if (prof == SDL_GL_CONTEXT_PROFILE_COMPATIBILITY || prof == 0) {
+        sysLogPrintf(LOG_ERROR, "GL: could not find function: %s", name);
+    }
 
     return NULL;
 }
@@ -1501,6 +1506,12 @@ static void gfx_opengl_init(void) {
     gl_es = (val == SDL_GL_CONTEXT_PROFILE_ES);
 
     gfx_opengl_init_extensions();
+
+    if (gl_es && (GLVersion.major < 3 || (GLVersion.major == 3 && GLVersion.minor < 1))) {
+        /* multisampled textures (and sampler2DMS) are ES 3.1; ANGLE can still
+         * hand out the pointer, so drop it and keep the renderbuffer MSAA path */
+        glad_glTexImage2DMultisample = NULL;
+    }
 
     if (sysArgCheck("--debug-gl")) {
         gfx_opengl_enable_debug();
@@ -2104,7 +2115,7 @@ static GlRetainedProgram* gl_ret_program_get(struct ShaderProgram* prg) {
     size_t vs_len = 0;
     vs_len += sprintf(vs_buf + vs_len, "#version %s\n", gl_glsl_version_str);
     if (gl_es) {
-        append_line(vs_buf, &vs_len, "precision mediump float;");
+        append_line(vs_buf, &vs_len, "precision highp float;");
     }
     if (gl_glsl_version >= 130) {
         append_line(vs_buf, &vs_len, "#define INPUT in");
@@ -2761,7 +2772,7 @@ static bool vi_init(void) {
     }
     char hdr[256];
     snprintf(hdr, sizeof(hdr), "#version %s\n%s#extension GL_ARB_texture_multisample : enable\n",
-             gl_glsl_version_str, gl_es ? "precision mediump float;\n" : "");
+             gl_glsl_version_str, gl_es ? "precision highp float;\n" : "");
     std::string vs = std::string(hdr) +
         "in vec2 aPos;\n"
         "void main() { gl_Position = vec4(aPos, 0.0, 1.0); }\n";

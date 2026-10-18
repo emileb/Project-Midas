@@ -1198,7 +1198,13 @@ ALSoundState *sndPlaySfx(struct ALBankAlt_s *soundBank, s16 soundIndex, ALSoundS
     {
         ALKeyMap *keyMap;
 
+#ifdef TARGET_N64
         sound = (soundBank->instArray[0]->soundArray[soundIndex]);
+#else
+        /* the Alt view puts soundArray 4 bytes early so 1-based indices land on
+         * the real array; on 64-bit pointer alignment removes that gap */
+        sound = ((ALInstrument *)soundBank->instArray[0])->soundArray[soundIndex - 1];
+#endif
 
         newState = sndSetupSound(soundBank, sound);
 
@@ -1206,7 +1212,7 @@ ALSoundState *sndPlaySfx(struct ALBankAlt_s *soundBank, s16 soundIndex, ALSoundS
         {
             ALSndpEvent playEvent;
 
-            g_sndPlayerPtr->target = (s32)newState;
+            g_sndPlayerPtr->target = newState;
             playEvent.common.type = AL_SNDP_PLAY_EVT;
             playEvent.common.state = newState;
             deltaLoop = sound->keyMap->velocityMax * DELTA_33_MS;

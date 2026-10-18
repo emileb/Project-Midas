@@ -7,6 +7,8 @@
 #include "bondview.h"
 #include "bgfog.h"
 #include <limits.h>
+#include "stdlib.h"
+#include "player.h"
 
 /**
  * Address 0x800825C0.

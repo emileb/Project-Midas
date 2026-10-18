@@ -39,7 +39,7 @@ void init_menus_or_reset(void)
     ptr_menu_videobuffer = mempAllocBytesInBank(0x4b040, MEMPOOL_STAGE);
 #endif
 
-    ptr_menu_videobuffer = ALIGN64_V1(ptr_menu_videobuffer);
+    ptr_menu_videobuffer = (u8 *)ALIGN64_V1((uintptr_t)ptr_menu_videobuffer);
 
     for (i = 0; i < 4; i++)
     {

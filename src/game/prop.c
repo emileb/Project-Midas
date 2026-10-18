@@ -32,6 +32,13 @@
 #include "stan.h"
 #include "model.h"
 #include "token.h"
+#include "deb_loadallmodels.h"
+#include "initguards.h"
+#include "bondinv.h"
+#include "cheat.h"
+#include "front.h"
+#include "lv.h"
+#include "initunk_005520.h"
 
 /**
  * EU .bss 0x80068480
@@ -1452,7 +1459,10 @@ void setupDoor(s32 arg0, struct DoorRecord *door, s32 arg2)
 /* ROM loading (port/src/romfile_setup.c): a setup loaded from the ROM is the
  * N64 image (offsets), so it uses the N64 promotion. Set right after the file loads, below. */
 s32 g_portSetupFromRom;
-#define SETUP_PROMOTE(base, val) (g_portSetupFromRom ? (void *) (((u32) (base)) + ((u32) (val))) : (void *) (u32) (val))
+/* TODO(64bit) layout: the setup header and section records are used in place;
+ * their pointer fields are 4-byte offsets in the ROM image, so on a 64-bit host
+ * the field offsets/strides don't match until the loader expands them. */
+#define SETUP_PROMOTE(base, val) (g_portSetupFromRom ? (void *) (((uintptr_t) (base)) + ((uintptr_t) (val))) : (void *) (uintptr_t) (val))
 
 /* bring-up (GE_DUMP_BOND): called at load milestones to find which step
  * corrupts the path waypoints data. */
@@ -1540,7 +1550,7 @@ static u32 portMeasurePads(u32 *pads)
         pad++;
     }
 
-    return ((u32) (pad + 1) - (u32) pads) / 4; /* include the terminator record */
+    return (u32) ((u8 *) (pad + 1) - (u8 *) pads) / 4; /* include the terminator record */
 }
 
 static u32 portMeasureBoundPads(u32 *pads)
@@ -1552,7 +1562,7 @@ static u32 portMeasureBoundPads(u32 *pads)
         vol++;
     }
 
-    return ((u32) (vol + 1) - (u32) pads) / 4;
+    return (u32) ((u8 *) (vol + 1) - (u8 *) pads) / 4;
 }
 
 /* Load-time setup lint: byte-swapped or garbled setup data shows up as
@@ -2164,7 +2174,7 @@ void proplvreset2(enum LEVELID stageId)
                 /** Ugly matching hack. 
                 *   TODO: investigate if there's a way to get rid of this.
                 */
-                if ((((u32) local_stage) ^ 0) + ((u32)vol->plink));
+                if ((((uintptr_t) local_stage) ^ 0) + ((uintptr_t)vol->plink));
 
                 vol->plink = SETUP_PROMOTE(local_stage, vol->plink);
                 vol->pos.f[0] *= roompos_2;
@@ -2539,7 +2549,8 @@ void proplvreset2(enum LEVELID stageId)
                             pdef_veh->turnrot60    = 0.0f;
                             pdef_veh->roty         = 0.0f;
                             pdef_veh->speedtime60  = -1.0f;
-                            pdef_veh->ailist       = ailistFindById(pdef_veh->ailist);
+                            /* TODO(64bit) layout: ailist holds the setup's 32-bit list id until resolved here */
+                            pdef_veh->ailist       = ailistFindById((s32) (intptr_t) pdef_veh->ailist);
                             pdef_veh->aioffset     = 0;
                             pdef_veh->aireturnlist = -1;
                             pdef_veh->path         = 0;
@@ -2561,7 +2572,8 @@ void proplvreset2(enum LEVELID stageId)
                             pdef_air->yrot            = 0.0f;
                             pdef_air->speedtime60     = -1.0f;
                             pdef_air->rotaryspeedtime = -1.0f;
-                            pdef_air->ailist          = ailistFindById(pdef_air->ailist);
+                            /* TODO(64bit) layout: as above, a 32-bit list id until resolved */
+                            pdef_air->ailist          = ailistFindById((s32) (intptr_t) pdef_air->ailist);
                             pdef_air->aioffset        = 0;
                             pdef_air->aireturnlist    = -1;
                             pdef_air->nextstep        = 0;

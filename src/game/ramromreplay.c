@@ -15,6 +15,8 @@
 #include "player.h" /* g_CurrentPlayer */
 #include "../../port/fast3d/gfx_api.h" /* PortHwLoad (GE_HWCAL) */
 #include "frametiming.h"
+#include "mp_weapon.h"
+#include "indy_comms.h"
 //D:800483F0
 
 struct ramrom_struct
@@ -229,7 +231,7 @@ void finalize_ramrom_on_hw(void)
     u8 *p;
     void *a1;
 
-    p = ALIGN16_a((s32)buffer);
+    p = (u8 *)ALIGN16_a((uintptr_t)buffer);
     p[0] = 0;
     p[1] = 0;
 
@@ -241,7 +243,7 @@ void finalize_ramrom_on_hw(void)
 
     ptr_active_demofile = romCopyAligned(ramrom_data_target, a1, 0xf0);
     ptr_active_demofile->totaltime_ms = g_GlobalTimer - g_ClockTimer;
-    ptr_active_demofile->filesize = (s32)address_demo_loaded - (s32)a1;
+    ptr_active_demofile->filesize = (s32)(address_demo_loaded - (u8 *)a1);
     romWrite(ptr_active_demofile, a1, 0xf0);
 }
 
@@ -264,7 +266,8 @@ void save_ramrom_to_devtool(void)
     }
     
     sprintf(indyFileName, "replay/demo.%d", i);
-    indycommHostSaveFile(indyFileName, INDY_RAMROM_DEMO_POINTER, ptr_active_demofile->filesize);
+    /* args were passed as (data, size); the callee takes (size, data) */
+    indycommHostSaveFile(indyFileName, ptr_active_demofile->filesize, INDY_RAMROM_DEMO_POINTER);
 }
 
 
@@ -292,7 +295,7 @@ void load_ramrom_from_devtool(void)
 // Address 0x7F0BFE5C NTSC
 void record_player_input_as_packet(struct contsample *arg0, s32 arg1, s32 arg2)
 {
-    s32 temp_t5;
+    uintptr_t temp_t5;
     s32 temp_t1;
     s32 var_a0;
     s32 var_a2;
@@ -303,7 +306,7 @@ void record_player_input_as_packet(struct contsample *arg0, s32 arg1, s32 arg2)
     u8 t1;
     s32 others0;
 
-    temp_t5 = ALIGN16_a((s32)&ramrom_data_target[0x1f8]);
+    temp_t5 = ALIGN16_a((uintptr_t)&ramrom_data_target[0x1f8]);
     temp_t1 = ptr_active_demofile->size_cmds;
 
     var_t2 = 0;
@@ -688,7 +691,7 @@ void test_if_recording_demos_this_stage_load(enum LEVELID arg0, enum DIFFICULTY 
 {
     if (g_ramromRecordFlag != 0)
     {
-        ptr_active_demofile = (ramromfilestructure *) ALIGN16_a((s32)ramrom_data_target);
+        ptr_active_demofile = (ramromfilestructure *) ALIGN16_a((uintptr_t)ramrom_data_target);
         dword_CODE_bss_8008C5F8 = 0;
         ptr_active_demofile->stagenum = arg0;
         ptr_active_demofile->difficulty = arg1;
@@ -779,7 +782,7 @@ void replay_recorded_ramrom_at_address(ramromfilestructure *demofile)
 
 void replay_recorded_ramrom_from_indy(void)
 {
-    replay_recorded_ramrom_at_address(INDY_RAMROM_DEMO_ADDRESS);
+    replay_recorded_ramrom_at_address(INDY_RAMROM_DEMO_POINTER);
 }
 
 void ramromFadeToTitle(void)

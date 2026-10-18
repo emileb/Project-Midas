@@ -1,4 +1,5 @@
 #include <ultra64.h>
+#include <string.h>
 #include "indy_commands.h"
 #include <PR/os.h>
 #include <PR/region.h>
@@ -60,7 +61,7 @@ s32 indycmdSendCommand(u8 *buffer, u32 size)
     pbuffer = sp40; // var_a3
 
     // if argument isn't 8 byte aligned
-    if ((s32)(buffer) & 7)
+    if ((intptr_t)(buffer) & 7)
     {
         if (size > 0x500)
         {
@@ -68,7 +69,7 @@ s32 indycmdSendCommand(u8 *buffer, u32 size)
         }
 
         // if local buffer isn't 8 byte aligned
-        if ((s32)(pbuffer) & 7)
+        if ((intptr_t)(pbuffer) & 7)
         {
             address += 4; // var_v1 = var_a3;
             pbuffer += 4; // var_a3 = &sp44;
@@ -292,7 +293,7 @@ void post_typeA_indyrescmd_app_command_recieved(s32 readsize,s32 writesize,u32 d
 }
 
 
-void indyrescmdRamRomLoad(u32 rsize,u32 wsize,char *name,u32 filesize,u32 ptarget)
+void indyrescmdRamRomLoad(u32 rsize,u32 wsize,char *name,u32 filesize,u8 *ptarget)
 {
   indy_resource_entry_typeF cmd;
   
@@ -497,7 +498,7 @@ s32 post_indyrescmd_recv_capture_data_success(u32 data)
 }
 
 
-s32 indycmdSendRamRomLoad(char *strptr,u32 ptarget,u32 filesize)
+s32 indycmdSendRamRomLoad(char *strptr,u8 *ptarget,u32 filesize)
 {
     indyrescmdStartCmdSeq(sizeof(indy_resource_entry_typeF),sizeof(indy_resource_entry_typeF));
     indyrescmdRamRomLoad(sizeof(s_indyResCmd02End),sizeof(s_indyResCmd02End),strptr,filesize,ptarget);
@@ -584,7 +585,7 @@ s32 indycmdRecieveCommand(u8 *buffer, u32 size)
     pbuffer = sp40; // var_a3
 
     // if argument isn't 8 byte aligned
-    if ((s32)(buffer) & 7)
+    if ((intptr_t)(buffer) & 7)
     {
         if (size > 0x400)
         {
@@ -592,7 +593,7 @@ s32 indycmdRecieveCommand(u8 *buffer, u32 size)
         }
 
         // if local buffer isn't 8 byte aligned
-        if ((s32)(pbuffer) & 7)
+        if ((intptr_t)(pbuffer) & 7)
         {
             pbuffer += 4; // var_a3 = &sp44;
             address += 4; // var_v1 = var_a3;
@@ -997,7 +998,7 @@ s32 indycmdAckHostCheckFileExists(u8 *response1,u8 *response2)
 }
 
 
-s32 indycmdReceiveFile(u8 *response1,u8 *response2,u32 childsize,u8 *child)
+s32 indycmdReceiveFile(u8 *response1,u8 *response2,u32 *childsize,u8 *child)
 {
     indyrescmdResponseSize(0,0x20);
     indyrescmdResponseRecieveFile(0x14,0x14,response1,response2,childsize,child);

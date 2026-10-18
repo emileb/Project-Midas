@@ -292,7 +292,11 @@ static void convertIntro(struct conv *c)
             u32 tbl = be32(c->d + o + 4);
             u32 ptr;
             convertCredits(c, tbl);
+#if UINTPTR_MAX > 0xFFFFFFFFu
+            ptr = tbl; /* 64-bit: a pointer doesn't fit the slot; bondview_r.c rebases the offset */
+#else
             ptr = (u32) (uintptr_t) (c->d + tbl);
+#endif
             memcpy(c->d + o + 4, &ptr, 4); /* promoted here: bondview_r.c's PC arm reads a pointer */
             kindApply(c->d + o, kSetupIntroKinds[type].kind[0]);
         } else {

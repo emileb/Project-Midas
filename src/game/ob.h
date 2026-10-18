@@ -50,4 +50,7 @@ s32 get_rom_remaining_buffer_for_index(s32 index);
 s32 get_pc_remaining_buffer_for_index(s32 index);
 s32 fileGetIndex(u8 *resname); /* matches the definition; was char* (IDO tolerated the mismatch) */
 
+void obInit(void);
+void obLoadBGFileBytesAtOffset(u8 *bgname, u8 *target, intptr_t offset, s32 len);
+
 #endif

@@ -1,4 +1,5 @@
 #include <ultra64.h>
+#include <string.h>
 #include "include/limits.h"
 #include <bondconstants.h>
 #include <bondtypes.h>
@@ -42,6 +43,12 @@
 #include "bondinv.h"
 #include "stan.h"
 #include "gbi_extension.h"
+#include "propobj.h"
+#include "gunfire.h"
+#include "dyn.h"
+#include "language.h"
+#include "explosion.h"
+extern s32 portCrosshairColor(void);
 
 
 #ifdef REFRESH_PAL
@@ -1941,9 +1948,9 @@ Gfx *set_enviro_fog_for_items_in_solo_watch_menu(Gfx *gdl, ITEM_IDS itemid, Mtxf
         if (dump < 0) dump = getenv("GE_DUMP_BOND") != NULL;
         if (dump && (calls++ % 31) == 0)
         {
-            printf("watch3d2: item=%d emitted=%d numMtx=%d root=%08x obj=%08x rootop=%04x\n",
+            printf("watch3d2: item=%d emitted=%d numMtx=%d root=%p obj=%p rootop=%04x\n",
                    itemid, (s32) (renderdata.gdl - gdl), bodymodel->numMatrices,
-                   (u32) bodymodel->RootNode, (u32) ((Model *) &model)->obj,
+                   (void *) bodymodel->RootNode, (void *) ((Model *) &model)->obj,
                    (bodymodel->RootNode != NULL) ? (u16) bodymodel->RootNode->Opcode : 0xDEAD);
         }
     }
@@ -1972,14 +1979,14 @@ earlyreturn:
 }
 
 
-void sub_GAME_7F0634D8(s32 arg0, s32 arg1, s32 arg2, s32 arg3)
+void sub_GAME_7F0634D8(Gfx *arg0, ITEM_IDS arg1, Mtxf *arg2, s32 arg3)
 {
     set_enviro_fog_for_items_in_solo_watch_menu(arg0, arg1, arg2, arg3, -256);
 }
 
 
 // Unreferenced
-void sub_GAME_7F0634FC(s32 arg0, s32 arg1, s32 arg2)
+void sub_GAME_7F0634FC(Gfx *arg0, ITEM_IDS arg1, Mtxf *arg2)
 {
     sub_GAME_7F0634D8(arg0, arg1, arg2, 0xFF);
 }
@@ -2117,7 +2124,7 @@ Gfx* watchRenderController(Gfx* gdl, Mtxf* basemtx, s32 envcolour, bool animateb
 
     for (i = 0; i < objheader->numMatrices; i++)
     {
-        matrix_4x4_copy((u32)modelstack.render_pos + i * sizeof(Mtxf), &sp41c);
+        matrix_4x4_copy((Mtxf *)((u8 *)modelstack.render_pos + i * sizeof(Mtxf)), &sp41c);
         matrix_4x4_f32_to_s32(&sp41c, &modelstack.render_pos[i]);
     }
 
@@ -2352,7 +2359,7 @@ Gfx* watchRenderController(Gfx* gdl, Mtxf* basemtx, s32 envcolour, bool animateb
 
         for (i = 0; i < objheader->numMatrices; i++)
         {
-            matrix_4x4_copy((u32)modelstack.render_pos + i * sizeof(Mtxf), &sp41c);
+            matrix_4x4_copy((Mtxf *)((u8 *)modelstack.render_pos + i * sizeof(Mtxf)), &sp41c);
             matrix_4x4_f32_to_s32(&sp41c, &modelstack.render_pos[i]);
         }
 
@@ -2865,7 +2872,7 @@ void gunTickHandState(enum GUNHAND hand, s32 triggerOn)
     struct PropRecord *temp_v0_8;
     Weapon1PTransformKeyframe *sp74;
     f32 temp_f0_2;
-    u32 var_a0_2;
+    Weapon1PTransformKeyframe *var_a0_2;
     f32 temp_v1_9;
     struct hand *temp_v1_5;
     f32 un_f32_num = 0.0f;
@@ -2921,7 +2928,7 @@ void gunTickHandState(enum GUNHAND hand, s32 triggerOn)
     Weapon1PTransformKeyframe *sp74;
     struct PropRecord *temp_v0_8;
     f32 temp_f0_2;
-    u32 var_a0_2;
+    Weapon1PTransformKeyframe *var_a0_2;
     f32 temp_v1_9;
     struct hand *temp_v1_5;
     f32 un_f32_num = 0.0f;
@@ -2976,7 +2983,7 @@ void gunTickHandState(enum GUNHAND hand, s32 triggerOn)
     Weapon1PTransformKeyframe *sp74;
     struct PropRecord *temp_v0_8;
     f32 temp_f0_2;
-    u32 var_a0_2;
+    Weapon1PTransformKeyframe *var_a0_2;
     f32 temp_v1_9;
     struct hand *temp_v1_5;
     f32 un_f32_num = 0.0f;
@@ -4321,11 +4328,11 @@ void gunTickHandState(enum GUNHAND hand, s32 triggerOn)
             || (handptr->weapon_action_state == GUN_ANIM_STATE_KNIFE_SLASH1_STRIKE)
             || (handptr->weapon_action_state == GUN_ANIM_STATE_KNIFE_SLASH1_RECOVER))
         {
-            var_a0_2 = D_80034CA4;
+            var_a0_2 = (Weapon1PTransformKeyframe *) D_80034CA4;
         }
         else
         {
-            var_a0_2 = D_80034E0C;
+            var_a0_2 = (Weapon1PTransformKeyframe *) D_80034E0C;
         }
 
         if (gunSample1PTransform(var_a0_2, sp88, &handptr->field_8EC, hand) != 0)
@@ -6560,7 +6567,7 @@ Gfx *gunDrawHudInteger(Gfx *gdl, s32 value, s32 x, s32 halign, s32 y, s32 valign
  * (12-byte stride from the 9mm slot at 0x02000C84) that N64 rebased onto the
  * copied segment; on PC map the slot index onto the compiled-in entries
  * (image_bank.c order) instead of dereferencing the raw address. */
-u32 portAmmoIconPtr(u32 icon)
+uintptr_t portAmmoIconPtr(uintptr_t icon)
 {
     extern struct sImageTableEntry *ammo9mmimage, *rifleammoimage,
         *shotgunammoimage, *knifeammoimage, *glaunchammoimage,
@@ -6568,7 +6575,7 @@ u32 portAmmoIconPtr(u32 icon)
         *magnumammoimage, *goldengunammoimage, *remotemineammoimage,
         *timedmineammoimage, *proxmineammoimage, *tankammoimage;
     struct sImageTableEntry **slots[14];
-    u32 idx;
+    uintptr_t idx;
 
     slots[0] = &ammo9mmimage;        slots[1] = &rifleammoimage;
     slots[2] = &shotgunammoimage;    slots[3] = &knifeammoimage;
@@ -6587,7 +6594,7 @@ u32 portAmmoIconPtr(u32 icon)
     {
         return 0;
     }
-    return (u32) *slots[idx];
+    return (uintptr_t) *slots[idx];
 }
 #endif
 
@@ -6764,9 +6771,9 @@ Gfx *generate_ammo_total_microcode(Gfx *gdl)
     s32 rightx;
     s32 reserveammo;
     s32 magammo;
-    u32 imageoffset_r;
+    uintptr_t imageoffset_r;
     s32 textwidth_r;
-    u32 imageoffset_l;
+    uintptr_t imageoffset_l;
     s32 textwidth_l = 0; /* read at the mission-timer call even with no left icon */
 
     if (g_CurrentPlayer->gunammooff == 0)
@@ -7069,7 +7076,7 @@ Gfx *gunDrawWatchAmmoDisplay(Gfx *gdl)
     s32 ammotype;
     s32 reserveammo;
     s32 magammo;
-    u32 imageoffset;
+    uintptr_t imageoffset;
     s32 textwidth;
     s32 pad;
 
@@ -7263,11 +7270,11 @@ static Gfx *portTargetRectQ(Gfx *g, s32 x1q, s32 y1q, s32 x2q, s32 y2q)
     return g + 1;
 }
 
-static void portDrawTargetPlus(s32 *gdl)
+static void portDrawTargetPlus(Gfx **gdl)
 {
     extern f32 portAimReachX(void);
     extern f32 g_bondviewSceneWideFactor;
-    Gfx *g = (Gfx *) *gdl;
+    Gfx *g = *gdl;
     f32 reachx = portAimReachX();
     f32 fx = g_CurrentPlayer->crosshair_angle.f[0];
     f32 fy = g_CurrentPlayer->crosshair_angle.f[1];
@@ -7345,13 +7352,13 @@ static void portDrawTargetPlus(s32 *gdl)
     {
         PORT_HUD_ANCHOR_OFF(g);
     }
-    *gdl = (s32) g;
+    *gdl = g;
 }
 #endif
 
-void gunDrawSight(s32 *gdl) {
+void gunDrawSight(Gfx **gdl) {
 
-    s32 sp54;
+    Gfx *sp54;
     f32 xypos[2];
     f32 halfedxy[2];
 
@@ -7394,7 +7401,7 @@ void gunDrawSight(s32 *gdl) {
              * repointing the sight's SETTIMG at that copy. */
             extern s32 portPlayerCrosshairColor(s32 player);
             extern const void *portTexCrosshairCopyFor(s32 rgb);
-            Gfx *from = (Gfx *) sp54;
+            Gfx *from = sp54;
             const s32 want = portPlayerCrosshairColor(get_cur_playernum());
 
             texSelect(&sp54, crosshairimage, 4, 0, 0);
@@ -7403,12 +7410,12 @@ void gunDrawSight(s32 *gdl) {
                 const void *copy = portTexCrosshairCopyFor(want);
                 Gfx *g;
 
-                for (g = from; copy != NULL && g < (Gfx *) sp54; g++)
+                for (g = from; copy != NULL && g < sp54; g++)
                 {
                     if ((g->words.w0 >> 24) == (u32) (u8) G_SETTIMG
-                        && g->words.w1 == (u32) (uintptr_t) crosshairimage->index)
+                        && g->words.w1 == (uintptr_t) crosshairimage->index)
                     {
-                        g->words.w1 = (u32) (uintptr_t) copy;
+                        g->words.w1 = (uintptr_t) copy;
                     }
                 }
             }
@@ -7441,21 +7448,21 @@ void gunDrawSight(s32 *gdl) {
 
             if (reachx > 1.001f)
             {
-                Gfx *agdl = (Gfx *) sp54;
+                Gfx *agdl = sp54;
                 PORT_HUD_ANCHOR(agdl, PORT_HUD_ANCHOR_SPAN);
-                sp54 = (s32) agdl;
+                sp54 = agdl;
                 xypos[0] = bondviewAimUnpinX(xypos[0]);
                 halfedxy[0] = halfedxy[0] / g_bondviewSceneWideFactor;
             }
             /* CROSSHAIR COLOUR: bondwalk2.c owns the tint-or-vanilla
              * decision for every crosshair sprite in the game. */
-            portDisplayCrosshairImage((Gfx **) &sp54, xypos, halfedxy, 0x20, 0x20, 0x6E,
+            portDisplayCrosshairImage(&sp54, xypos, halfedxy, 0x20, 0x20, 0x6E,
                                       (crosshairimage->level > 0));
             if (reachx > 1.001f)
             {
-                Gfx *agdl = (Gfx *) sp54;
+                Gfx *agdl = sp54;
                 PORT_HUD_ANCHOR_OFF(agdl);
-                sp54 = (s32) agdl;
+                sp54 = agdl;
             }
         }
 #else

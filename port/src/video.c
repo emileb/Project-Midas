@@ -29,6 +29,8 @@
 #endif
 #include "game/frametiming.h"   /* portTickSetHz: [display] tickhz */
 #include "romdata.h"            /* romdataIsIniKey: [data] keys are not "unknown controls" */
+extern s32 portIniWriteStrs(const char *section, const char *const *keys, const char *const *vals, s32 n);
+extern s32 portVideoIniSetKey(const char *key, const char *value);
 
 /* port_console.c: same output as the fprintf(stderr, ...) this replaced,
  * plus a silent copy in the tilde console ring (spec section 7). */

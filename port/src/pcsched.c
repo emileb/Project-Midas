@@ -24,6 +24,26 @@
 #include "sched.h"
 #include "game/frametiming.h"   /* portTickHz: GE_TICKHZ pump rate */
 
+#ifdef __APPLE__
+/* macOS has no clock_nanosleep: sleep what is left until the absolute
+ * CLOCK_MONOTONIC target, returning EINTR like the real one. */
+static int port_clock_nanosleep_abs(const struct timespec *target)
+{
+    struct timespec now, d;
+    long long ns;
+
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    ns = (long long) (target->tv_sec - now.tv_sec) * 1000000000LL + (target->tv_nsec - now.tv_nsec);
+    if (ns <= 0) {
+        return 0;
+    }
+    d.tv_sec = (time_t) (ns / 1000000000LL);
+    d.tv_nsec = (long) (ns % 1000000000LL);
+    return nanosleep(&d, NULL) == 0 ? 0 : errno;
+}
+#define clock_nanosleep(clk, flags, target, rem) port_clock_nanosleep_abs(target)
+#endif
+
 /* port_console.c: same output as the fprintf(stderr, ...) this replaced,
  * plus a silent copy in the tilde console ring (spec section 7). */
 extern void portConLogf(const char *fmt, ...);
@@ -159,7 +179,7 @@ void portAllocHighReserve(void)
 
     for (attempt = 0; attempt < 8 && s_HighArena == NULL && !portAllocHighSkipHints(); attempt++)
     {
-        s_HighArena = portAllocHighRaw((void *) (0x30000000u + 0x10000000u * (u32) attempt), PORT_HIGH_ARENA_SIZE);
+        s_HighArena = portAllocHighRaw((void *) (uintptr_t) (0x30000000u + 0x10000000u * (u32) attempt), PORT_HIGH_ARENA_SIZE);
     }
 #ifdef _WIN32
     if (s_HighArena == NULL)
@@ -220,7 +240,7 @@ void *portAllocHigh(u32 size)
 
     for (attempt = 0; attempt < 8 && !portAllocHighSkipHints(); attempt++)
     {
-        void *p = portAllocHighRaw((void *) (0x50000000u + 0x08000000u * (u32) attempt), size);
+        void *p = portAllocHighRaw((void *) (uintptr_t) (0x50000000u + 0x08000000u * (u32) attempt), size);
         if (p != NULL)
         {
             return p;
@@ -255,7 +275,7 @@ void *portAllocHighDedicated(u32 size)
     size = (size + 0xFFFFu) & ~0xFFFFu;
     for (attempt = 0; attempt < 8 && !portAllocHighSkipHints(); attempt++)
     {
-        void *p = portAllocHighRaw((void *) (0x50000000u + 0x08000000u * (u32) attempt), size);
+        void *p = portAllocHighRaw((void *) (uintptr_t) (0x50000000u + 0x08000000u * (u32) attempt), size);
         if (p != NULL)
         {
             return p;

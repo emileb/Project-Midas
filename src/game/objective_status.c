@@ -7,6 +7,13 @@
 #include "PR/os.h"
 #include "str.h"
 #include "bondview.h"
+#include "bondinv.h"
+#include "chraction.h"
+#include "debugmenu_handler.h"
+#include "gunfire.h"
+#include "lv.h"
+#include "propobj.h"
+#include "loadobjectmodel.h"
 
 //Public variables - move to header
 // bss

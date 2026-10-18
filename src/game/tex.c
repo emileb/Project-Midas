@@ -4,6 +4,7 @@
 #include "lv.h"
 #include "image.h"
 #include "tex.h"
+#include "unk_092E50.h"
 
 s32 g_TexLutMode;
 s32 dword_CODE_bss_8008D144; // unused/padding
@@ -835,6 +836,8 @@ s32 texLoadFromGdl(Gfx *src, s32 srcsize, Gfx *dst, void *texpool)
     s32 dbgSeen = 0, dbgFound = 0, dbgMissed = 0, dbgFirstMiss = -1;
 #endif
 
+    /* TODO(64bit) layout: srcsize is in N64 bytes (8 per command), not
+     * host bytes; host Gfx is 16 bytes on a 64-bit host. */
     count = srcsize >> 3;
 
     sub_GAME_7F0CC4C8();
@@ -1159,7 +1162,7 @@ s32 texLoadFromGdl(Gfx *src, s32 srcsize, Gfx *dst, void *texpool)
         lightFixtureEntryEnd(out);
     }
 
-    return ((s32)out) - ((s32)dst);
+    return (s32)((uintptr_t)out - (uintptr_t)dst);
 }
 
 
@@ -1168,6 +1171,8 @@ s32 texLoadFromGdl(Gfx *src, s32 srcsize, Gfx *dst, void *texpool)
 */
 void texCopyGdls(Gfx *arg0, Gfx *arg1, s32 arg2)
 {
+    /* TODO(64bit) layout: 8-byte N64 Gfx count, but arg0/arg1 step by host
+     * sizeof(Gfx) (16) and only 8 bytes of each slot are written on PC. */
     arg2 = (arg2 >> 3);
     arg0 = arg0 + (arg2 - 1);
     arg1 = arg1 + (arg2 - 1);

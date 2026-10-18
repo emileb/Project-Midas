@@ -7,13 +7,45 @@ project(ge007 C)
 
 set(CMAKE_C_STANDARD 11)
 
+# GE_64BIT: native 64-bit targets (macOS arm64, Android arm64) instead of the
+# i686 route. Pointers are 8 bytes and Gfx is 16, so ROM data is converted to
+# native layout at load time rather than used in place.
+if(APPLE OR ANDROID)
+    set(GE_64BIT ON)
+else()
+    set(GE_64BIT OFF)
+endif()
+
+if(GE_64BIT)
+    # arm64 floats are already IEEE single; stop clang fusing a*b+c into FMA,
+    # which rounds differently from the N64 FPU.
+    add_compile_options(-ffp-contract=off)
+    add_compile_definitions(GE_64BIT=1)
+    # Apple's fortified stdio turns sprintf into a macro that collides with
+    # GE's own sprintf (src/sprintf.c)
+    add_compile_definitions(_FORTIFY_SOURCE=0)
+    # pointer<->int casts silently truncate on 64-bit, so they are errors here;
+    # -w would hide them, so silence everything else with -Wno-everything instead
+    add_compile_options(
+        -Wno-everything
+        $<$<COMPILE_LANGUAGE:C>:-Werror=int-conversion>
+        $<$<COMPILE_LANGUAGE:C>:-Werror=implicit-function-declaration>
+        $<$<COMPILE_LANGUAGE:C>:-Werror=incompatible-function-pointer-types>
+        $<$<COMPILE_LANGUAGE:C>:-Werror=pointer-to-int-cast>
+        $<$<COMPILE_LANGUAGE:C>:-Werror=int-to-pointer-cast>
+        $<$<COMPILE_LANGUAGE:C>:-Werror=void-pointer-to-int-cast>
+        $<$<COMPILE_LANGUAGE:C>:-Werror=int-to-void-pointer-cast>)
+else()
+    add_compile_options(
+        -m32
+        # Use SSE scalar floats so every operation rounds to single precision like
+        # the N64 FPU; x87's 80-bit excess precision flips borderline comparisons
+        # (it broke the stan.c tile-walk edge test and room visibility in Egypt).
+        -msse2
+        -mfpmath=sse)
+endif()
+
 add_compile_options(
-    -m32
-    # Use SSE scalar floats so every operation rounds to single precision like
-    # the N64 FPU; x87's 80-bit excess precision flips borderline comparisons
-    # (it broke the stan.c tile-walk edge test and room visibility in Egypt).
-    -msse2
-    -mfpmath=sse
     -fno-strict-aliasing
     -fwrapv
     -funsigned-char
@@ -29,7 +61,7 @@ add_compile_options(
     -O2
     # (Audit recipe: swap the -w below for -Wreturn-type and rebuild, since
     # falling off a non-void function is live UB at -O2. Keep the tree clean.)
-    -w
+    $<$<NOT:$<BOOL:${GE_64BIT}>>:-w>
     # C-only: game code is self-contained against repo-local headers;
     # fast3d C++ needs hosted stdlib and no ms-extensions quirks.
     $<$<COMPILE_LANGUAGE:C>:-ffreestanding>
@@ -49,7 +81,10 @@ if(WIN32)
                      -Wl,--image-base=0x10000000 -Wl,--disable-dynamicbase
                      -Wl,--stack,16777216)
     link_libraries(dbghelp)
-else()
+elseif(APPLE)
+    # 16MB main-thread stack, as on Windows (recursive room/portal walks)
+    add_link_options(-Wl,-stack_size,0x1000000)
+elseif(NOT GE_64BIT)
     add_link_options(-m32 -no-pie)
 endif()
 
@@ -67,8 +102,18 @@ endif()
 # port/include: shim<->scheduler interface (port_libultra.h). src/libultra:
 # lets vitbl.c resolve <io/viint.h>. Both appended LAST, so no include that
 # resolved before can be shadowed.
-include_directories(. include include/ultra64 include/PR src src/game src/inflate
+set(GE_INCLUDE_DIRS . include include/ultra64 include/PR src src/game src/inflate
                     port/include src/libultra)
+if(GE_64BIT)
+    # include/ has its own math.h/stdlib.h/string.h for the game code; libc++
+    # (fast3d) must find the system ones first, so C++ searches the repo last.
+    foreach(d ${GE_INCLUDE_DIRS})
+        add_compile_options($<$<COMPILE_LANGUAGE:C>:-I${CMAKE_SOURCE_DIR}/${d}>
+                            $<$<COMPILE_LANGUAGE:CXX>:-idirafter${CMAKE_SOURCE_DIR}/${d}>)
+    endforeach()
+else()
+    include_directories(${GE_INCLUDE_DIRS})
+endif()
 
 # Game logic: everything in src/game.
 file(GLOB GAME_SRC CONFIGURE_DEPENDS src/game/*.c)
@@ -216,6 +261,7 @@ endif()
 # their weak file symbols resolve to NULL (ob_end.seg always lives in ob_seg.s).
 set(PORT_ASSET_KEEP_SYMS PlegalpageZ PnintendologoZ PgoldeneyelogoZ)
 function(port_asset_record obj sym)
+    set_property(GLOBAL APPEND PROPERTY PORT_ASSET_ALL_SYMS ${sym})
     if(${sym} IN_LIST PORT_ASSET_KEEP_SYMS)
         set_property(GLOBAL APPEND PROPERTY PORT_ASSET_OBJS_KEEP ${obj})
     else()
@@ -259,13 +305,30 @@ get_property(ASSET_OBJS_SERVED GLOBAL PROPERTY PORT_ASSET_OBJS_SERVED)
 # GE_ROMDATA_FALLBACK OFF: drop the served asset objects (models/bg/setups/
 # stans/text/briefs) - the exe then carries none of Rare's data and the ROM
 # is mandatory. ON keeps them for the GE_ROMDATA=0 / missing-ROM fallback.
-if(GE_ROMDATA_FALLBACK)
+if(GE_64BIT)
+    # N64-layout asset objects can't be linked into a 64-bit build (8-byte
+    # pointers, no objcopy --add-symbol on Mach-O): everything comes off the ROM.
+    set(ASSET_OBJS)
+    if(APPLE)
+        # ELF leaves the weak file symbols (assets/obseg/obseg.h) NULL when
+        # their objects are dropped; ld64 refuses, so define them as absolute 0.
+        get_property(ASSET_ALL_SYMS GLOBAL PROPERTY PORT_ASSET_ALL_SYMS)
+        set(nullsyms "/* generated by CMakeLists.txt: asset file symbols with no object (ROM-served) */\n")
+        foreach(sym ${ASSET_ALL_SYMS})
+            string(APPEND nullsyms "__asm__(\".globl _${sym}\\n.set _${sym}, 0\");\n")
+        endforeach()
+        file(WRITE ${CMAKE_BINARY_DIR}/generated/asset_nullsyms.c "${nullsyms}")
+        set(ASSET_OBJS ${CMAKE_BINARY_DIR}/generated/asset_nullsyms.c)
+    endif()
+elseif(GE_ROMDATA_FALLBACK)
     set(ASSET_OBJS ${ASSET_OBJS_KEEP} ${ASSET_OBJS_SERVED})
 else()
     set(ASSET_OBJS ${ASSET_OBJS_KEEP})
     message(STATUS "GE_ROMDATA_FALLBACK=OFF: dropping the served asset objects from the exe (ROM mandatory)")
 endif()
-set_source_files_properties(${ASSET_OBJS} PROPERTIES EXTERNAL_OBJECT TRUE GENERATED TRUE)
+if(NOT GE_64BIT)
+    set_source_files_properties(${ASSET_OBJS} PROPERTIES EXTERNAL_OBJECT TRUE GENERATED TRUE)
+endif()
 
 # Loose single-TU asset data (unique symbol names; compiled like game code):
 set(ASSET_LOOSE_SRC
@@ -376,6 +439,16 @@ if(GE_ROMDATA_FALLBACK)
     list(APPEND ASSET_LOOSE_SRC ${ASSET_LOOSE_FALLBACK_SRC})
 endif()
 
+# GE_GLES: OpenGL ES 3.0 only (Android; on macOS through ANGLE)
+if(ANDROID)
+    option(GE_GLES "Render with OpenGL ES 3.0 only" ON)
+else()
+    option(GE_GLES "Render with OpenGL ES 3.0 only" OFF)
+endif()
+if(GE_GLES)
+    add_compile_definitions(GE_GLES=1)
+endif()
+
 if(GE_VIDEO)
     enable_language(CXX)
     set(CMAKE_CXX_STANDARD 20) # gfx_cc.h uses operator<=> (PD builds C++20)
@@ -443,6 +516,19 @@ if(GE_VIDEO)
         # the game needs SDL2.dll beside the exe
         add_custom_command(TARGET ge POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SDL2_ROOT}/bin/SDL2.dll $<TARGET_FILE_DIR:ge>)
+    elseif(APPLE)
+        # SDL2 from Homebrew (sdl2-compat); GL entry points come through
+        # SDL_GL_GetProcAddress, so only the framework link is needed here.
+        find_package(SDL2 REQUIRED CONFIG)
+        target_link_libraries(ge SDL2::SDL2 "-framework OpenGL")
+        # ANGLE (GLES over Metal) for GE_GLES / --gl-version 3.0es: copy its
+        # libEGL.dylib + libGLESv2.dylib beside the game.
+        set(ANGLE_LIB_DIR "" CACHE PATH "folder holding ANGLE's libEGL.dylib and libGLESv2.dylib")
+        if(ANGLE_LIB_DIR)
+            add_custom_command(TARGET ge POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                    ${ANGLE_LIB_DIR}/libEGL.dylib ${ANGLE_LIB_DIR}/libGLESv2.dylib $<TARGET_FILE_DIR:ge>)
+        endif()
     else()
         # 32-bit SDL2: needs libsdl2-dev:i386 (+ libgl-dev:i386), or set
         # SDL2_LINUX_ROOT to a self-built prefix (e.g. CI's cached, user-writable

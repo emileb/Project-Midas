@@ -8,6 +8,7 @@
 #include "decompress.h"
 #ifndef TARGET_N64
 #include "frametiming.h" /* tickhz=hw texture decode price */
+extern int printf(const char *fmt, ...); /* PC bring-up logging */
 #endif
 
 
@@ -430,7 +431,7 @@ s32 texAlignIndices(u8 *src, s32 width, s32 height, s32 format, u8 *dst)
             src++;
         }
 
-        outptr = (u8 *)(((u32)outptr + 7) & ~7);
+        outptr = (u8 *)(((uintptr_t)outptr + 7) & ~(uintptr_t)7);
     }
 
     return outptr - dst;
@@ -1746,9 +1747,9 @@ void texReadAlphaBits(u8 *image,s32 count)
  */
 s32 texReadUncompressed(u8 *dst, s32 width, s32 height, s32 format)
 {
-	u32 *dst32 = (u32 *)(((u32)dst + 0xf) & ~0xf);
-	u16 *dst16 = (u16 *)(((u32)dst + 7) & ~7);
-	u8 *dst8 = (u8 *)(((u32)dst + 7) & ~7);
+	u32 *dst32 = (u32 *)(((uintptr_t)dst + 0xf) & ~(uintptr_t)0xf);
+	u16 *dst16 = (u16 *)(((uintptr_t)dst + 7) & ~(uintptr_t)7);
+	u8 *dst8 = (u8 *)(((uintptr_t)dst + 7) & ~(uintptr_t)7);
 	s32 x;
 	s32 y;
 
@@ -2437,7 +2438,7 @@ struct tex *texFindInPool(s32 texturenum, struct texpool *arg1)
 
 s32 texFreeBytesInBuffer(struct texpool *arg0)
 {
-	return (u32)arg0->rightpos - (u32)arg0->leftpos;
+	return (s32)((uintptr_t)arg0->rightpos - (uintptr_t)arg0->leftpos);
 }
 
 
@@ -2551,7 +2552,7 @@ void texLoad(s32 *updateword, struct texpool *pool)
         extern void portHitchNote(int cat, unsigned long long us);
         const unsigned long long hitchT0 = portProfNow(); /* hitchlog.c */
 #endif
-        alignedcompbuffer = (u8 *) (((u32)compbuffer + 0xF) >> 4 << 4);
+        alignedcompbuffer = (u8 *) (((uintptr_t)compbuffer + 0xF) >> 4 << 4);
 
         if (alignedcompbuffer);
         if (tex);
@@ -2589,7 +2590,7 @@ void texLoad(s32 *updateword, struct texpool *pool)
         {
             // Copy the compressed texture to RAM
             romCopy(alignedcompbuffer,
-                    (u32) &_imagesSegmentRomStart + (thisoffset & 0xfffffff8),
+                    (u8 *) &_imagesSegmentRomStart + (thisoffset & 0xfffffff8),
                     ((u32) (nextoffset - thisoffset) + 0x1f) >> 4 << 4);
 #ifndef TARGET_N64
             { /* tickhz=hw load hitch: the texture's cart read; its decode is priced
@@ -2625,6 +2626,7 @@ void texLoad(s32 *updateword, struct texpool *pool)
                     }
                 }
 #endif
+                /* TODO(64bit) layout: see the store at the end of texLoad. */
                 *updateword = osVirtualToPhysical(pool->start);
                 return;
             }
@@ -2720,6 +2722,9 @@ void texLoad(s32 *updateword, struct texpool *pool)
 #endif
     }
 
+    /* TODO(64bit) layout: updateword is a 32-bit slot (ModelFileTextures.TextureID,
+     * sImageTableEntry.index, or the low half of a host Gfx w1 from
+     * texLoadFromDisplayList), so the pointer is truncated on a 64-bit host. */
     *updateword = osVirtualToPhysical(tex->data);
 }
 

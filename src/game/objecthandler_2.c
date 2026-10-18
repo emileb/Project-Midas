@@ -60,7 +60,8 @@ static Gfx *portConvertModelGdl(Gfx *src, struct texpool *pool)
         return NULL;
     }
 
-    texLoadFromGdl(src, n * (s32)sizeof(Gfx), dst, pool);
+    /* srcsize is in N64 bytes (8 per command): texLoadFromGdl does srcsize >> 3. */
+    texLoadFromGdl(src, n * 8, dst, pool);
     return dst;
 }
 
@@ -134,11 +135,11 @@ void sub_GAME_7F0762E0(ModelFileHeader *objheader, u8 *name, u8 *dst, struct tex
         replacement = portConvertModelGdl(curgdl, buffer);
         if (replacement != NULL)
         {
-            modelNodeReplaceGdl((u32) objheader, curnode, curgdl, replacement);
+            modelNodeReplaceGdl(objheader, curnode, curgdl, replacement);
         }
     }
-    return;
-#endif
+#else
+    /* N64 only: rebases 0x05 segment offsets and packs DLs in the file image. */
 
     filedata = (s32) objheader->Switches;
     filenum = fileGetIndex((char *) name);
@@ -178,7 +179,7 @@ void sub_GAME_7F0762E0(ModelFileHeader *objheader, u8 *name, u8 *dst, struct tex
                     name = (u8 *) ((((s32) (filedata + pcremaining)) - ((s32) objheader->Switches)) - (((u32) curgdl) & 0x00ffffff));
                 }
                 
-                modelNodeReplaceGdl((u32) objheader, curnode, curgdl, (Gfx *) replacementgdl);
+                modelNodeReplaceGdl(objheader, curnode, curgdl, (Gfx *) replacementgdl);
                 
                 replacementgdl += texLoadFromGdl( (Gfx *) ((((u8 *) objheader->Switches) + (((u32) curgdl) & 0x00ffffff)) + delta), (s32) name, (Gfx *) (((u8 *) objheader->Switches) + (replacementgdl & 0x00ffffff)), buffer);
             } 
@@ -189,6 +190,7 @@ void sub_GAME_7F0762E0(ModelFileHeader *objheader, u8 *name, u8 *dst, struct tex
 
         fileSetSize(filenum, (u8 *) filedata, (((s32) name + 0xf) & (~0xf)), dst == 0);
     }
+#endif
 }
 
 
@@ -300,6 +302,8 @@ void load_object_fill_header(struct ModelFileHeader *objheader, u8 *name, u8* ds
     objheader->Switches = (struct ModelNode **)filedata;
     
     // hmmmmmmmmmmmm
+    /* TODO(64bit) layout: the file's Switches[] is u32 slots, but Switches is
+     * ModelNode ** (8-byte stride on a 64-bit host). */
     objheader->Textures = (struct ModelFileTextures *)&((s32*)filedata)[objheader->numSwitches];
     
     objheader->RootNode = (struct ModelNode *)&objheader->Textures[objheader->numtextures];
@@ -351,7 +355,7 @@ void load_object_fill_header(struct ModelFileHeader *objheader, u8 *name, u8* ds
 
             if (converted)
             {
-                sub_GAME_7F075A90(objheader, 0x5000000, (u32) filedata);
+                sub_GAME_7F075A90(objheader, 0x5000000, (uintptr_t) filedata);
             }
             else
             {
@@ -369,7 +373,7 @@ void load_object_fill_header(struct ModelFileHeader *objheader, u8 *name, u8* ds
         {
             /* PORT: compiled-in model data already holds real pointers, so vma
              * == fileramaddr makes the promote a no-op. */
-            sub_GAME_7F075A90(objheader, (s32) filedata, (u32) filedata);
+            sub_GAME_7F075A90(objheader, (uintptr_t) filedata, (uintptr_t) filedata);
         }
     }
     portSwapInlineTextures(objheader, filedata);
@@ -403,8 +407,9 @@ void load_object_fill_header(struct ModelFileHeader *objheader, u8 *name, u8* ds
         {
             /* texLoad replaced TextureID with the data pointer; the texture
              * number sits 8 bytes before it (portGunTexAudit, gun.c) */
+            /* TODO(64bit) layout: TextureID is a u32 slot holding a pointer. */
             u32 id = objheader->Textures[t].TextureID;
-            s32 texnum = (id >= (u32) MAX_TEXTURES) ? *(s16 *) ((u8 *) id - 8) : (s32) id;
+            s32 texnum = (id >= (u32) MAX_TEXTURES) ? *(s16 *) ((u8 *) (uintptr_t) id - 8) : (s32) id;
 
             portHwNoteTexture(texnum, portTexRomBytes(texnum)); /* cart read + last-priced decode */
         }

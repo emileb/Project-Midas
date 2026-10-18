@@ -593,16 +593,30 @@ typedef union
         u16 valueOffset;
     } ModelAnimRootMotionChannel;
 
+    /* The header is used in place in ptr_animation_table, in its N64 layout.
+     * On 64-bit its pointer slots can't hold a pointer, so they keep offsets:
+     * bitDescriptors/bitStream from ptr_animation_table->data, address from the
+     * entries segment (model.c MODELANIM_* resolves them). */
+#if !defined(TARGET_N64) && UINTPTR_MAX > 0xFFFFFFFFu
+#define MODELANIM_OFFSETS 1
+#endif
     typedef struct ModelAnimation
     {
         s32 address;
         u16 unk04; // number of frames in the animation
         u8 unk06;
         u8 unk07; // bit 0 is a loop flag: 0 means freeze anim at end, 1 means loop anim
+#ifdef MODELANIM_OFFSETS
+        u32 bitDescriptors; // 0x08
+        u16 unk0C;
+        u16 unk0E;
+        u32 bitStream; // 0x10
+#else
         ModelAnimBitField *bitDescriptors; // 0x08
         u16 unk0C;
         u16 unk0E;
         u8  *bitStream; // 0x10
+#endif
         s32 unk14;
         s32 unk18;
         s32 unk1c;
@@ -621,7 +635,7 @@ typedef union
         void *ptranimation;        // 0x00
         u16   offsettocurcmd;      // 0x04
         u16   waitcounter;         // 0x06
-        u32   imagenum;            // 0x08
+        struct sImageTableEntry *imagenum; // 0x08: MonitorRecord.tconfig (the two are used interchangeably)
         f32   rotation;            // 0x0C
         f32   curzoomx;            // 0x10
         f32   startzoomx;          // 0x14
@@ -1496,6 +1510,10 @@ typedef union
          * I beleve that "datas" is actually " struct modeldata_root" and that
          * unk1c is the model node data array
          */
+        /* Root-motion ground callback (e.g. sub_GAME_7F01FC10), see Model.unka0. */
+        struct Model;
+        typedef s32 (*ModelGroundFunc)(struct Model *model, struct coord3d *src, struct coord3d *dst, f32 *ground);
+
         typedef struct Model
         {
             s16                unk00;      /*0x00*/   // objInit() indicates that unk00 is a s16...
@@ -1536,8 +1554,8 @@ typedef union
              * Offset 0x32.
             */
             s16               frameb;
-            s32               unk34;
-            s32               unk38;
+            u8               *unk34; /* animation frame bitstream (loadAnimationFrame) */
+            u8               *unk38;
             f32               endframe;
 
             f32               speed; /*0x40*/
@@ -1563,8 +1581,8 @@ typedef union
             */
             s16               frame2b;
 
-            s32               unk64;
-            s32               unk68;
+            u8               *unk64;
+            u8               *unk68;
             f32               unk6c;
             // 0x70
             f32               speed2;
@@ -1584,10 +1602,10 @@ typedef union
             // 0x90
             f32               animloopframe; /*0x90*/
             f32               animloopmerge; /*0x94*/
-            s32               animflipfunc; /*0x98*/
+            void            (*animflipfunc)(void); /*0x98*/
             s32               unk9c;
             // 0xa0
-            s32               unka0; // This is likely a function pointer, see sub_GAME_7F06D490()
+            ModelGroundFunc   unka0; /*0xa0*/
             f32               playspeed; // used by ACT_STAND in chrlv
             f32               animrate;
             f32               unkac;
@@ -3235,7 +3253,7 @@ typedef union
     //[This struct uses original names]
     typedef struct MonitorRecord
     {
-        u32 *cmdlist;   // 0x80	4	image pointer for this monitor
+        uintptr_t *cmdlist;   // 0x80	4	image pointer for this monitor
         u16 offset;     // 0x84	2	[runtime] cur. #commands from start of routine
         s16 pause60;    // 0x86	2	[runtime] loop counter
         struct sImageTableEntry *tconfig;      //0x88	4	[runtime] monitor image# or p->image header
@@ -3692,7 +3710,7 @@ typedef union
     typedef struct TankRecord
     {
         inherits ObjectRecord;
-        collision_data *collision /*0x80*/;
+        s32 collision /*0x80: edge count, then the inline collision data */;
         rect4f  rect;       /*0x84*/
         //s32 unk88;
         //s32 unk8C;

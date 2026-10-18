@@ -163,7 +163,7 @@ typedef struct {
     s32                         sample;
     s32                         lastsam;
     s32                         first;
-    s32                         memin; 
+    intptr_t                    memin; /* PC: host address */
 } ALLoadFilter;
 
 void    alLoadNew(ALLoadFilter *f, ALDMANew dma, ALHeap *hp);
@@ -256,7 +256,7 @@ s32     alResampleParam(void *f, s32 paramID, void *param);
 
 typedef struct ALSave_s {
     ALFilter            filter;
-    s32	       		dramout;
+    intptr_t   		dramout; /* PC: host address */
     s32                 first;
 } ALSave;
 

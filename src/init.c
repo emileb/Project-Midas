@@ -13,6 +13,10 @@
 #include "thread_config.h"
 
 #include "usb.h"
+#include "boss.h"
+#include "pi.h"
+#include "token.h"
+#include "vi.h"
 
 /**
  * EU .data, offset from start of data_seg : 0x22B0
@@ -109,6 +113,9 @@ void init(void)
     s32 *stack_pointer;
     u8 *dataziprom;
 
+#ifdef TARGET_N64
+    /* N64 boot: unpack the code segment from fixed 32-bit N64 addresses.
+     * PC never calls init() (port/src/main.c owns startup). */
     csegmentSegmentVaddrStart = get_csegmentSegmentStart();
     cdataSegmentRomStart = get_cdataSegmentRomStart();
     cdataSegmentRomSize = (u8 *) get_cdataSegmentRomEnd() - cdataSegmentRomStart;
@@ -134,6 +141,7 @@ void init(void)
         {
         }
     }
+#endif
 
     osInitialize();
 
@@ -223,7 +231,7 @@ void idleCreateThread(void)
  */
 void rmonCreateThread(void)
 {
-    osCreateThread(&rmonThread, RMON_THREAD_ID, rmonMain, NULL, setSPToEnd(&sp_rmon, sizeof(sp_rmon)), RMON_THREAD_PRIORITY);
+    osCreateThread(&rmonThread, RMON_THREAD_ID, (void (*)(void *))rmonMain, NULL, setSPToEnd(&sp_rmon, sizeof(sp_rmon)), RMON_THREAD_PRIORITY);
     osStartThread(&rmonThread);
 }
 

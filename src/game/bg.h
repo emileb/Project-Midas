@@ -21,16 +21,16 @@ struct levelentry
 #define PORTMAX 200
 
 #ifdef TARGET_N64
-#define BG_SEG_TO_PTR(base, off) ((void *) (((u32) (base)) + (((u32) (off)) + 0xF1000000)))
+#define BG_SEG_TO_PTR(base, off) ((void *) (((uintptr_t) (base)) + (((uintptr_t) (off)) + 0xF1000000)))
 #else
 /* PC: compiled-in bg files already hold real pointers, which pass through
  * unchanged; only values below 0x400000 or tagged with segment 0x0F are treated
  * as offsets (a `>= 0x10000000` test breaks on Windows). */
 #define BG_SEG_IS_OFFSET(off) \
-    ((u32) (off) < 0x00400000u || (((u32) (off)) >> 24) == 0x0Fu)
+    ((uintptr_t) (off) < 0x00400000u || (((uintptr_t) (off)) >> 24) == 0x0Fu)
 #define BG_SEG_TO_PTR(base, off) \
-    (BG_SEG_IS_OFFSET(off) ? ((void *) (((u32) (base)) + (((u32) (off)) & 0x00FFFFFFu))) \
-                           : ((void *) (u32) (off)))
+    (BG_SEG_IS_OFFSET(off) ? ((void *) (((uintptr_t) (base)) + (((uintptr_t) (off)) & 0x00FFFFFFu))) \
+                           : ((void *) (uintptr_t) (off)))
 #endif
 
 typedef struct RoomVtxBatchBounds {
@@ -214,7 +214,7 @@ bool bgTestBulletHitBackground(coord3d *from, coord3d *to, s32 roomnum, struct H
 void delete_room_data(s32 roomID);
 void load_bg_file(LEVEL_INDEX stagenum);
 
-s32 bgDebugRemoved7F0B9DE4(s32 arg0, s32 arg1, s32 arg2);
+Gfx *bgDebugRemoved7F0B9DE4(Gfx *arg0, s32 arg1, s32 arg2);
 void bgRemoved7F0B9DF4(s32 arg0);
 s8 bgSwapConnectedRooms(s32 index);
 s32 bgGetDataPortalsControlBytes1Bit1(s32 index);
@@ -251,5 +251,16 @@ f32 bgGetLevelFloorY(void);
 void bgFindRoomsAlongSegment(coord3d *pos1, coord3d *pos2, u8 *initialRooms, u8 *outRoomSet, s32 *outRoomNums, s32 *outRoomNumsCount, s32 outRoomNumsMax);
 s32 sub_GAME_7F0B9E04(coord3d *arg0, coord3d *arg1);
 void bgRoomCalcBB(s32 room);
+
+char *bgDebPrintROOMID(s32 roomId);
+s32 bgGetConnectedRooms(s32 roomIndex, s32*list, s32 max);
+void bgGetRoomCenter(s32 roomnum, coord3d *dst);
+bool bgProjectRoomCoordToScreen(coord3d*src, coord3d*dst);
+bool bgTestRayIntersectsBbox(coord3d *origin, coord3d *dir, s32 *bbox_min, s32 *bbox_max);
+void cleanup_rooms(void);
+s32 getIndexOfPORTALID(bg_portal_entry *portalID);
+s32 getMaxNumRooms(void);
+u8 getROOMID_isNeighborToRendered(s32 roomID);
+s32 sub_GAME_7F0B993C(s32 arg0);
 
 #endif

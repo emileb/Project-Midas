@@ -514,6 +514,7 @@ static void portArmWatchpoints(void)
 }
 #else
 #include <execinfo.h>
+#include <unistd.h> /* _exit */
 
 /* Bring-up crash handler: print a raw backtrace (addresses decode with
  * addr2line -e build_pc/ge) so crashes are diagnosable without gdb. */
@@ -585,6 +586,10 @@ static char sPortRootDir[1024]; /* with trailing separator; "" = cwd fallback */
 #ifndef _WIN32
 #include <unistd.h> /* readlink */
 #endif
+#ifdef __APPLE__
+#include <mach-o/dyld.h> /* _NSGetExecutablePath */
+#include <string.h>
+#endif
 
 static void portInitRootDir(const char *argv0)
 {
@@ -604,7 +609,12 @@ static void portInitRootDir(const char *argv0)
      * eeprom.bin/midas.ini across directories. So use /proc/self/exe, the Linux
      * equivalent of GetModuleFileNameA, and keep argv[0] only as the fallback
      * for other POSIX. */
+#ifdef __APPLE__
+    uint32_t sz = sizeof(sPortRootDir);
+    ssize_t n = (_NSGetExecutablePath(sPortRootDir, &sz) == 0) ? (ssize_t) strlen(sPortRootDir) : -1;
+#else
     ssize_t n = readlink("/proc/self/exe", sPortRootDir, sizeof(sPortRootDir) - 1);
+#endif
     if (n > 0 && (size_t) n < sizeof(sPortRootDir) - 1) {
         sPortRootDir[n] = '\0';
     } else if (argv0 == NULL ||

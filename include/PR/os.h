@@ -119,7 +119,7 @@ typedef struct {
 	u16     	transferMode;   /* Block, Track, or sector?   */
 	u16		blockNum;	/* which block is transfering */
 	s32     	sectorNum;      /* which sector is transfering */
-	u32     	devAddr;        /* Device buffer address */
+	uintptr_t	devAddr;        /* Device buffer address */
 	u32		bmCtlShadow;	/* asic bm_ctl(510) register shadow ram */
 	u32		seqCtlShadow;	/* asic seq_ctl(518) register shadow ram */
 	__OSBlockInfo	block[2];	/* bolck transfer info */
@@ -856,8 +856,14 @@ extern void		osSetTLBASID(s32);
 
 /* Address translation routines and macros */
 
+#ifdef TARGET_N64
 extern u32		 osVirtualToPhysical(void *);
 extern void *		 osPhysicalToVirtual(u32);
+#else
+/* PC port: identity, so the "physical" address is the host pointer */
+extern uintptr_t	 osVirtualToPhysical(void *);
+extern void *		 osPhysicalToVirtual(uintptr_t);
+#endif
 
 #ifdef TARGET_N64
 #define	OS_K0_TO_PHYSICAL(x)	(u32)(((char *)(x)-0x80000000))
@@ -869,8 +875,8 @@ extern void *		 osPhysicalToVirtual(u32);
 /* PC port: no KSEG mapping - host pointers pass through unchanged, matching
  * the identity osVirtualToPhysical shim. The N64 arithmetic wrapped host
  * pointers into wild addresses (first-frame viewport crash). */
-#define	OS_K0_TO_PHYSICAL(x)	((u32)(x))
-#define	OS_K1_TO_PHYSICAL(x)	((u32)(x))
+#define	OS_K0_TO_PHYSICAL(x)	((uintptr_t)(x))
+#define	OS_K1_TO_PHYSICAL(x)	((uintptr_t)(x))
 
 #define	OS_PHYSICAL_TO_K0(x)	((void *)(x))
 #define	OS_PHYSICAL_TO_K1(x)	((void *)(x))
@@ -895,10 +901,10 @@ extern u32 		osPiGetStatus(void);
 extern s32		osPiGetDeviceType(void);
 extern s32		osPiRawWriteIo(u32, u32);
 extern s32		osPiRawReadIo(u32, u32 *);
-extern s32		osPiRawStartDma(s32, u32, void *, u32);
+extern s32		osPiRawStartDma(s32, uintptr_t, void *, u32);
 extern s32		osPiWriteIo(u32, u32);
 extern s32		osPiReadIo(u32, u32 *);
-extern s32		osPiStartDma(OSIoMesg *, s32, s32, u32, void *, u32,
+extern s32		osPiStartDma(OSIoMesg *, s32, s32, uintptr_t, void *, u32,
 				     OSMesgQueue *);
 extern void		osCreatePiManager(OSPri, OSMesgQueue *, OSMesg *, s32);
 

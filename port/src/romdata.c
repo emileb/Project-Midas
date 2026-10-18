@@ -74,6 +74,10 @@ extern void portConLogf(const char *fmt, ...);
  * this is libc's own expansion, brought back under a port name */
 #ifdef _WIN32
 #define port_errno (*_errno())
+#elif defined(__APPLE__)
+#define port_errno (*__error())
+#elif defined(__ANDROID__)
+#define port_errno (*__errno())
 #else
 #define port_errno (*__errno_location())
 #endif
@@ -879,6 +883,51 @@ static const struct {
     { "LoptionsE", 35, "wide\n" },          /* was "16:9" */
 };
 
+#if UINTPTR_MAX > 0xFFFFFFFFu
+/* 64-bit: a bank's slot table holds 4-byte offsets and can't take host
+ * pointers, so each loaded bank gets a native table on the side, found by the
+ * bank's data pointer (language.c langGet). A stage bank reloaded at the same
+ * address replaces its entry. */
+#define TEXT_TABLES_MAX 64
+static struct {
+    const u8 *data;
+    const char **slots;
+    u32 count;
+} sTextTables[TEXT_TABLES_MAX];
+
+static const char **romdataTextTableFor(const u8 *data, u32 count)
+{
+    s32 i, freeslot = -1;
+    for (i = 0; i < TEXT_TABLES_MAX; i++) {
+        if (sTextTables[i].data == data) {
+            break;
+        }
+        if (freeslot < 0 && sTextTables[i].data == NULL) {
+            freeslot = i;
+        }
+    }
+    if (i == TEXT_TABLES_MAX) {
+        i = freeslot >= 0 ? freeslot : 0;
+    }
+    free(sTextTables[i].slots);
+    sTextTables[i].data = data;
+    sTextTables[i].slots = calloc(count ? count : 1, sizeof(const char *));
+    sTextTables[i].count = count;
+    return sTextTables[i].slots;
+}
+
+const char *romdataTextSlot(const void *bank, u32 slot)
+{
+    s32 i;
+    for (i = 0; i < TEXT_TABLES_MAX; i++) {
+        if (sTextTables[i].data == bank) {
+            return slot < sTextTables[i].count ? sTextTables[i].slots[slot] : NULL;
+        }
+    }
+    return NULL;
+}
+#endif
+
 static void romdataTextPreprocess(s32 index, u8 *data, u32 size)
 {
     u32 n = 0;
@@ -919,31 +968,34 @@ static void romdataTextPreprocess(s32 index, u8 *data, u32 size)
         return;
     }
     n = first / 4;
+#if UINTPTR_MAX > 0xFFFFFFFFu
+    const char **slots = romdataTextTableFor(data, n);
+#endif
     for (i = 0; i < n; i++) {
         u32 off = be32(data + i * 4);
-        u32 v = 0;
+        const char *v = NULL;
         if (off != 0) {
             if (off >= size) {
                 portConLogf("ge: romdata: text %s: slot %u offset 0x%X beyond the %u-byte bank - zeroed\n",
                         file_resource_table[index].filename, i, off, size);
             } else {
-                v = (u32) (uintptr_t) (data + off);
+                v = (const char *) (data + off);
             }
         }
         {
             size_t p;
             for (p = 0; p < sizeof(sTextPatches) / sizeof(sTextPatches[0]); p++) {
                 if (sTextPatches[p].slot == i && strcmp(sTextPatches[p].bank, bank) == 0) {
-                    v = (u32) (uintptr_t) sTextPatches[p].text;
+                    v = sTextPatches[p].text;
                     patched++;
                 }
             }
         }
-        if (compiled != NULL && v != 0) {
+        if (compiled != NULL && v != NULL) {
             /* a NULL ROM slot is not compared: the generated char *LxE[]
              * arrays drop trailing NULL slots, so compiled[i] may not exist */
             const char *c = compiled[i];
-            const char *r = (const char *) (uintptr_t) v;
+            const char *r = v;
             if (c == NULL || strcmp(c, r) != 0) {
                 if (differ == 0) {
                     firstdiff = i;
@@ -951,7 +1003,14 @@ static void romdataTextPreprocess(s32 index, u8 *data, u32 size)
                 differ++;
             }
         }
-        memcpy(data + i * 4, &v, 4);
+#if UINTPTR_MAX > 0xFFFFFFFFu
+        slots[i] = v;
+#else
+        {
+            u32 w = (u32) (uintptr_t) v;
+            memcpy(data + i * 4, &w, 4);
+        }
+#endif
     }
     if (compiled != NULL) {
         if (differ == 0) {

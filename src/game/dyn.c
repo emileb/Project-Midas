@@ -1,9 +1,12 @@
 #include <ultra64.h>
+#include <string.h>
 #include "dyn.h"
 #include <token.h>
 #include <str.h>
 #include <memp.h>
 #include <macro.h>
+#include "deb.h"
+#include "player.h"
 
 #ifndef TARGET_N64
 #include <stdio.h> /* GE_ROOM_AUDIT dyn-pool watch (see bg.c) */

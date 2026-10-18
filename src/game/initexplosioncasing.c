@@ -2,6 +2,8 @@
 #include <memp.h>
 #include "initexplosioncasing.h"
 #include "explosion.h"
+#include "player.h"
+#include "lv.h"
 
 #ifndef DEBUG
     #ifdef TARGET_N64

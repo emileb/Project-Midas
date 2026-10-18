@@ -1,4 +1,5 @@
 #include <ultra64.h>
+#include <string.h>
 #include <bondconstants.h>
 #include <boss.h>
 #include <fr.h>
@@ -20,6 +21,14 @@
 #include "glass.h"
 #include "frametiming.h"
 #include "assets/obseg/text/LoptionE.h"
+#include "bondinv.h"
+#include "debugmenu_handler.h"
+#include "objective_status.h"
+#include "gunfire.h"
+#include "lv.h"
+#include "bondview2.h"
+#include "mp_music.h"
+extern s32 portInputDeviceCount(void);
 #ifndef TARGET_N64
 #include "port_watchpages.h" /* the port watch pages */
 /* Defined further down, next to the vanilla page drawer they replace; the
@@ -288,6 +297,13 @@ typedef struct WatchContButtonPositions {
     f32 words[55]; /* 0xdc bytes */
 } WatchContButtonPositions;
 
+/* gun.c (gun.h has its own WatchContButtonPositions layout) */
+ITEM_IDS getCurrentPlayerWeaponId(GUNHAND hand);
+Gfx *set_enviro_fog_for_items_in_solo_watch_menu(Gfx *gdl, ITEM_IDS itemid, Mtxf *mtx, s32 arg3, s32 arg4);
+void currentPlayerUnEquipWeaponWrapper(enum GUNHAND hand, enum ITEM_IDS weapid);
+Gfx *watchRenderController(Gfx *gdl, Mtxf *basemtx, s32 envcolour, bool animatebuttons, WatchContButtonPositions *buttonpositions, s8 *contpadnum);
+Gfx *watchRenderControllerOpaque(Gfx *gdl, Mtxf *basemtx, bool animatebuttons, WatchContButtonPositions *buttonpositions, s8 *contpadnum);
+
 //D:80040B68
 // 3D positions for the buttons at the sides of the screen for the 1x control styles.
 WatchContButtonPositions g_1ContButtonPositions[] = {{
@@ -382,7 +398,7 @@ void game_option_select_value(u32 *param_1, u32 param_2);
 void portPlayerOptsAdoptIf(const u32 *value);
 #endif
 void watch_adjust_volume_slider(u16* arg0);
-Gfx *sub_GAME_7F0A3B40(Gfx *gdl, s32 *arg1);
+Gfx *sub_GAME_7F0A3B40(Gfx *gdl, uintptr_t arg1);
 void update_volume_slider_verts(struct WatchVertex *verts, f32 fill_amount, s32 transition_width);
 void sub_GAME_7F0A9684(s8 contpadnum, s32 *counter, f32 *value, f32 *step);
 Gfx *display_text_buttons_dual_control(Gfx *gdl);
@@ -2169,7 +2185,7 @@ Gfx *portWatchMouseDraw(Gfx *gdl)
             portWatchProjectFace(-299.0f, 310.0f, &px0, &py0);
             fprintf(stderr, "ge: watchmouse: hand [%g %g %g %g | %g %g %g %g | %g %g %g %g | %g %g %g %g] fovy %g asp %g scale %g pos %g cot %g pi %g proj(-299,310)=%g,%g\n",
                     m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9], m[10], m[11], m[12], m[13], m[14], m[15],
-                    g_portWatchFovy, g_portWatchAspect, g_CurrentPlayer->watch_scale_destination, g_CurrentPlayer->pause_watch_position, cosf(g_portWatchFovy * (M_PI_F / 360.0f)) / sinf(g_portWatchFovy * (M_PI_F / 360.0f)), (f64) M_PI_F, (f64) px0, (f64) py0);
+                    g_portWatchFovy, g_portWatchAspect, g_CurrentPlayer->something_with_watch_object_instance.scale, g_CurrentPlayer->pause_watch_position, cosf(g_portWatchFovy * (M_PI_F / 360.0f)) / sinf(g_portWatchFovy * (M_PI_F / 360.0f)), (f64) M_PI_F, (f64) px0, (f64) py0);
             fprintf(stderr, "ge: watchmouse: mouse %.1f,%.1f shown %d hover %d\n", sPortWatchMouseX, sPortWatchMouseY, sPortWatchCursorShown, g_portWatchHoverTab);
             fflush(stderr);
         }
@@ -3724,11 +3740,11 @@ Gfx *draw_abort_cancel_confirm(Gfx *gdl)
     s32 sp64;
     s32 sp60;
 
-    s32 pFontFile;
-    s32 pFontChars;
-    s32 sp54;
-    s32 sp50;
-    s32 sp4C;
+    struct font *pFontFile;
+    struct fontchar *pFontChars;
+    char *sp54;
+    char *sp50;
+    char *sp4C;
 
     pFontFile = ptrFontBankGothic;
     pFontChars = ptrFontBankGothicChars;
@@ -3798,14 +3814,14 @@ Gfx *draw_abort_cancel_confirm(Gfx *gdl)
 
 Gfx *draw_text_mission_status(Gfx *gdl)
 {
-    s32 txtptr_1;
-    s32 txtptr_2;
+    char *txtptr_1;
+    char *txtptr_2;
     s32 sp64;
     s32 sp60;
     s32 sp5C;
     s32 sp58;
-    s32 pFontFile;
-    s32 pFontChars;
+    struct font *pFontFile;
+    struct fontchar *pFontChars;
     s32 sp4C;
     s32 joffset;
 
@@ -3856,13 +3872,13 @@ Gfx *empty_draw_function(Gfx *gdl) {
 
 Gfx *draw_text_q_watch_v201_beta(Gfx *gdl)
 {
-    s32 txtptr;
+    char *txtptr;
     s32 sp50;
     s32 sp4C;
     s32 sp48;
     s32 sp44;
-    s32 pFontFile;
-    s32 pFontChars;
+    struct font *pFontFile;
+    struct fontchar *pFontChars;
     s32 joffset;
 
     txtptr = langGet(getStringID(LOPTIONS, OPTION_STR_2B_QWATCHVERSION_LF)); //q watch v2.01 beta
@@ -3922,8 +3938,8 @@ Gfx* draw_current_hand_item_and_ammo(Gfx* gdl) {
     s32 sp88;
     s32 sp84;
     s32 sp80;
-    s32 sp7C;
-    s32 sp78;
+    struct font *sp7C;
+    struct fontchar *sp78;
     s32 temp_v0;
     s32 sp70;
     f32 sp6C;
@@ -4204,12 +4220,12 @@ Gfx *draw_watch_inventory_page(Gfx *gdl, Mtx *param_2)
             s32 i;
             s32 textheight;
             s32 textwidth;
-            s32 pFontFile2;
-            s32 pFontChars2;
+            struct font *pFontFile2;
+            struct fontchar *pFontChars2;
             char string_builder_allocation[2000];
 
 #if defined(VERSION_JP) || defined(VERSION_EU)
-            s32 pFontFile;
+            struct font *pFontFile;
             s32 base_y;
             char formattedString[32];
 #endif
@@ -4277,9 +4293,9 @@ Gfx *draw_watch_inventory_page(Gfx *gdl, Mtx *param_2)
             {
 #if !defined(VERSION_JP) && !defined(VERSION_EU)
                 char formattedString[32];
-                s32 pFontFile;
+                struct font *pFontFile;
 #endif
-                s32 pFontChars;
+                struct fontchar *pFontChars;
                 s32 x2;
                 s32 y2;
                 char *invItemName;
@@ -4333,8 +4349,8 @@ Gfx *unused_draw_watch_inventory_page(Gfx *gdl, Mtx *param_2) {
     s32 sp5C;
     s32 sp58;
     s32 sp54;
-    s32 pFontFile;
-    s32 pFontChars;
+    struct font *pFontFile;
+    struct fontchar *pFontChars;
 
     u16 *long_name;
     s32 temp_2;
@@ -5248,7 +5264,7 @@ Gfx *sub_GAME_7F0A9AB8(Gfx *gdl)
 
 Gfx *display_text_buttons_dual_control(Gfx *gdl)
 {
-    s32 textptr_aux;
+    char *textptr_aux;
 
     gdl = microcode_constructor(gdl);
 
@@ -5441,7 +5457,7 @@ Gfx *draw_watch_controller(Gfx *gdl)
     }
     else
     {
-        gdl = watchRenderControllerOpaque(gdl, &finalmtx, 1, (s32) watchTable, &contpadnum0);
+        gdl = watchRenderControllerOpaque(gdl, &finalmtx, 1, watchTable, &contpadnum0);
     }
 
     if (controllerCheckDualControllerTypesAllowed())
@@ -5492,7 +5508,7 @@ Gfx *draw_watch_controller(Gfx *gdl)
         }
         else
         {
-            gdl = watchRenderControllerOpaque(gdl, &finalmtx, 1, (s32) (&table2), &contpadnum1);
+            gdl = watchRenderControllerOpaque(gdl, &finalmtx, 1, &table2, &contpadnum1);
         }
     }
 
@@ -5544,8 +5560,8 @@ Gfx *draw_watch_control_options_page(Gfx *gdl, Mtx *param_2) {
     s32 sp58;
     s32 sp54;
     s32 sp50;
-    s32 pFontFile;
-    s32 pFontChars;
+    struct font *pFontFile;
+    struct fontchar *pFontChars;
 
 #ifndef TARGET_N64
     /* This tab is the device picker plus the action list, except for a raphnet
@@ -7861,8 +7877,8 @@ Gfx *draw_watch_game_options_page(Gfx *gdl, Mtx *param_2) {
     s32 sp4C;
     s32 sp48;
 
-    s32 pFontFile;
-    s32 pFontChars;
+    struct font *pFontFile;
+    struct fontchar *pFontChars;
 
     gdl = draw_background_health_and_armor(gdl, param_2, 0);
 

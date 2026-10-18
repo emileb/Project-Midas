@@ -356,8 +356,8 @@ static s32 portAcmdValidate(Acmd *list, s32 count)
     s32 c;
 
     for (c = 0; c < count; c++) {
-        u32 w0 = list[c].words.w0;
-        u32 w1 = list[c].words.w1;
+        u32 w0 = (u32)list[c].words.w0; /* packed fields only */
+        uintptr_t w1 = list[c].words.w1; /* may carry a host pointer */
         u32 op = w0 >> 24;
         s32 bad = 0;
 
@@ -408,8 +408,8 @@ void portAcmdRun(Acmd *list, s32 count)
     }
 
     for (c = 0; c < count; c++) {
-        u32 w0 = list[c].words.w0;
-        u32 w1 = list[c].words.w1;
+        u32 w0 = (u32)list[c].words.w0; /* packed fields only */
+        uintptr_t w1 = list[c].words.w1; /* may carry a host pointer */
         u32 op = w0 >> 24;
 
         switch (op) {
@@ -419,7 +419,7 @@ void portAcmdRun(Acmd *list, s32 count)
 
         case A_CLEARBUFF: {
             u32 d = w0 & 0xFFFFFF;
-            u32 n = w1;
+            u32 n = (u32)w1;
 
             if (n > 0 && d < DMEM_SIZE) {
                 if (d + n > DMEM_SIZE) {
@@ -507,7 +507,7 @@ void portAcmdRun(Acmd *list, s32 count)
 
         case A_DMEMMOVE: {
             u32 din = w0 & 0xFFFFFF;
-            u32 dout = w1 >> 16;
+            u32 dout = (u32)(w1 >> 16);
             u32 n = w1 & 0xFFFF;
 
             memmove(&s_Dmem[dout & (DMEM_SIZE - 1)], &s_Dmem[din & (DMEM_SIZE - 1)], n);
@@ -566,7 +566,7 @@ void portAcmdRun(Acmd *list, s32 count)
 
         case A_MIXER: {
             s32 gain = (s16)(w0 & 0xFFFF);
-            const s16 *min = dmem16(w1 >> 16);
+            const s16 *min = dmem16((u32)(w1 >> 16));
             s16 *mout = dmem16(w1 & 0xFFFF);
             s32 n = ((s_BufCount + 15) & ~15) >> 1;
             s32 i;
@@ -585,7 +585,7 @@ void portAcmdRun(Acmd *list, s32 count)
         }
 
         case A_INTERLEAVE: {
-            const s16 *l = dmem16(w1 >> 16);
+            const s16 *l = dmem16((u32)(w1 >> 16));
             const s16 *r = dmem16(w1 & 0xFFFF);
             s16 *o = dmem16(s_BufOut);
             s32 n = s_BufCount >> 1; /* per-channel sample count */

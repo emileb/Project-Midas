@@ -25,10 +25,10 @@ extern struct sImageTableEntry *flareimage5;
 extern u8* img_curpos;
 extern s32 img_bitcount;
 extern s32 *pGlobalimagetable;
-extern s32 globalbank_rdram_offset;
+extern intptr_t globalbank_rdram_offset;
 
 void texReset(void);
 u32 texReadBits(s32 bitCount);
-void texSetBitstring(s32 pos);
+void texSetBitstring(u8 *pos);
 
 #endif

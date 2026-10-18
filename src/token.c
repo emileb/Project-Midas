@@ -1,4 +1,5 @@
 #include "token.h"
+#include <string.h>
 #include "pi.h"
 #include "snd.h"
 #include "game/language.h"

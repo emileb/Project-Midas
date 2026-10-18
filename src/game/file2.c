@@ -1,4 +1,5 @@
 #include <ultra64.h>
+#include <string.h>
 #include <bondconstants.h>
 #include "debugmenu_handler.h"
 #include "joy.h"
@@ -8,6 +9,7 @@
 #include "file2.h"
 #include "front.h"
 #include "cheat.h"
+#include "crc.h"
 #ifndef TARGET_N64
 #include <stdio.h> /* stderr - save-write diagnostics (see file.c portMissionEndLog) */
 #endif

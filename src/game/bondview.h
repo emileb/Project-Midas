@@ -197,7 +197,7 @@ struct hand
   f32 field_A3C;
   f32 field_A40;
   ALSoundState * audioHandle;
-  s32 field_A48;
+  struct ALSoundState_s *field_A48; /* second sound handle (sndPlaySfx writes it) */
   s32 field_A4C;
   s32 field_A50;
   BeamRecord weapon_beam;
@@ -343,11 +343,11 @@ struct player
    * Used as parameter to gbi macro.
    * Offset 0x005c.
    */
-  s32 field_5C;
+  Mtx *field_5C;
 
-  /* 0x0060 */ s32 field_60;
-  /* 0x0064 */ s32 field_64;
-  /* 0x0068 */ s32 field_68;
+  /* 0x0060 */ Mtx *field_60;
+  /* 0x0064 */ Mtx *field_64;
+  /* 0x0068 */ Mtx *field_68;
 
   /**
    * Collision / clipping related.
@@ -692,59 +692,14 @@ struct player
    */
   f32 pause_watch_related_scaled;
 
-  s32 something_with_watch_object_instance;
-
-  s32 field_234;
-  s32 field_238;
-  s32 field_23C;
-  s32 field_240;
-  f32 watch_scale_destination;
-  s32 field_248;
-  s32 field_24C;
-  s32 field_250;
-  s32 field_254;
-
   /**
-   * Some kind of adjustment applied before scaling to set pause_watch_related_scaled.
-   * Offset 0x0258.
+   * The pause watch's model (animInit), with its rwdata at field_2EC. A real
+   * Model so it keeps its size on 64-bit: 0x230-0x2EC on N64. The decomp's
+   * names for its fields were render_pos (field_23C), scale
+   * (watch_scale_destination) and animframe1 (pause_watch_related_adjust).
    */
-  f32 pause_watch_related_adjust;
-  s32 field_25C;
-  s32 field_260;
-  s32 field_264;
-  s32 field_268;
-  s32 field_26C;
-  s32 field_270;
-  s32 field_274;
-  s32 field_278;
-  s32 field_27C;
-  s32 field_280;
-  s32 field_284;
-  s32 field_288;
-  s32 field_28C;
-  s32 field_290;
-  s32 field_294;
-  s32 field_298;
-  s32 field_29C;
-  s32 field_2A0;
-  s32 field_2A4;
-  s32 field_2A8;
-  s32 field_2AC;
-  s32 field_2B0;
-  s32 field_2B4;
-  s32 field_2B8;
-  s32 field_2BC;
-  s32 field_2C0;
-  s32 field_2C4;
-  s32 field_2C8;
-  s32 field_2CC;
-  s32 field_2D0;
-  s32 field_2D4;
-  s32 field_2D8;
-  s32 field_2DC;
-  s32 field_2E0;
-  s32 field_2E4;
-  s32 field_2E8;
+  Model something_with_watch_object_instance;
+
   s32 field_2EC;
   s32 field_2F0;
   s32 field_2F4;
@@ -1154,8 +1109,8 @@ struct player
   Mtxf* viewtoworldmtxf;
   Mtx* projmatrix;
   Mtxf* projmatrixf;
-  s32 field_10E0; // ptr
-  s32 field_10E4; // ptr
+  Mtx *field_10E0; /* projection matrix */
+  LookAt *field_10E4;
   Mtxf* field_10E8;
   Mtxf* field_10EC;
   f32 c_scalelod60; // canonical name
@@ -1214,7 +1169,7 @@ struct player
   f32 swayoffset0;
   f32 swayoffset2;
   f32 field_1280;
-  s32 players_cur_animation;
+  intptr_t players_cur_animation; /* a ModelAnimation pointer */
   f32 field_1288;
 
   /**
@@ -2303,8 +2258,8 @@ struct player
   s16 registeredroom;
   f32 field_2A08;
   f32 field_2A0C;
-  s32 ptr_text_first_mp_award;
-  s32 ptr_text_second_mp_award;
+  char *ptr_text_first_mp_award;
+  char *ptr_text_second_mp_award;
   coord3d field_2A18[2];
   s32 field_2A30;
   s32 field_2A34;
@@ -2417,7 +2372,7 @@ struct move_bond_temp_struct {
 //D:80036424
 extern s32 g_bondviewForceDisarm;
 //D:80036428
-extern s32 resolution;
+extern u8 *resolution;
 //D:8003642C
 extern s32 cameraBufferToggle;
 //D:80036430
@@ -2649,9 +2604,9 @@ extern s32 status_bar_text_buffer_index;
 //D:8003689C
 extern s32 display_statusbar;
 //D:800368A0
-extern s32 copy_1stfonttable;
+extern struct font *copy_1stfonttable;
 //D:800368A4
-extern s32 copy_2ndfonttable;
+extern struct fontchar *copy_2ndfonttable;
 //D:800368A8
 extern s32 upper_text_buffer_index;
 //D:800368AC
@@ -2768,7 +2723,7 @@ void jp_hudmsgBottomShow(char *string);
 // VERSION_US
 #define HUDMESSAGEBOTTOM hudmsgBottomShow
 void hudmsgBottomShow(char *string);
-void setFontTables(s32 arg0, s32 arg1);
+void setFontTables(struct fontchar *arg0, struct font *arg1);
 #endif
 
 Gfx * bondviewRenderDebugBondView(Gfx *arg0);
@@ -2815,8 +2770,8 @@ f32 bondviewGetPlayerYawRadians(void);
 Mtxf *camGetWorldToScreenMtxf(void);
 void transformAndNormalizeByLength2Dto3D(struct coord2d *in, coord3d *out, f32 value);
 void bondviewTransformManyPosToViewMatrix(RenderPosView *arg0, s32 arg1);
-s32 sub_GAME_7F078474(void);
-s32 get_BONDdata_field_10E0(void);
+LookAt *sub_GAME_7F078474(void);
+Mtx *get_BONDdata_field_10E0(void);
 Mtx *currentPlayerGetProjectionMatrix(void);
 Gfx *bondviewRenderProp(PropRecord *arg0, Gfx *arg1, s32 arg2);
 f32 getPlayer_c_lodscalez(void);
@@ -2848,5 +2803,21 @@ void bondviewRemovePlayerBody(void);
 void currentPlayerAdjustFade(f32 maxfadetime, s32 r, s32 g, s32 b, f32 frac);
 void bondviewSelectCuff(Model *model, ModelFileHeader *header, s32 switchindex);
 void sub_GAME_7F08976C(f32 param_1);
+
+void bondviewSetCurrentPlayerPosition(coord3d *pos, coord3d *pos2, coord3d *offset, StandTile *tile, coord3d *stan_walk_start);
+void bondviewUpdateFrustumPlanes();
+s32 currentPlayerGetCrouchPos(void);
+Mtx *currentPlayerGetMatrix10C8(void);
+void currentPlayerSetCameraMode(s32 mode);
+void currentPlayerSetMatrix10C4(Mtx *matrix);
+void currentPlayerSetMatrix10C8(Mtx *matrix);
+void *currentPlayerSetMatrix10CC(Mtxf *matrix);
+void currentPlayerSetProjectionMatrix(Mtx *matrix);
+void currentPlayerSetProjectionMatrixF(Mtxf *matrix);
+void currentPlayerSetViewToWorldMtxf(Mtxf *matrix);
+s32 playerGetCrouchPos(s32 playernum);
+void set_BONDdata_field_10E0(Mtx *arg0);
+void sub_GAME_7F078464(LookAt *arg0);
+void transform3Dto2DWithZScaling(coord3d *in, coord3d *out);
 
 #endif

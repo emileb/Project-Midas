@@ -9,7 +9,8 @@
 
 // bss
 //CODE.bss:8008C640
-s32 g_LangBanks[45];
+/* N64: u32 offset tables; PC: compiled-in char *[] (pointer-width entries) */
+uintptr_t *g_LangBanks[45];
 
 
 //CODE.bss:8008C6F4
@@ -413,9 +414,9 @@ void langClearBank(s32 textBank) {
 u8 * langGet(s32 slotID)
 {
     u32 bank_id = slotID >> 10;
-    u32 * textbank_ptr;
-    u32 textslot_offset;
-    u32 output_slot;
+    uintptr_t * textbank_ptr;
+    uintptr_t textslot_offset;
+    uintptr_t output_slot;
 
 #ifndef TARGET_N64
     if (bank_id >= 45)
@@ -435,11 +436,20 @@ u8 * langGet(s32 slotID)
         return (u8 *)"Error: Bank not loaded";
     }
 #endif
+#if !defined(TARGET_N64) && UINTPTR_MAX > 0xFFFFFFFFu
+    {
+        /* 64-bit: the ROM bank's own table holds 4-byte offsets; romdata.c
+         * keeps the native one */
+        extern const char *romdataTextSlot(const void *bank, u32 slot);
+        const char *t = romdataTextSlot(textbank_ptr, slotID & 0x03FF);
+        return t != NULL ? (u8 *)t : (u8 *)"Sorry, string not loaded.";
+    }
+#endif
     textslot_offset = textbank_ptr[slotID & 0x03FF]; /* load the textbank ptr table then get the slot's offset */
 
     output_slot = textslot_offset; /* add the text slot offset to the base ptr to get the ptr to text file's slot */
 #ifdef TARGET_N64
-    output_slot += (u32)textbank_ptr;
+    output_slot += (uintptr_t)textbank_ptr;
 #endif
     /* PORT: compiled-in text banks (char *LxE[] = {...}) store absolute
      * pointers, not bank-relative offsets, so don't add the base. */

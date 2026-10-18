@@ -56,4 +56,6 @@ void texGetDepthAndSize(struct tex *tex, s32 *deptharg, s32 *lenarg);
 s32 texGetHeightAtLod(struct tex *tex, s32 lod);
 s32 texLoadFromGdl(Gfx *src, s32 srcsize, Gfx *dst, void *texpool);
 
+s32 texGetWidthAtLod(struct tex *tex, s32 lod);
+
 #endif

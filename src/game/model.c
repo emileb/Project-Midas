@@ -14,6 +14,10 @@
 #include "objecthandler.h"
 #include "quaternion.h"
 #include "random.h"
+#include "ramrom.h"
+#include "othermodemicrocode.h"
+extern int printf(const char *fmt, ...); /* PC bring-up logging */
+extern int portPtrLooksBad(const void *p);
 
 
 typedef struct ModelGroupMtxBuildArg {
@@ -218,7 +222,7 @@ void sub_GAME_7F06C418(Vew4s32 *src, Vew4s32 *dst) {
 }
 
 
-void set_vtxallocator(s32 param_1) {
+void set_vtxallocator(struct Vertex *(*param_1)(s32 numvertices)) {
   vtxallocator = param_1;
 }
 
@@ -908,6 +912,16 @@ void sub_GAME_7F06D160(coord3d *arg0, coord3d *arg1, f32 mult)
 /**
  * Address: 7F06D1CC
  */
+#ifdef MODELANIM_OFFSETS
+#include "initanitable.h" /* ptr_animation_table */
+extern u8 _animation_entriesSegmentRomStart[];
+#define MODELANIM_BITDESC(anim) ((ModelAnimBitField *)((u8 *)&ptr_animation_table->data + (anim)->bitDescriptors))
+#define MODELANIM_BITSTREAM(anim) ((u8 *)&ptr_animation_table->data + (anim)->bitStream)
+#else
+#define MODELANIM_BITDESC(anim) ((anim)->bitDescriptors)
+#define MODELANIM_BITSTREAM(anim) ((anim)->bitStream)
+#endif
+
 u16 modelAnimReadRootMotionValue(ModelAnimation *anim, s32 fieldIndex, s32 extraBitOffset)
 {
     u32 result;
@@ -922,7 +936,7 @@ u16 modelAnimReadRootMotionValue(ModelAnimation *anim, s32 fieldIndex, s32 extra
     u8 bitsThisRead;
 
     result = 0;
-    desc = anim->bitDescriptors + fieldIndex;
+    desc = MODELANIM_BITDESC(anim) + fieldIndex;
     bitsRemaining = desc->bitCount;
 
     if (bitsRemaining > 0)
@@ -930,7 +944,7 @@ u16 modelAnimReadRootMotionValue(ModelAnimation *anim, s32 fieldIndex, s32 extra
         totalBitOffset = extraBitOffset + desc->bitOffset;
         byteIndex = totalBitOffset >> 3;
         totalBitOffset &= 7;
-        byteptr = anim->bitStream + byteIndex;
+        byteptr = MODELANIM_BITSTREAM(anim) + byteIndex;
         bitsThisRead = 8 - totalBitOffset;
 
         if (bitsRemaining >= bitsThisRead)
@@ -1061,7 +1075,7 @@ void sub_GAME_7F06D490(Model *model, ModelNode *modelNode)
             {
                 rw->Header.unk14 = sub_GAME_7F06D0CC(rw->Header.unk30, rw->Header.unk20, model->unk2c);
             }
-            while (model->unka0 * 0);
+            while ((intptr_t)model->unka0 * 0);
         }
     }
 
@@ -1084,7 +1098,7 @@ void sub_GAME_7F06D490(Model *model, ModelNode *modelNode)
     sp2c.y = sp38.y;
     sp2c.z = sp38.z;
 
-    if (model->unka0 && !((s32 (*)(Model *, coord3d *, coord3d *, f32 *)) model->unka0)(model, &rw->Header.pos, &sp2c, &rw->Header.ground))
+    if (model->unka0 && !model->unka0(model, &rw->Header.pos, &sp2c, &rw->Header.ground))
     {
         return;
     }
@@ -1335,13 +1349,13 @@ void sub_GAME_7F06DB5C(ModelRenderData *arg0, Model *arg1, ModelNode *arg2, quat
     s32 sp4C;
     RenderPosView *sp48;
     s32 sp44;
-    s32 *new_var;
+    intptr_t *new_var;
     s32 sp40;
     quatf sp2C;
     Mtxf *sp28;
     f32 sp24;
     s32 _gap20;
-    s32 sp1C;
+    intptr_t sp1C;
 
     spA4 = arg2->Opcode;
     spA0 = (ModelRoData_GroupRecord *)arg2->Data;
@@ -1350,7 +1364,7 @@ void sub_GAME_7F06DB5C(ModelRenderData *arg0, Model *arg1, ModelNode *arg2, quat
     sp4C = spA0->MatrixID2;
     new_var = &sp1C;
     sp48 = arg1->render_pos;
-    sp1C = (s32)arg2->Parent;
+    sp1C = (intptr_t)arg2->Parent;
 
     if (*new_var != 0) {
         sp9C = arg0->basemtx;
@@ -1361,10 +1375,14 @@ void sub_GAME_7F06DB5C(ModelRenderData *arg0, Model *arg1, ModelNode *arg2, quat
 
     if (sp9C != 0) {
         quaternion_to_transform_matrix(&spA0->Origin, arg3, &sp58);
-        sp1C = (s32)&sp48[sp54];
+        sp1C = (intptr_t)&sp48[sp54];
         matrix_4x4_multiply_homogeneous(sp9C, &sp58, (Mtxf *)sp1C);
         if (g_ModelJointPositionedFunc != NULL) {
+#ifdef TARGET_N64
             ((void (*)(s32, s32, s32)) g_ModelJointPositionedFunc)(sp54, sp1C, sp1C);
+#else
+            g_ModelJointPositionedFunc(sp54, (Mtxf *)sp1C); /* real (s32, Mtxf *) signature */
+#endif
         }
     } else {
         quaternion_to_transform_matrix(&spA0->Origin, arg3, (Mtxf *)&sp48[sp54]);
@@ -2739,7 +2757,7 @@ void modelSetAnimEndFrame(Model *model, f32 endframe) {
 #endif
 }
 
-void modelSetAnimFlipFunction(Model *model, void *callback) {
+void modelSetAnimFlipFunction(Model *model, void (*callback)(void)) {
     model->animflipfunc = callback;
 }
 
@@ -2806,7 +2824,7 @@ void modelSetAnimPlaySpeed(Model *model, f32 animation_rate, f32 startframe) {
 }
 
 
-void sub_GAME_7F06FF5C(Model *model, s32 arg1) {
+void sub_GAME_7F06FF5C(Model *model, ModelGroundFunc arg1) {
     model->unka0 = arg1;
 }
 
@@ -4624,7 +4642,7 @@ void sub_GAME_7F073038(ModelRenderData *renderdata, struct sImageTableEntry *tco
 }
 
 
-void sub_GAME_7F07306C(s32 param_1,struct Model *param_2,struct ModelNode *param_3)
+void sub_GAME_7F07306C(ModelRenderData *param_1,struct Model *param_2,struct ModelNode *param_3)
 {
     return;
 }
@@ -4890,13 +4908,13 @@ void dotube(ModelRenderData* renderdata, Model* model, ModelNode* node)
 }
 
 
-void sub_GAME_7F0737EC(s32 param_1,struct Model *param_2, struct ModelNode *param_3)
+void sub_GAME_7F0737EC(ModelRenderData *param_1,struct Model *param_2, struct ModelNode *param_3)
 {
     return;
 }
 
 
-void sub_GAME_7F0737FC(s32 param_1,struct Model *param_2,struct ModelNode *param_3)
+void sub_GAME_7F0737FC(ModelRenderData *param_1,struct Model *param_2,struct ModelNode *param_3)
 {
     return;
 }
@@ -5021,7 +5039,8 @@ void dogfnegx(ModelRenderData *renderdata, Model *model, ModelNode *node)
         vertices[3].coord.y = sp90.f[1] - spc4;
         vertices[3].coord.z = sp90.f[2] + negspc8 + -spbc;
 
-        gSPSegment(renderdata->gdl++, SPSEGMENT_MODEL_COL1, osVirtualToPhysical(rodata->BaseAddr));
+        /* TODO(64bit) layout: GunfireRecord.BaseAddr is a u32 slot holding a pointer. */
+        gSPSegment(renderdata->gdl++, SPSEGMENT_MODEL_COL1, osVirtualToPhysical((void *)(uintptr_t)rodata->BaseAddr));
 
         if (rodata->Image)
         {
@@ -5214,7 +5233,8 @@ void doshadow(ModelRenderData *renderdata, Model *model, ModelNode *node)
                 {
                     extern struct tex *texFindInPool(s32 texturenum, struct texpool *pool);
                     extern struct texpool *portModelTexPool(void);
-                    u16 texnum = ((u16 *)image->index)[-4];
+                    /* TODO(64bit) layout: sImageTableEntry.index is a u32 slot holding a pointer. */
+                    u16 texnum = ((u16 *)(uintptr_t)image->index)[-4];
                     struct tex *recglobal = texFindInPool(texnum, NULL);
                     struct tex *recmodel = texFindInPool(texnum, portModelTexPool());
                     v[0] = (f32)texnum;
@@ -5265,13 +5285,13 @@ void doshadow(ModelRenderData *renderdata, Model *model, ModelNode *node)
 }
 
 
-void sub_GAME_7F074514(s32 param_1,struct Model *param_2,struct ModelNode *param_3)
+void sub_GAME_7F074514(ModelRenderData *param_1,struct Model *param_2,struct ModelNode *param_3)
 {
     return;
 }
 
 
-void sub_GAME_7F074524(Gfx *param_1,struct Model *param_2, struct ModelNode *param_3)
+void sub_GAME_7F074524(ModelRenderData *param_1,struct Model *param_2, struct ModelNode *param_3)
 {
     return;
 }
@@ -5356,7 +5376,7 @@ void subdraw(ModelRenderData *mrData, Model *mdl)
     }
     else
     {
-        osSyncPrintf("subdraw: object not initialised! (0x%X)\n", (u32)mdl->obj);
+        osSyncPrintf("subdraw: object not initialised! (%p)\n", (void *)mdl->obj);
         return_null();
     }
     #endif
@@ -5391,7 +5411,7 @@ void sub_GAME_7F074790(ModelRenderData* arg0, Model* arg1)
 {
     subcalcpos(arg1);
     subcalcmatrices(arg0, arg1);
-    subdraw((s32) arg0, arg1);
+    subdraw(arg0, arg1);
 }
 
 
@@ -5862,7 +5882,7 @@ u32 modelFindNextProjectileHitCandidate(Model *model, coord3d *arg1, coord3d *ar
 /**
  * Unreferenced
  */
-u32 *sub_GAME_7F07549C(void *arg0, f32 *arg1, f32 *arg2, ModelNode **nodeptr)
+u32 sub_GAME_7F07549C(void *arg0, f32 *arg1, f32 *arg2, ModelNode **nodeptr)
 {
     *nodeptr = NULL;
     return modelFindNextProjectileHitCandidate(arg0, arg1, arg2, nodeptr);
@@ -5873,18 +5893,22 @@ u32 *sub_GAME_7F07549C(void *arg0, f32 *arg1, f32 *arg2, ModelNode **nodeptr)
  * Address 7F0754BC.
  * Copy animation from ROM to RAM
 */
-s32 loadAnimationFrame(ModelAnimation* anim, s32 frame, ModelSkeleton* unused)
+u8 *loadAnimationFrame(ModelAnimation* anim, s32 frame, ModelSkeleton* unused)
 {
-    s32 ret;
-    s32 source;
+    uintptr_t ret;
+    intptr_t source;
     s32 frameSize;
-    u32 dest;
+    uintptr_t dest;
     u32 size;
 
     ret = 0;
     frameSize = anim->unk0E >> 3; // divide by 8
 
+#ifdef MODELANIM_OFFSETS
+    if (0) /* 64-bit: address is an offset into the entries segment, never RAM */
+#else
     if (anim->address & 0x80000000) // If animation's address is in RAM
+#endif
     {
         // Load that frame from RAM
         ret = anim->address + (frame * frameSize);
@@ -5892,11 +5916,15 @@ s32 loadAnimationFrame(ModelAnimation* anim, s32 frame, ModelSkeleton* unused)
     else if (D_80036414 != NULL) // should never be NULL after initAnimationsBuffer is called
     {
         // Get dest from this D_80036414 which points to an array. Align to 16 bytes.
-        dest = ((u32) (D_80036414->animBufferPtr2 + 15) >> 4) * 16;
+        dest = ((uintptr_t) (D_80036414->animBufferPtr2 + 15) >> 4) * 16;
         ret = dest;
 
         // Get source of this animation in ROM with the offset of the frame we'll load
+#ifdef MODELANIM_OFFSETS
+        source = (intptr_t)&_animation_entriesSegmentRomStart + (u32)anim->address + (frame * frameSize);
+#else
         source = anim->address + (frame * frameSize);
+#endif
         if (source & 1)
         {
             source--;
@@ -5915,9 +5943,9 @@ s32 loadAnimationFrame(ModelAnimation* anim, s32 frame, ModelSkeleton* unused)
 
         // Set this to point to the end of the copied frame
         // This allows to copy another frame after this one
-        D_80036414->animBufferPtr2 = dest + size;
+        D_80036414->animBufferPtr2 = (char *) (dest + size);
     }
-    return ret;
+    return (u8 *) ret;
 }
 
 
@@ -5935,22 +5963,35 @@ void modelResetAnimationsScratchBuffer(void)
 }
 
 
+/* TODO(64bit) layout: every PROMOTE'd field is a pointer member of a struct
+ * overlaid on the in-place N64 file image, whose pointer slots are 4 bytes.
+ * On a 64-bit host the struct offsets no longer match the file. */
 #ifdef TARGET_N64
 #define PROMOTE(var) \
     if (var) \
-        var = (void *)((u32)var + diff)
+        var = (void *)((uintptr_t)var + diff)
 #else
 /* PORT: compiled-in model files hold real pointers except about 105 raw
  * segment-5 words the asset generator left behind, so only 0x05-tagged values
  * are rebased onto the file base (real pointers and NULL never look like that). */
 #define PROMOTE(var) \
-    if (((u32)(var) & 0xFF000000) == 0x05000000) \
-        var = (void *)((u32)(var) - 0x05000000 + (u32)vma + (u32)diff)
+    if (((uintptr_t)(var) & ~(uintptr_t)0x00FFFFFF) == 0x05000000) \
+        var = (void *)((uintptr_t)(var) - 0x05000000 + vma + (uintptr_t)diff)
+#endif
+/* Same, for pointers kept in u32 slots (the store truncates on 64-bit). */
+#ifdef TARGET_N64
+#define PROMOTE_WORD(var) \
+    if (var) \
+        var = (uintptr_t)var + diff
+#else
+#define PROMOTE_WORD(var) \
+    if (((uintptr_t)(var) & ~(uintptr_t)0x00FFFFFF) == 0x05000000) \
+        var = (uintptr_t)(var) - 0x05000000 + vma + (uintptr_t)diff
 #endif
 
-void modelPromoteNodeOffsetsToPointers(ModelNode *node, u32 vma, u32 fileramaddr)
+void modelPromoteNodeOffsetsToPointers(ModelNode *node, uintptr_t vma, uintptr_t fileramaddr)
 {
-    s32 diff = fileramaddr - vma;
+    intptr_t diff = fileramaddr - vma;
     s32 i;
 
     while (node)
@@ -6028,12 +6069,13 @@ void modelPromoteNodeOffsetsToPointers(ModelNode *node, u32 vma, u32 fileramaddr
                              * texcoords, so on little-endian its halves are
                              * swapped; unswap it (low half 0x0500) or
                              * chrCreateBloodStain crashes. */
-                            u32 w = (u32) rodata->CollisionVertices[i].LinkedTo;
+                            /* TODO(64bit) layout: LinkedTo is a 4-byte word in the file image. */
+                            u32 w = (u32) (uintptr_t) rodata->CollisionVertices[i].LinkedTo;
 
                             if (w != 0 && (w & 0x0000FFFFu) == 0x00000500u)
                             {
                                 rodata->CollisionVertices[i].LinkedTo =
-                                    (void *)((w << 16) | (w >> 16));
+                                    (void *)(uintptr_t)((w << 16) | (w >> 16));
 
                                 /* Same problem for the +0xc union: emitted as
                                  * r/g/b/a bytes, its s16 CollisionRelatedIndex
@@ -6137,7 +6179,8 @@ void modelPromoteNodeOffsetsToPointers(ModelNode *node, u32 vma, u32 fileramaddr
             case MODELNODE_OPCODE_OP11:
                 {
                     ModelRoData_Op11Record* rodata = &node->Data->Op11;
-                    PROMOTE(rodata->unk0c[15]);
+                    /* TODO(64bit) layout: Op11Record.unk0c[15] is a u32 pointer slot. */
+                    PROMOTE_WORD(rodata->unk0c[15]);
                     rodata->BaseAddr = (void *)fileramaddr;
                     break;
                 }
@@ -6146,7 +6189,8 @@ void modelPromoteNodeOffsetsToPointers(ModelNode *node, u32 vma, u32 fileramaddr
                 {
                     ModelRoData_GunfireRecord* rodata = &node->Data->Gunfire;
                     PROMOTE(rodata->Image);
-                    rodata->BaseAddr = (void *)fileramaddr;
+                    /* TODO(64bit) layout: GunfireRecord.BaseAddr is a u32 slot. */
+                    rodata->BaseAddr = fileramaddr;
                     break;
                 }
 
@@ -6197,10 +6241,11 @@ void modelPromoteNodeOffsetsToPointers(ModelNode *node, u32 vma, u32 fileramaddr
 /**
  * Address 7F075A90.
 */
-void sub_GAME_7F075A90(ModelFileHeader *header, s32 vma, u32 addr) {
-    s32 diff = addr - vma;
+void sub_GAME_7F075A90(ModelFileHeader *header, uintptr_t vma, uintptr_t addr) {
+    intptr_t diff = addr - vma;
     s32 i;
 
+    /* TODO(64bit) layout: Switches[] is a u32 array in the file image. */
     for(i = 0;i < header->numSwitches;i++)
     {
         PROMOTE(header->Switches[i]);
@@ -6630,7 +6675,7 @@ void animInit(struct Model *objinst, struct ModelFileHeader *header, u32 *data)
     objinst->animlooping = 0;
     objinst->animflipfunc = 0;
     objinst->unk9c = 0;
-    objinst->unka0 = 0;
+    objinst->unka0 = NULL;
     objinst->unk2c = 0.0f;
     objinst->timespeed = 0.0f;
     objinst->unk5c = 0.0f;
@@ -6775,7 +6820,7 @@ void modelIterateDisplayLists(ModelFileHeader *fileheader, ModelNode **nodeptr, 
 }
 
 
-void modelNodeReplaceGdl(u32 arg0, ModelNode *node, Gfx *find, Gfx *replacement)
+void modelNodeReplaceGdl(ModelFileHeader *arg0, ModelNode *node, Gfx *find, Gfx *replacement)
 {
     union ModelRoData *rodata;
     u32 type = node->Opcode & 0xff;

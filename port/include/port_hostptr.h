@@ -12,9 +12,15 @@
  * image" (xbox_sys.c reads the image size from the XBE header at boot). Heap
  * allocations never hold display-list data, and every other display-list
  * allocation goes through the arenas. See docs/port/xbox-port.md.
+ *
+ * 64-bit builds: every host pointer is above 4 GB (macOS arm64 reserves the low
+ * 4 GB as __PAGEZERO; Android arm64 maps code, heap and mmap far higher), so a
+ * word that fits in 32 bits is a segment word or an offset.
  */
 #ifndef PORT_HOSTPTR_H
 #define PORT_HOSTPTR_H
+
+#include <stdint.h>
 
 #ifdef GE_XBOX
 #ifdef __cplusplus
@@ -25,6 +31,8 @@ int portXboxIsHostAddr(unsigned int v);
 }
 #endif
 #define PORT_IS_HOST_ADDR(v) (portXboxIsHostAddr((unsigned int) (v)))
+#elif UINTPTR_MAX > 0xFFFFFFFFu
+#define PORT_IS_HOST_ADDR(v) ((uintptr_t) (v) > 0xFFFFFFFFu)
 #else
 #define PORT_IS_HOST_ADDR(v) ((unsigned int) (v) >= 0x10000000u)
 #endif

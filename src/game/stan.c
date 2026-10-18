@@ -10,10 +10,13 @@
 #include "chr.h"
 #include "stanintersection.h"
 #include "assert.h"
+#include "dyn.h"
+#include "token.h"
 
 #ifndef TARGET_N64
 #include <stdlib.h> /* calloc - portStanPack rebuilds the packed tile image */
 #include <string.h>
+extern int printf(const char *fmt, ...); /* PC bring-up logging */
 
 #ifndef TARGET_N64
 /* Records which blocker a move hit, stamped with the tick and the test that
@@ -39,7 +42,7 @@ void getTileMidPoint(StandTile *tile, coord3d *out);
 // bss
 struct StanPrefixRecord {
     //CODE.bss:8007B120
-    s32 stanfile;
+    struct StanPrefixRecord *stanfile; /* aliases stan_prefix via stanLoadFile */
     //CODE.bss:8007B124
     StandTile *ptr_firstroom;    // read as offset 4, hence the struct
 };
@@ -109,7 +112,7 @@ u8 list_of_tilesizes[] = {
 //D:80040F58
 struct StandTile * standTileStart = NULL;
 //D:80040F5C
-s32 ptr_firstroom_0 = 0;
+intptr_t ptr_firstroom_0 = 0;
 //D:80040F60
 struct StandTile* stanTileEnd = NULL;
 //D:80040F64
@@ -163,7 +166,7 @@ const char aStanlinelog[] = "-stanlinelog";
 // forward declarations
 
 s32 stanIsSpecialBit1Set(StandTile *arg0, struct StandTileLocusCallbackRecord* arg1);
-s32 stanCheckLinkedSpecialTile(StandTile *tile, s32 pointIdx, s32 arg2, s32 arg3, s32 arg4, s32 *outFlags);
+s32 stanCheckLinkedSpecialTile(StandTile *tile, s32 pointIdx, f32 arg2, f32 arg3, f32 arg4, struct StandTileLocusCallbackRecord *outFlags);
 s32 sub_GAME_7F0B21B0(StandTile **tileStack, f32 target_x, f32 target_z, f32 radius, s32 *rooms, s32 *count_rtn, s32 bufMax);
 f32 getShortest2dDispToInfTripleEdge(StandTile *tile, s32 start3index, f32 p_x, f32 p_z);
 StanCollisionResult sub_GAME_7F0B1DDC(struct StandTile**, f32, f32, f32, standTileLocusCallback_A_t, standTileLocusCallback_B_t, standTileLocusCallback_C_t, struct StandTileLocusCallbackRecord*);
@@ -586,16 +589,19 @@ static u32 portStanTileSize(u8 *p)
 
 static struct StanPrefixRecord *portStanPack(struct StanPrefixRecord *file)
 {
-    u32 *srcw = (u32 *) file;
-    u32 nrooms;   /* entries after ptr_firstroom: BE OFFSET words */
-    u32 o_first;  /* original-file offset of the first tile */
+    /* room table after ptr_firstroom: BE N64 file OFFSET words */
+    u32 *srcw = (u32 *) ((StandFileHeader *) file)->unk2;
+    u32 nrooms;
+    u32 o_first;  /* N64 file offset of the first tile */
+    u32 hdrsize;  /* size of the compiled-in header global */
+    u32 pk_first; /* packed-image offset of the first tile */
     u32 total;
     u32 ntiles;
     u32 badrooms;
     u32 i;
     u8 *p;
     u8 *dst;
-    u32 *dstw;
+    StandTile **dstrooms;
     struct StanPrefixRecord *packed;
 
     for (i = 0; i < STAN_PACK_CACHE_MAX; i++)
@@ -606,8 +612,12 @@ static struct StanPrefixRecord *portStanPack(struct StanPrefixRecord *file)
         }
     }
 
-    for (nrooms = 0; srcw[2 + nrooms] != 0; nrooms++);
+    for (nrooms = 0; srcw[nrooms] != 0; nrooms++);
     o_first = 8 + (nrooms + 1) * 4;
+    hdrsize = (u32) offsetof(StandFileHeader, unk2) + (nrooms + 1) * 4;
+    /* packed header: word 0, then pointer-sized room slots (ptr_firstroom,
+     * nrooms more, a NULL terminator); same bytes as N64 with 4-byte pointers */
+    pk_first = (u32) (offsetof(struct StanPrefixRecord, ptr_firstroom) + (nrooms + 2) * sizeof(StandTile *));
 
     total = 0;
     ntiles = 0;
@@ -622,7 +632,7 @@ static struct StanPrefixRecord *portStanPack(struct StanPrefixRecord *file)
         }
         total += size;
         ntiles++;
-        p = portStanNextTileGlobal(p + size, (u8 *) srcw, o_first);
+        p = portStanNextTileGlobal(p + size, (u8 *) file, hdrsize);
     }
 
     /* +8: the zero word terminating the tile walk (portAllocHigh memory
@@ -631,7 +641,7 @@ static struct StanPrefixRecord *portStanPack(struct StanPrefixRecord *file)
      * below that. */
     {
         extern void *portAllocHigh(u32 size);
-        u32 need = o_first + total + 8;
+        u32 need = pk_first + total + 8;
         /* The high arena is bump-only and never freed, so allocating a new
          * packed stan per stage load eventually ran out of memory and crashed.
          * Reuse the block whenever the next stage fits (the old stage's data is
@@ -679,16 +689,16 @@ static struct StanPrefixRecord *portStanPack(struct StanPrefixRecord *file)
          * The caller sees an unpacked stan and the stage load fails
          * loudly rather than crashing at address 4. */
         printf("ge: FATAL: portStanPack: no high memory for %u bytes "
-               "(stan pack); stage cannot load\n", o_first + total + 8);
+               "(stan pack); stage cannot load\n", pk_first + total + 8);
         return file;   /* unpacked - caller keeps the source stan */
     }
-    dstw = (u32 *) packed;
-    dstw[1] = (u32) ((u8 *) packed + o_first);
+    dstrooms = &packed->ptr_firstroom;
+    dstrooms[0] = (StandTile *) ((u8 *) packed + pk_first);
 
     badrooms = 0;
     for (i = 0; i < nrooms; i++)
     {
-        u32 w = srcw[2 + i];
+        u32 w = srcw[i];
         u32 be = ((w & 0xFFu) << 24) | ((w & 0xFF00u) << 8) |
                  ((w >> 8) & 0xFF00u) | (w >> 24);
 
@@ -696,10 +706,10 @@ static struct StanPrefixRecord *portStanPack(struct StanPrefixRecord *file)
         {
             badrooms++;
         }
-        dstw[2 + i] = (u32) ((u8 *) packed + be);
+        dstrooms[1 + i] = (StandTile *) ((u8 *) packed + pk_first + (be - o_first));
     }
 
-    dst = (u8 *) packed + o_first;
+    dst = (u8 *) packed + pk_first;
     p = (u8 *) file->ptr_firstroom;
     while (p != NULL)
     {
@@ -711,7 +721,7 @@ static struct StanPrefixRecord *portStanPack(struct StanPrefixRecord *file)
         }
         memcpy(dst, p, size);
         dst += size;
-        p = portStanNextTileGlobal(p + size, (u8 *) srcw, o_first);
+        p = portStanNextTileGlobal(p + size, (u8 *) file, hdrsize);
     }
 
     for (i = 0; i < STAN_PACK_CACHE_MAX; i++)
@@ -734,8 +744,8 @@ static struct StanPrefixRecord *portStanPack(struct StanPrefixRecord *file)
         v[2] = (f32) o_first;
         v[3] = (f32) nrooms;
         v[4] = (f32) badrooms;
-        v[5] = (f32) (u32) packed;
-        v[6] = (f32) (u32) file->ptr_firstroom;
+        v[5] = (f32) (uintptr_t) packed;
+        v[6] = (f32) (uintptr_t) file->ptr_firstroom;
         ge_dbg_vec("stanpack ntiles/bytes/ofirst/rooms/bad/dst/src", v, 7);
     }
 
@@ -752,6 +762,9 @@ struct StanPrefixRecord *portStanPackForProbe(struct StanPrefixRecord *file)
 /* set by load_bg_file (bg.c) right after the stan loads: a ROM-served
  * stan (port/src/romfile_stan.c) arrives ALREADY in the packed shape, with
  * real pointers in its header - portStanPack must not run on it */
+/* TODO(64bit) layout: romfile_stan.c writes 4-byte header pointer slots, but
+ * StanPrefixRecord reads pointer-width ptr_firstroom/room slots (as
+ * portStanPack now builds them); the ROM converter must match. */
 s32 g_portStanFromRom;
 #endif
 
@@ -2500,11 +2513,11 @@ StanCollisionResult sub_GAME_7F0B1DDC(StandTile **startTile, f32 x, f32 z, f32 r
                 once++;
                 v[0] = (f32) visitedCount;
                 v[1] = (f32) cat;
-                v[2] = (f32) (u32) *startTile;
-                v[3] = (f32) (u32) standTileStart;
+                v[2] = (f32) (uintptr_t) *startTile;
+                v[3] = (f32) (uintptr_t) standTileStart;
                 for (h = 0; h < 4; h++)
                 {
-                    v[4 + h] = (f32) (u32) tileStack[h];
+                    v[4 + h] = (f32) (uintptr_t) tileStack[h];
                 }
                 ge_dbg_vec("locusnull visited/cat/start/stanbase/s0..s3", v, 8);
             }
@@ -2537,7 +2550,7 @@ StanCollisionResult sub_GAME_7F0B1DDC(StandTile **startTile, f32 x, f32 z, f32 r
                     {
                         if ((callbackB == NULL || !callbackB(tile, pointI, edgeDist, pointDistA, pointDistB, record)) && (tile->points[pointI].link >> 4))
                         {
-                            linkedTile = ((u32) standTileStart) + (tile->points[pointI].link << 3);
+                            linkedTile = (StandTile *) (((uintptr_t) standTileStart) + (tile->points[pointI].link << 3));
                             for (i = cat - 1; i >= 0; i--)
                             {
                                 if (linkedTile == tileStack[i])
@@ -2706,7 +2719,7 @@ s32 stanIsSpecialBit1Set(StandTile *arg0, struct StandTileLocusCallbackRecord *a
     s32 val = STAN_MID_NIB(arg0->mid.half, 12);
     if (g_StanTileSpecialFlags[val] & STANTILEFLAG_FORCECROUCH)
     {
-        arg1->rooms = 1;
+        arg1->rooms = (s32 *) (intptr_t) 1; /* field 0 doubles as a flag here */
     }
 
     return 0;
@@ -2716,7 +2729,10 @@ s32 stanIsSpecialBit1Set(StandTile *arg0, struct StandTileLocusCallbackRecord *a
 /**
  * Address: 7F0B2274
  */
-s32 stanCheckLinkedSpecialTile(StandTile *tile, s32 pointIdx, s32 arg2, s32 arg3, s32 arg4, s32 *outFlags)
+/* arg2-4 are the callback's f32 distances (unused); they must be f32 so outFlags
+ * arrives in the right register on arm64. outFlags[0]/[1] were the record's
+ * rooms/count words; named fields keep count right with an 8-byte rooms. */
+s32 stanCheckLinkedSpecialTile(StandTile *tile, s32 pointIdx, f32 arg2, f32 arg3, f32 arg4, struct StandTileLocusCallbackRecord *outFlags)
 {
     u16 link;
     StandTile *target;
@@ -2730,7 +2746,7 @@ s32 stanCheckLinkedSpecialTile(StandTile *tile, s32 pointIdx, s32 arg2, s32 arg3
         mid = target->mid.half;
 
         if (g_StanTileSpecialFlags[STAN_MID_NIB(mid, 12)] & STANTILEFLAG_FORCECROUCH) {
-            outFlags[0] = 1;
+            outFlags->rooms = (s32 *) (intptr_t) 1;
             return 1;
         }
 
@@ -2738,7 +2754,7 @@ s32 stanCheckLinkedSpecialTile(StandTile *tile, s32 pointIdx, s32 arg2, s32 arg3
 
         if (g_StanTileSpecialFlags[STAN_MID_NIB(mid, 12)] & STANTILEFLAG_LADDER) {
             dword_CODE_bss_8007BA0C = target;
-            outFlags[1] = 1;
+            outFlags->count = 1;
             return 0;
         }
     }
@@ -2769,11 +2785,11 @@ s32 stanTileDistanceRelated(StandTile **arg0, f32 arg1, f32 arg2, f32 arg3, stru
     /* The original zeroed 64 bytes through this pointer, which only worked with
      * IDO's stack layout and under GCC wiped the caller's locals (crashing
      * Dam). Zero just one record; every caller and callback only uses fields
-     * inside it. */
-    ((s32 *) arg4)[0] = 0;
-    ((s32 *) arg4)[1] = 0;
-    ((s32 *) arg4)[2] = 0;
-    ((s32 *) arg4)[3] = 0;
+     * inside it. Per field: rooms is pointer-sized. */
+    arg4->rooms = NULL;
+    arg4->count = 0;
+    arg4->bufMax = 0;
+    arg4->nearEdgeCount = 0;
     (void) i;
 #endif
 
@@ -2794,7 +2810,7 @@ s32 stanTileDistanceRelated(StandTile **arg0, f32 arg1, f32 arg2, f32 arg3, stru
 
 s32 stanGetLocusField0(struct StandTileLocusCallbackRecord *arg0)
 {
-    return arg0->rooms;
+    return arg0->rooms != NULL;
 }
 
 
@@ -2878,13 +2894,13 @@ void stanGetMoveBondCollisionTiles(StandTile **tile1, StandTile **tile2, coord3d
                             stanGetTileOrderedPointWorldPos(
                                 linktile,
                                 ((j >> 2) + k) % 3,
-                                (coord3d *)((s32)coords + (((j + k) & 3) * 0xc)));
+                                (coord3d *)((intptr_t)coords + (((j + k) & 3) * 0xc)));
                         }
 
                         stanGetTileOrderedPointWorldPos(
                             curtileStore,
                             curtilePointI,
-                            (coord3d *)((s32)coords + (((j + 3) & 3) * 0xc)));
+                            (coord3d *)((intptr_t)coords + (((j + 3) & 3) * 0xc)));
 
                         j++;
 
@@ -2976,7 +2992,7 @@ s32 stanTestLocusEdgeAboveY(StandTile **tile, f32 target_x, f32 target_z, f32 ra
 
     /// TODO: Why is this cast wrong?
 
-    return sub_GAME_7F0B1DDC(tile, target_x, target_z, radius, NULL, stanLocusEdgeIsAboveY, NULL, (struct StandTileLocusCallbackRecord*)&data);
+    return sub_GAME_7F0B1DDC(tile, target_x, target_z, radius, NULL, (standTileLocusCallback_B_t)stanLocusEdgeIsAboveY, NULL, (struct StandTileLocusCallbackRecord*)&data);
 }
 
 
@@ -3448,7 +3464,7 @@ struct StandTilePoint *stanMatchTileName(char *id)
             s32 walked = 0;
             f32 v[8];
             once = 1;
-            v[0] = (f32) (u32) t;
+            v[0] = (f32) (uintptr_t) t;
             v[1] = (f32) ((StandTile *) t)->id;
             while (*(u32 *) t != 0 && walked < 100000) {
                 s16 h = t->link;
@@ -3456,10 +3472,10 @@ struct StandTilePoint *stanMatchTileName(char *id)
                 t = (StandTilePoint *) ((u8 *) t + list_of_tilesizes[STAN_PTCOUNT(h)]);
             }
             v[2] = (f32) walked;
-            v[3] = (f32) (u32) t;
+            v[3] = (f32) (uintptr_t) t;
             v[4] = (f32) sizeof(StandTilePoint);
-            v[5] = (f32) (u32) &(((StandTilePoint *) 0)->link);
-            v[6] = (f32) (u32) &(((StandTile *) 0)->points);
+            v[5] = (f32) (uintptr_t) &(((StandTilePoint *) 0)->link);
+            v[6] = (f32) (uintptr_t) &(((StandTile *) 0)->points);
             v[7] = (f32) (u16) tile->link;
             ge_dbg_vec("stanmatch start/id0/walked/end/szpt/offlink/offpts/link0", v, 8);
         }
@@ -3527,12 +3543,12 @@ void sub_GAME_7F0B2F00(StandTilePoint** arg0) {
 
 void stanDetermineEOF(struct StanPrefixRecord *file /* canonically r */, s32 origBase, u8 *newBase)
 {
-    s32 delta;
+    intptr_t delta;
     void **roomPtr;
     StandTile *tile;
     u8 *tileSizes;
     
-    delta = ((s32) newBase) - origBase;
+    delta = ((intptr_t) newBase) - origBase;
 #ifndef TARGET_N64
     /* PC: compiled-in stan files already hold real pointers, so the
      * offset-to-pointer rebase must be zero or every room pointer is doubled. A
@@ -3558,8 +3574,8 @@ void stanDetermineEOF(struct StanPrefixRecord *file /* canonically r */, s32 ori
     assert(*r==0);
     #endif
   
-    standTileStart = (StandTile *)(((s32)file->ptr_firstroom + delta) - 0x80);
-    ptr_firstroom_0 = (s32)file->ptr_firstroom + delta;
+    standTileStart = (StandTile *)(((intptr_t)file->ptr_firstroom + delta) - 0x80);
+    ptr_firstroom_0 = (intptr_t)file->ptr_firstroom + delta;
     
     newBase = list_of_tilesizes;
     roomPtr = (void **)&file->ptr_firstroom;
@@ -3603,7 +3619,7 @@ void stanDetermineEOF(struct StanPrefixRecord *file /* canonically r */, s32 ori
                     f32 v[10];
                     s32 h;
                     steps++;
-                    v[0] = (f32) (u32) tile;
+                    v[0] = (f32) (uintptr_t) tile;
                     v[1] = (f32) ((u8 *) list_of_tilesizes)[STAN_PTCOUNT(tile->tail.half)];
                     for (h = 0; h < 8; h++) {
                         v[2 + h] = (f32) ((u16 *) tile)[h];
@@ -3613,7 +3629,7 @@ void stanDetermineEOF(struct StanPrefixRecord *file /* canonically r */, s32 ori
             }
 #endif
 
-            tile = (StandTile *)((s32)tile
+            tile = (StandTile *)((intptr_t)tile
                 + (tileSizes = newBase)[STAN_PTCOUNT(tile->tail.half)]);
         }
         while (*(s32 *) tile != 0);
@@ -3673,7 +3689,12 @@ s32 sub_GAME_7F0B3044(void) {
     f32 temp_f0;
 
     sp1C = 0;
+#ifdef TARGET_N64
     if (((dynGetFreeGfx() < 0x1000) || (dynGetFreeVtx() < 0x1000)) && (*D_800413D0 == 0)) {
+#else
+    /* vanilla passes no gdl (dynGetFreeGfx read a stale a0): treat gfx as having room */
+    if ((dynGetFreeVtx() < 0x1000) && (*D_800413D0 == 0)) {
+#endif
         D_800413C0 = 0.0f;
         D_800413C4 = 0.0f;
         D_800413C8 = D_800413CC;

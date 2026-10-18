@@ -11,6 +11,7 @@
 #include "lv.h"
 #include "objective_status.h"
 #include "random.h"
+#include "othermodemicrocode.h"
 
 #define BULLET_SPARKS_MAX 20
 #define BULLET_MOVING_SPARKS_MAX 50
@@ -444,7 +445,7 @@ struct WatchVertex *setup_watch_rectangles(struct WatchVertex *vtx, s32 startx, 
 }
 
 
-Gfx *sub_GAME_7F0A3B40(Gfx *gdl, s32 *arg1)
+Gfx *sub_GAME_7F0A3B40(Gfx *gdl, uintptr_t arg1)
 {
     gSPVertex(gdl++, arg1, 4, 0);
 

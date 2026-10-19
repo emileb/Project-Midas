@@ -279,3 +279,6 @@ docs/devnotes/
 
 # the docs live in the private repo
 /docs/
+
+# tools/n64trace: cloned emulator sources and binaries (build.sh)
+tools/n64trace/build/

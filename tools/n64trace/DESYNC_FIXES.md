@@ -19,32 +19,41 @@ compares them with the port's `GE_DEMODIAG` / `GE_RNGTRACE` output. See
 
 ## Current state
 
-First desync tick per demo (`GE_DEMO=n`, tolerant mode), macOS arm64:
+Per demo (`GE_DEMO=n`), macOS arm64, after fix #1. "Port vs recording" is the
+first tick where the port's seed byte differs from the recording's;
+"port vs N64" is `compare.py` against the emulator (the authority: the
+emulated N64 itself disagrees with the dam2 recording from tick 68, and ends a
+demo at its first mismatch).
 
-| # | Demo | Before #1 | After #1 | End |
-|---|---|---|---|---|
-| 0 | dam1 | 185 | 189 | 438 |
-| 1 | dam2 | 44 | 68 | 445 |
-| 2 | facility1 | 235 | 345 | 410 |
-| 3 | facility2 | none | none | 538 |
-| 4 | facility3 | 114 | 114 | 380 |
-| 5 | runway1 | 301 | 301 | 388 |
-| 6 | runway2 | 350 | 350 | 388 |
-| 7 | bunker1 | 297 | 445 | 482 |
-| 8 | bunker2 | 50 | 269 | varies, see below |
-| 9 | silo1 | 141 | 281 | 501 |
-| 10 | silo2 | none | none | 503 |
-| 11 | frigate1 | 116 | 116 | 328 |
-| 12 | frigate2 | 61 | 63 | 384 |
-| 13 | train | 279 | 279 | 464 |
+| # | Demo | Port vs recording (before #1) | Port vs recording | N64 plays to | Port vs N64 |
+|---|---|---|---|---|---|
+| 0 | dam1 | 185 | 189 | 453 | differs at 189 |
+| 1 | dam2 | 44 | 68 | 87 | **identical 1-87** |
+| 2 | facility1 | 235 | 345 | 419 | differs at 345 |
+| 3 | facility2 | none | none | 557 | **identical 1-541** |
+| 4 | facility3 | 114 | 114 | 398 | differs at 114 |
+| 5 | runway1 | 301 | 301 | 409 | differs at 301 |
+| 6 | runway2 | 350 | 350 | 417 | differs at 350 |
+| 7 | bunker1 | 297 | 445 | 498 | differs at 445 |
+| 8 | bunker2 | 50 | 269 | ? | see below |
+| 9 | silo1 | 141 | 281 | 516 | differs at 281 |
+| 10 | silo2 | none | none | 518 | **identical 1-510** |
+| 11 | frigate1 | 116 | 116 | 343 | differs at 116 |
+| 12 | frigate2 | 61 | 63 | 401 | differs at 63 |
+| 13 | train | 279 | 279 | 484 | differs at 279 |
 
 Open issues:
-- **bunker2 is not deterministic run to run**: its end tick has been 388, 438
-  and 328 across runs, so something there depends on more than the inputs.
+- **Wall-clock dependence.** With `GE_DEMOFAST=1 GE_NOSLEEP=1` (unpaced
+  playback) 12 demos give identical per-tick logs, but silo1 (281 -> 141) and
+  frigate2 (63 -> 61) change, and bunker2 varies from run to run even paced.
+  The N64's timing is fixed, so some simulation in the port depends on real
+  time, probably game logic that runs in the render path (player shots and
+  monitor scripts draw RNG from `lvlRender`) being run a different number of
+  times per tick. Until it's found, compare paced runs (`PACED=1`).
+- **bunker2**: the emulator run did not report an end; check `getrace`
+  output for demo 8.
 - **frigate2, tick 61-63**: a multi-screen monitor's random-effect script
-  draws RNG one tick away from the N64. The port gives each screen the same
-  animation as the N64 code and ROM data imply; the remaining difference is
-  timing.
+  draws RNG one tick away from the N64.
 
 ## #1 Bullet dust puff skipped when only the floor-tile test hits
 

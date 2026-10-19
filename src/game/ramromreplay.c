@@ -416,11 +416,14 @@ s32 ramrom_replay_handler(struct contsample *arg0, s32 arg1)
         }
         if (diag)
         {
-            printf("ge: demo tick %d draws=%d live=%02x rec=%02x p0=%d,%d p1=%d,%d b=%04x,%04x\n",
+            /* seed= is the full 64-bit seed, compared tick by tick against an
+             * emulator by tools/n64trace/compare.py */
+            printf("ge: demo tick %d draws=%d live=%02x rec=%02x p0=%d,%d p1=%d,%d b=%04x,%04x seed=%016llx\n",
                    port_demo_ticks, g_portRandDrawCount - port_demo_lastdraws,
                    (u8) g_randomSeed, ramrom_blkbuf_2->randseed,
                    joyGetStickX(0), joyGetStickY(0), joyGetStickX(1), joyGetStickY(1),
-                   joyGetButtons(0, 0xFFFF), joyGetButtons(1, 0xFFFF));
+                   joyGetButtons(0, 0xFFFF), joyGetButtons(1, 0xFFFF),
+                   (unsigned long long) g_randomSeed);
         }
         port_demo_lastdraws = g_portRandDrawCount;
     }

@@ -599,8 +599,18 @@ void bossMainloop(void)
 #ifndef TARGET_N64
                     /* Demo playback pacing: hold each tick until the vsync count
                      * recorded with its input block has elapsed, otherwise the
-                     * replay fast-forwards at the PC's 60Hz tick rate. */
-                    if (get_is_ramrom_flag() != 0 &&
+                     * replay fast-forwards at the PC's 60Hz tick rate.
+                     * GE_DEMOFAST=1 skips the hold for testing (with GE_NOSLEEP=1
+                     * a demo runs as fast as it renders): the replayed ticks use
+                     * the recorded frame counts, so the simulation is unchanged. */
+                    static s32 s_demofast = -1;
+
+                    if (s_demofast < 0)
+                    {
+                        extern char *getenv(const char *);
+                        s_demofast = getenv("GE_DEMOFAST") != NULL;
+                    }
+                    if (get_is_ramrom_flag() != 0 && !s_demofast &&
                         mainTickElapsed < (u32) portRamromPendingSpeedframes() * (CYCLES_PER_FRAME - 6450U) - (INTERVAL_INTER_MATH - 3225U))
                     {
                         // wait for a later retrace.

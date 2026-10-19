@@ -79,6 +79,31 @@ extern coord3d D_80035C88;
 extern Vtx D_80035C98;
 extern coord3d D_80035CA8;
 extern coord3d D_80035CB4;
+#if !defined(TARGET_N64) && UINTPTR_MAX > 0xFFFFFFFFu
+/* 64-bit: the ModelRenderData templates in gun.c are N64 word images (16
+ * words), but the host struct has 8-byte pointers, so copying the words in
+ * puts zbufferenabled into basemtx's high half. Fill it by field instead. */
+static void portRenderDataFromWords(ModelRenderData *rd, const u32 *w)
+{
+    memset(rd, 0, sizeof(*rd));
+    rd->basemtx = (Mtxf *) (uintptr_t) w[0];
+    rd->zbufferenabled = w[1];
+    rd->flags = w[2];
+    rd->gdl = (Gfx *) (uintptr_t) w[3];
+    rd->mtxlist = (Mtxf *) (uintptr_t) w[4];
+    rd->unk14 = w[5];
+    rd->unk18 = w[6];
+    rd->unk1c = w[7];
+    rd->unk20 = w[8];
+    rd->unk24 = w[9];
+    rd->unk28 = w[10];
+    rd->unk2c = w[11];
+    rd->PropType = (s32) w[12];
+    rd->envcolour.word = w[13];
+    rd->fogcolour.word = w[14];
+    rd->cullmode = w[15];
+}
+#endif
 extern u32 D_80035CC0;
 #ifndef TARGET_N64
 /* PORT: upstream split gun.c at a04b2214; the port arm below (the raw-word
@@ -659,7 +684,7 @@ void gunUpdateAndFire(GUNHAND handnum)
 
         if (mdlhdr->Switches);
 
-        modelInit(model, mdlhdr, (s32 *) (&hand->modeldatas));
+        modelInit(model, mdlhdr, HAND_MODELDATAS(hand));
         sub_GAME_7F05E978(model, 1);
         sub_GAME_7F05EA94(model, hand->field_87E);
         node = mdlhdr->Switches[1];
@@ -668,7 +693,7 @@ void gunUpdateAndFire(GUNHAND handnum)
         {
             if (&node->Data->Switch);
 
-            flashvisptr = ((s32 *) (&hand->modeldatas)) + node->Data->Switch.RwDataIndex;
+            flashvisptr = HAND_MODELDATAS(hand) + node->Data->Switch.RwDataIndex;
         }
 
         if (mdlhdr->Switches[3] != NULL)
@@ -676,7 +701,13 @@ void gunUpdateAndFire(GUNHAND handnum)
             flashdata = (f32 *) mdlhdr->Switches[3]->Data;
         }
 
+#if !defined(TARGET_N64) && UINTPTR_MAX > 0xFFFFFFFFu
+        /* field_B74 (mtxlist) is the gun Model's render_pos on N64; on 64-bit
+         * the union's mtxlist lands on model->obj instead, so name the field */
+        model->render_pos = (RenderPosView *) rwmtx;
+#else
         hand->mtxlist = rwmtx;
+#endif
 
         if ((bondwalkItemCheckBitflags(item, WEAPONSTATBITFLAG_MIRROR_DUAL) != 0) && (handnum == GUNLEFT))
         {
@@ -1612,6 +1643,13 @@ void gunRenderFirstPersonGunModels(Gfx **gdlptr)
  
 #ifdef TARGET_N64
     renderdata = *(ModelRenderData *)&D_80035CC0;
+#elif UINTPTR_MAX > 0xFFFFFFFFu
+    /* 64-bit: the struct has 8-byte pointers, so the N64 word template below
+     * would put zbufferenabled into basemtx's high half; set it by field. */
+    memset(&renderdata, 0, sizeof(renderdata));
+    renderdata.basemtx = NULL;                  /* D_80035CC0 */
+    renderdata.zbufferenabled = D_80035CC4[0];  /* 1 */
+    renderdata.flags = D_80035CC4[1];           /* 3 */
 #else
     /* The 64-byte template is split across two adjacent globals: word 0 is
      * D_80035CC0 (basemtx NULL), words 1..15 are D_80035CC4[]
@@ -1746,7 +1784,11 @@ Gfx *set_enviro_fog_for_items_in_solo_watch_menu(Gfx *gdl, ITEM_IDS itemid, Mtxf
     ModelRenderData renderdata;
 #endif
     ModelHeader model;
+#if UINTPTR_MAX > 0xFFFFFFFFu
+    u32 spb8[64]; /* 32 words on N64; rwdata records holding pointers are wider */
+#else
     u8 spb8[0x80];
+#endif
     s32 padb4;
     Mtxf sp74;
     Mtxf *matrices;
@@ -1763,6 +1805,12 @@ Gfx *set_enviro_fog_for_items_in_solo_watch_menu(Gfx *gdl, ITEM_IDS itemid, Mtxf
 #ifndef TARGET_N64
     memset(&model, 0, sizeof(model)); /* full Model on PC - clear the anim state the truncated N64 local never had */
 
+#if UINTPTR_MAX > 0xFFFFFFFFu
+    /* 64-bit: set the template by field (see gunRenderFirstPersonGunModels) */
+    memset(&renderdata, 0, sizeof(renderdata));
+    renderdata.zbufferenabled = D_80035D04[0];
+    renderdata.flags = D_80035D04[1];
+#else
     {
         u32 *w = (u32 *) &renderdata;
         s32 wi;
@@ -1773,6 +1821,7 @@ Gfx *set_enviro_fog_for_items_in_solo_watch_menu(Gfx *gdl, ITEM_IDS itemid, Mtxf
             w[1 + wi] = D_80035D04[wi];
         }
     }
+#endif
 #endif
 
     sub_GAME_7F05DA8C(GUNRIGHT, itemid);
@@ -1822,6 +1871,12 @@ Gfx *set_enviro_fog_for_items_in_solo_watch_menu(Gfx *gdl, ITEM_IDS itemid, Mtxf
     i = 0;
     ((Model *) &model)->render_pos = matrices;
     modelCalculateRwDataLen(bodymodel);
+#if UINTPTR_MAX > 0xFFFFFFFFu
+    if (bodymodel->numRecords > (s32) ARRAYCOUNT(spb8)) {
+        extern void portConLogf(const char *fmt, ...);
+        portConLogf("ge: watch weapon model needs %d rwdata words, has %d\n", bodymodel->numRecords, (s32) ARRAYCOUNT(spb8));
+    }
+#endif
     modelInit((Model *) &model, bodymodel, spb8);
     sub_GAME_7F05E978((Model *) &model, 0);
     sub_GAME_7F05EA94((Model *) &model, 1);
@@ -1877,6 +1932,7 @@ Gfx *set_enviro_fog_for_items_in_solo_watch_menu(Gfx *gdl, ITEM_IDS itemid, Mtxf
 
     if (bodymodel->numSwitches >= 19)
     {
+#ifdef TARGET_N64
         for (j = 0; j != 20; j += 4)
         {
             if ((*((ModelNode **) ((((u8 *) bodymodel->Switches) + j) + 0x48))) != NULL)
@@ -1898,6 +1954,31 @@ Gfx *set_enviro_fog_for_items_in_solo_watch_menu(Gfx *gdl, ITEM_IDS itemid, Mtxf
                     rwdata->Raw.unk00 = 1;
                 }
             }
+#else
+        /* PORT: Switches[18 + j/4] and [23 + j/4] (the byte offsets above assume
+         * 4-byte entries) */
+        for (j = 0; j != 20; j += 4)
+        {
+            if (bodymodel->Switches[18 + j / 4] != NULL)
+            {
+                rwdata = modelGetNodeRwData((Model *) &model, bodymodel->Switches[18 + j / 4]);
+
+                if (rwdata != NULL)
+                {
+                    rwdata->Raw.unk00 = 1;
+                }
+            }
+
+            if (bodymodel->Switches[23 + j / 4] != NULL)
+            {
+                rwdata = modelGetNodeRwData((Model *) &model, bodymodel->Switches[23 + j / 4]);
+
+                if (rwdata != NULL)
+                {
+                    rwdata->Raw.unk00 = 1;
+                }
+            }
+#endif
         }
     }
 
@@ -2017,7 +2098,11 @@ Gfx* watchRenderController(Gfx* gdl, Mtxf* basemtx, s32 envcolour, bool animateb
     s32 j;
     s32 offset;
     f32 angle;
+#if UINTPTR_MAX > 0xFFFFFFFFu
+    u32 rwdata[52]; /* 26 words on N64; rwdata records holding pointers are wider */
+#else
     u32 rwdata[26];
+#endif
     u32 pad2;
     Mtxf sp41c;
     Mtxf sp3dc;
@@ -2058,7 +2143,17 @@ Gfx* watchRenderController(Gfx* gdl, Mtxf* basemtx, s32 envcolour, bool animateb
     struct coord3d coord_node12_pos;
     struct coord3d coord_node12_base;
 
+#if !defined(TARGET_N64) && UINTPTR_MAX > 0xFFFFFFFFu
+    {
+        /* N64: the 16 words at D_80035D04 + 0x3c, i.e. its last word (0) and
+         * the start of watchControllerButtonBases (1, 3, 0...) - adjacency a
+         * host compiler doesn't keep, so spell the template out */
+        static const u32 tmpl[16] = { 0, 1, 3 };
+        portRenderDataFromWords(&renderdata, tmpl);
+    }
+#else
     renderdata = *(ModelRenderData *)((u8 *)D_80035D04 + 0x3c);
+#endif
 
     sub_GAME_7F05DA8C(GUNRIGHT, 0x55);
 
@@ -2077,6 +2172,12 @@ Gfx* watchRenderController(Gfx* gdl, Mtxf* basemtx, s32 envcolour, bool animateb
     memset(&modelstack, 0, sizeof(modelstack)); /* full Model on PC - see the ModelHeader typedef note */
 #endif
 
+#if UINTPTR_MAX > 0xFFFFFFFFu
+    if (objheader->numRecords > ARRAYCOUNT(rwdata)) {
+        extern void portConLogf(const char *fmt, ...);
+        portConLogf("ge: watch controller model needs %d rwdata words, has %d\n", objheader->numRecords, ARRAYCOUNT(rwdata));
+    }
+#endif
     modelInit(&modelstack, objheader, rwdata);
     modelstack.render_pos = (RenderPosView*) matrices;
     matrix_4x4_copy(basemtx, &matrices[0]);
@@ -5535,9 +5636,19 @@ CasingRecord* casingCreate(ModelFileHeader* header, Mtxf* mtx)
 #define THROWPOS_PREV_OFFSET 0xB48
 #endif
 
+#if !defined(TARGET_N64) && UINTPTR_MAX > 0xFFFFFFFFu
+/* 64-bit: struct player/hand grew, so name the fields the N64 offsets meant:
+ * hands[n].throw_item_pos_related (0xAD8), its translation (0xB08) and
+ * throw_item_pos_related_prev's translation (0xB48) */
+#define THROWHAND    ((struct hand *) ((u8 *) &g_CurrentPlayer->hands[0] + handoffset))
+#define THROWMTX     (&THROWHAND->throw_item_pos_related)
+#define THROWPOS(k)  (THROWHAND->throw_item_pos_related.m[3][k])
+#define THROWPREV(k) (THROWHAND->throw_item_pos_related_prev.m[3][k])
+#else
 #define THROWMTX     ((Mtxf *) ((u8 *) g_CurrentPlayer + handoffset + THROWMTX_OFFSET))
 #define THROWPOS(k)  (((f32 *) ((u8 *) g_CurrentPlayer + handoffset + THROWPOS_OFFSET))[k])
 #define THROWPREV(k) (((f32 *) ((u8 *) g_CurrentPlayer + handoffset + THROWPOS_PREV_OFFSET))[k])
+#endif
 
 extern const f32 g_CasingSwitchScale;
 extern const f32 g_PistolCasingHorizontalSpeed;
@@ -6194,7 +6305,11 @@ void sub_GAME_7F068EC4(CasingRecord *casing, Gfx **gdl)
     ModelFileHeader *model_header = casing->header;
     RenderPosView   *model_matrices = dynAllocate(model_header->numMatrices * sizeof(RenderPosView));
     ModelHead        model;
+#if !defined(TARGET_N64) && UINTPTR_MAX > 0xFFFFFFFFu
+    ModelRenderData  render_data;
+#else
     ModelRenderData  render_data = *(ModelRenderData *)g_DefaultCasingModelRenderData;
+#endif
     Mtxf             casing_model_mtx;
     s32              axis_offset;
     s32              matrix_translation_in_range = TRUE;
@@ -6202,6 +6317,9 @@ void sub_GAME_7F068EC4(CasingRecord *casing, Gfx **gdl)
     f32              model_scale_or_min_translation;
     u8              *matrix_axis_ptr;
 
+#if !defined(TARGET_N64) && UINTPTR_MAX > 0xFFFFFFFFu
+    portRenderDataFromWords(&render_data, g_DefaultCasingModelRenderData);
+#endif
     modelCalculateRwDataLen(model_header);
     modelInit((Model *)&model, model_header, NULL);
 
@@ -6847,7 +6965,7 @@ Gfx *generate_ammo_total_microcode(Gfx *gdl)
                             (viGetViewTop() + viGetViewHeight()) - 20, 0,
 #endif
                             ammo_related[ammotype].IconYOffset, 1);
-                        textwidth_r = ((u8 *)imageoffset_r)[4];
+                        textwidth_r = ((sImageTableEntry *)imageoffset_r)->width;
                     }
 
                     gdl = microcode_constructor(gdl);
@@ -6932,7 +7050,7 @@ Gfx *generate_ammo_total_microcode(Gfx *gdl)
                             (viGetViewTop() + viGetViewHeight()) - 20, 1,
 #endif
                             ammo_related[ammotype].IconYOffset, 1);
-                        textwidth_l = ((u8 *)imageoffset_l)[4];
+                        textwidth_l = ((sImageTableEntry *)imageoffset_l)->width;
                     }
 
                     gdl = microcode_constructor(gdl);
@@ -7113,7 +7231,7 @@ Gfx *gunDrawWatchAmmoDisplay(Gfx *gdl)
                 gdl = set_rgba_redirect_generate_microcode(gdl, (u8 *)imageoffset, 200.0f, 180.0f, (viGetViewTop() + viGetViewHeight()) - 20, 0, ammo_related[ammotype].IconYOffset, 1);
 #endif
 
-                textwidth = ((u8 *)imageoffset)[4];
+                textwidth = ((sImageTableEntry *)imageoffset)->width;
             }
 
             gdl = microcode_constructor(gdl);

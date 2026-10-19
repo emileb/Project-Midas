@@ -41,6 +41,9 @@
 #include <ultra64.h>
 #include "bondtypes.h"
 #include "../generated/setup_kinds.h"
+#include "game/bondview.h" /* textoverride, for the layout size checks */
+#define SL64_WANT_CHECKS /* setup_layout64.h: pin every mapped struct's size */
+#include "../generated/setup_layout64.h"
 
 /* port_console.c: prints to stderr like the fprintf it replaced, and also
  * keeps a silent copy in the tilde console's log. */
@@ -313,6 +316,252 @@ static void convertIntro(struct conv *c)
     }
 }
 
+/* ==== the 64-bit native image ========================================== */
+
+#if UINTPTR_MAX > 0xFFFFFFFFu
+/* 64-bit hosts: the converted file is still the N64 layout, whose 4-byte
+ * pointer slots don't fit the host structs, so every record is re-laid out
+ * into a separately allocated native image that prop.c uses instead of the
+ * file (romfileSetupNative). Layout of the image:
+ *
+ *   [0]      a native struct stagesetup - section OFFSETS from the image base,
+ *            so prop.c's SETUP_PROMOTE rebases them as on N64
+ *   [NI_FILE] the converted file, byte for byte: strings, -1 terminated s32
+ *            lists, AI byte streams and the credits table stay here
+ *   then     each section, re-laid out record by record (8-aligned)
+ *
+ * Fields that hold file offsets (pad names, waypoint lists, path and ailist
+ * pointers, the credits table) are offsets into the image: NI_FILE + the file
+ * offset. Every other pointer slot gets its N64 word zero-extended (0 in
+ * retail data, or a small id/index the game reads back as an s32).
+ * The word maps come from port/generated/setup_layout64.h. */
+
+#define NI_FILE ((u32) ((sizeof(struct stagesetup) + 15) & ~15u))
+#define NI_ALIGN8(x) (((x) + 7u) & ~7u)
+
+static const struct sl64map kNiPropdef[SETUP_PROPDEF_TYPES] = SL64_PROPDEF_MAPS;
+static const struct sl64map kNiIntro[SETUP_INTRO_TYPES] = SL64_INTRO_MAPS;
+static const struct sl64map kNiPad = SL64_MAP_PadRecord;
+static const struct sl64map kNiBoundPad = SL64_MAP_BoundPadRecord;
+static const struct sl64map kNiWaypoint = SL64_MAP_waypoint;
+static const struct sl64map kNiWaygroup = SL64_MAP_waygroup;
+static const struct sl64map kNiPath = SL64_MAP_PathRecord;
+static const struct sl64map kNiAilist = SL64_MAP_AIListRecord;
+static const struct sl64map kNiName = SL64_MAP_pname;
+
+struct nimg {
+    u8 *p;
+    u32 len, cap;
+    int oom;
+    u32 ptrNonzero; /* pointer slots that held a non-zero N64 word (non-offset slots) */
+};
+
+/* reserve `bytes` (zero-filled) and return the offset: 8-aligned, or packed
+ * right after the previous allocation */
+static u32 niAllocAt(struct nimg *n, u32 bytes, int packed)
+{
+    u32 off = packed ? n->len : NI_ALIGN8(n->len);
+    u32 end = off + bytes;
+    if (end > n->cap) {
+        u32 cap = n->cap ? n->cap : 0x10000;
+        u8 *np;
+        while (cap < end) cap *= 2;
+        np = realloc(n->p, cap);
+        if (np == NULL) {
+            n->oom = 1;
+            return 0;
+        }
+        memset(np + n->cap, 0, cap - n->cap);
+        n->p = np;
+        n->cap = cap;
+    }
+    n->len = end;
+    return off;
+}
+
+static u32 niAlloc(struct nimg *n, u32 bytes)
+{
+    return niAllocAt(n, bytes, 0);
+}
+
+static void niPut(struct nimg *n, u32 off, uintptr_t v, int wide)
+{
+    if (wide) {
+        memcpy(n->p + off, &v, sizeof(v));
+    } else {
+        u32 w = (u32) v;
+        memcpy(n->p + off, &w, 4);
+    }
+}
+
+/* one record: N64 words -> native offsets. `offsets` is a bitmask of words
+ * that are file offsets (rebased onto the image when non-zero). Words past
+ * the map (pointer-free structs shorter than the N64 record) keep their
+ * position. */
+static void niRecord(struct nimg *n, u32 dst, const u8 *src, u32 words, const struct sl64map *m, u32 offsets)
+{
+    u32 w;
+    for (w = 0; w < words; w++) {
+        u32 v;
+        memcpy(&v, src + w * 4, 4);
+        if (w < m->nwords) {
+            u16 e = m->word[w];
+            if (offsets & (1u << w)) {
+                niPut(n, dst + SL64_OFS(e), v != 0 ? (uintptr_t) v + NI_FILE : 0, (e & SL64_PTR) != 0);
+            } else {
+                niPut(n, dst + SL64_OFS(e), v, 0); /* a pointer slot's high half stays 0 */
+                if ((e & SL64_PTR) && v != 0) n->ptrNonzero++;
+            }
+        } else {
+            niPut(n, dst + w * 4, v, 0);
+        }
+    }
+}
+
+/* a fixed-size table ending at (and including) the record `last` says is the end */
+static u32 niTable(struct nimg *n, struct conv *c, u32 off, const struct sl64map *m, u32 offsets,
+                   int (*last)(const u8 *rec))
+{
+    u32 words = m->size32 / 4;
+    u32 o = off, count = 0, dst, i;
+    for (;;) { /* count first so the section is one contiguous run */
+        if (o + words * 4 > c->size) return 0;
+        count++;
+        if (last(c->d + o)) break;
+        o += words * 4;
+    }
+    dst = niAlloc(n, count * m->size64);
+    if (n->oom) return 0;
+    for (i = 0; i < count; i++) {
+        niRecord(n, dst + i * m->size64, c->d + off + i * words * 4, words, m, offsets);
+    }
+    return dst;
+}
+
+static u32 rd32(const u8 *p) { u32 v; memcpy(&v, p, 4); return v; }
+static int lastPad(const u8 *r) { return rd32(r + 36) == 0; }          /* plink */
+static int lastWaypoint(const u8 *r) { return (s32) rd32(r) < 0; }     /* padID */
+static int lastFirstWord(const u8 *r) { return rd32(r) == 0; }         /* waygroup neighbours, path waypoints, ailist, name */
+
+static u32 niPropDefs(struct nimg *n, struct conv *c)
+{
+    u32 o = c->hdr[H_PD];
+    u32 start = NI_ALIGN8(n->len);
+    n->len = start;
+    for (;;) {
+        u32 type, words, nw, dst;
+        if (o + 4 > c->size) return 0;
+        type = c->d[o + 3]; /* host-order header: {u16 scale; u8 hidden; u8 type} */
+        if (type >= SETUP_PROPDEF_TYPES) return 0;
+        words = kSetupPropdefKinds[type].words;
+        if (o + words * 4 > c->size) return 0;
+        nw = (u32) sizepropdef((PropDefHeaderRecord *) (c->d + o)); /* the native stride, by type */
+        dst = niAlloc(n, nw * 4);
+        if (n->oom) return 0;
+        niRecord(n, dst, c->d + o, words, &kNiPropdef[type], 0);
+        o += words * 4;
+        if (type == SETUP_PROPDEF_TYPES - 1) return start;
+    }
+}
+
+static u32 niIntro(struct nimg *n, struct conv *c)
+{
+    u32 o = c->hdr[H_INTRO];
+    u32 start = NI_ALIGN8(n->len);
+    n->len = start;
+    for (;;) {
+        u32 type, words, dst;
+        if (o + 4 > c->size) return 0;
+        type = c->d[o + 3];
+        if (type >= SETUP_INTRO_TYPES) return 0;
+        words = kSetupIntroKinds[type].words;
+        if (o + words * 4 > c->size) return 0;
+        /* records are packed back to back by sizeof (bondview_r.c's walk) */
+        dst = niAllocAt(n, kNiIntro[type].size64, 1);
+        if (n->oom) return 0;
+        /* CREDITS word 1 is the credits table's file offset (convertIntro) */
+        niRecord(n, dst, c->d + o, words, &kNiIntro[type], type == 8 ? 1u << 1 : 0);
+        o += words * 4;
+        if (type == SETUP_INTRO_TYPES - 1) return start;
+    }
+}
+
+#define NI_SLOTS 4
+static struct {
+    const u8 *data;
+    u8 *img;
+} sNative[NI_SLOTS];
+
+/* the native image built for this converted file, or NULL */
+void *romfileSetupNative(const void *data)
+{
+    s32 i;
+    for (i = 0; i < NI_SLOTS; i++) {
+        if (sNative[i].data == data && data != NULL) {
+            return sNative[i].img;
+        }
+    }
+    return NULL;
+}
+
+static void niStore(const u8 *data, u8 *img)
+{
+    s32 i, slot = -1;
+    for (i = 0; i < NI_SLOTS; i++) {
+        if (sNative[i].data == data) {
+            slot = i;
+            break;
+        }
+        if (slot < 0 && sNative[i].data == NULL) slot = i;
+    }
+    if (slot < 0) slot = 0;
+    free(sNative[slot].img);
+    sNative[slot].data = img != NULL ? data : NULL;
+    sNative[slot].img = img;
+}
+
+static int romfileSetupBuildNative(struct conv *c)
+{
+    struct nimg n;
+    u32 sec[SETUP_HDR_WORDS];
+    u32 i;
+
+    memset(&n, 0, sizeof(n));
+    memset(sec, 0, sizeof(sec));
+    niAlloc(&n, NI_FILE + c->size);
+    if (n.oom) goto fail;
+    memcpy(n.p + NI_FILE, c->d, c->size);
+
+    /* pads: plink (word 9) is a name offset; boundpads likewise */
+    if (!(sec[H_PADS] = niTable(&n, c, c->hdr[H_PADS], &kNiPad, 1u << 9, lastPad))) goto fail;
+    if (!(sec[H_BPADS] = niTable(&n, c, c->hdr[H_BPADS], &kNiBoundPad, 1u << 9, lastPad))) goto fail;
+    if (!(sec[H_WP] = niTable(&n, c, c->hdr[H_WP], &kNiWaypoint, 1u << 1, lastWaypoint))) goto fail;
+    if (!(sec[H_WG] = niTable(&n, c, c->hdr[H_WG], &kNiWaygroup, 3u, lastFirstWord))) goto fail;
+    if (!(sec[H_PATHS] = niTable(&n, c, c->hdr[H_PATHS], &kNiPath, 1u, lastFirstWord))) goto fail;
+    if (!(sec[H_AI] = niTable(&n, c, c->hdr[H_AI], &kNiAilist, 1u, lastFirstWord))) goto fail;
+    if (c->hdr[H_PN] != 0 && !(sec[H_PN] = niTable(&n, c, c->hdr[H_PN], &kNiName, 1u, lastFirstWord))) goto fail;
+    if (c->hdr[H_BPN] != 0 && !(sec[H_BPN] = niTable(&n, c, c->hdr[H_BPN], &kNiName, 1u, lastFirstWord))) goto fail;
+    if (!(sec[H_PD] = niPropDefs(&n, c))) goto fail;
+    if (!(sec[H_INTRO] = niIntro(&n, c))) goto fail;
+
+    for (i = 0; i < SETUP_HDR_WORDS; i++) {
+        uintptr_t v = sec[i];
+        memcpy(n.p + i * sizeof(void *), &v, sizeof(v));
+    }
+    niStore(c->d, n.p);
+    portConLogf("ge: romdata: setup %-16s native 64-bit image built (%u bytes; %u non-zero pointer-slot words widened)\n",
+            c->name, n.len, n.ptrNonzero);
+    return 1;
+
+fail:
+    portConLogf("ge: romdata: setup %s: building the native 64-bit image failed%s - the stage cannot load\n",
+            c->name, n.oom ? " (out of memory)" : " (a section runs off the file)");
+    free(n.p);
+    niStore(c->d, NULL);
+    return 0;
+}
+#endif
+
 /* ==== the probe ======================================================== */
 
 static u32 probeMismatch(const u8 *a, const u8 *b, u32 n)
@@ -501,6 +750,33 @@ s32 romfileSetupConvert(u8 *data, u32 size, const char *name, const u8 *compiled
     struct conv c;
     u32 i;
 
+    { /* once: sizepropdef must walk what the converters lay out - the N64
+       * record length on 32-bit hosts, the native record on 64-bit ones */
+        static int checked;
+        if (!checked) {
+            u32 t, bad = 0;
+            checked = 1;
+            for (t = 0; t < SETUP_PROPDEF_TYPES; t++) {
+                PropDefHeaderRecord h;
+                u32 got, want;
+                memset(&h, 0, sizeof(h));
+                h.type = (u8) t;
+                got = (u32) sizepropdef(&h);
+#if UINTPTR_MAX > 0xFFFFFFFFu
+                want = kNiPropdef[t].size64 > kSetupPropdefKinds[t].words * 4u ? kNiPropdef[t].size64 : kSetupPropdefKinds[t].words * 4u;
+                want = (NI_ALIGN8(want)) / 4;
+#else
+                want = kSetupPropdefKinds[t].words;
+#endif
+                if (got != want) {
+                    portConLogf("ge: romdata: sizepropdef(type %u) = %u words, the setup layout says %u - setups will not walk\n", t, got, want);
+                    bad++;
+                }
+            }
+            (void) bad;
+        }
+    }
+
     memset(&c, 0, sizeof(c));
     c.d = data;
     c.size = size;
@@ -537,5 +813,12 @@ s32 romfileSetupConvert(u8 *data, u32 size, const char *name, const u8 *compiled
     } else {
         portConLogf("ge: romdata: setup %-16s converted (%u propdef words, %u intro words, %u pads)\n", name, c.pdWords, c.introWords, c.npads);
     }
+#if UINTPTR_MAX > 0xFFFFFFFFu
+    if (c.bad == 0) {
+        romfileSetupBuildNative(&c);
+    } else {
+        niStore(c.d, NULL);
+    }
+#endif
     return c.bad == 0;
 }

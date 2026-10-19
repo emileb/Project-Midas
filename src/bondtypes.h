@@ -721,10 +721,18 @@ typedef union
                 s16 t; /* 0xa */
             };
 
+#if defined(TARGET_N64) || UINTPTR_MAX <= 0xFFFFFFFFu
             struct Vertex *LinkedTo;
 
             /* Collision vertices only: points to related model node. */
             void *CollisionRelatedNode; /* 0x8 */
+#else
+            /* 64-bit: a pointer here would make Vertex 24 bytes instead of the
+             * RSP's 16, so collision vertices keep the related node's segment-5
+             * file offset (romfile_model_native.c portModelCollisionNode). */
+            u32 LinkedTo;
+            u32 CollisionRelatedNode; /* 0x8 */
+#endif
         };
 
         union
@@ -803,7 +811,7 @@ typedef union
 
     typedef struct ModelFileTextures
     {
-        u32 TextureID;
+        uintptr_t TextureID; /* texture number; texLoad replaces it with the data pointer */
         u8  Width;
         u8  Height;
         u8  MipMapTiles;
@@ -1124,7 +1132,7 @@ typedef union
             f32     Scale;       /*0x1c*/
             u16     RwDataIndex; /*0x20*/
             u16     reserved;    /*0x22 padding*/
-            u32     BaseAddr;    /*0x24 padding*/
+            void   *BaseAddr;    /*0x24*/
         } ModelRoData_GunfireRecord;
 
         typedef struct ModelRwData_GunfireRecord
@@ -3995,7 +4003,7 @@ struct objective_entry
 #pragma region Images
 typedef struct sImageTableEntry
 {
-    u32 index;
+    uintptr_t index; /* texture number; texLoad replaces it with the data pointer */
     u8  width;
     u8  height;
     u8  level;

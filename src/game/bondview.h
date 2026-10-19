@@ -214,6 +214,7 @@ struct hand
   Mtxf throw_item_pos_related_prev;
   coord3d field_B58;
   f32 field_B64;
+#ifdef TARGET_N64
   s32 field_B68;
   s32 field_B6C;
   s32 field_B70;
@@ -254,9 +255,70 @@ struct hand
   s32 field_BFC;
   s32 field_C00;
   s32 field_C04;
+#else
+  /* PC: gunfire.c uses field_B68 as a whole Model, which outgrows this run of
+   * fields (and on 64-bit any fixed size), so give it a Model's room */
+  union {
+    struct {
+    s32 field_B68;
+    s32 field_B6C;
+    s32 field_B70;
+    Mtxf *mtxlist;
+    s32 field_B78;
+    s32 field_B7C;
+    s32 field_B80;
+    s32 field_B84;
+    s32 modeldatas;
+    s32 field_B8C;
+    s32 field_B90;
+    s32 field_B94;
+    s32 field_B98;
+    s32 field_B9C;
+    s32 field_BA0;
+    s32 field_BA4;
+    s32 field_BA8;
+    s32 field_BAC;
+    s32 field_BB0;
+    s32 field_BB4;
+    s32 field_BB8;
+    s32 field_BBC;
+    s32 field_BC0;
+    s32 field_BC4;
+    s32 field_BC8;
+    s32 field_BCC;
+    s32 field_BD0;
+    s32 field_BD4;
+    s32 field_BD8;
+    s32 field_BDC;
+    s32 field_BE0;
+    s32 field_BE4;
+    s32 field_BE8;
+    s32 field_BEC;
+    s32 field_BF0;
+    s32 field_BF4;
+    s32 field_BF8;
+    s32 field_BFC;
+    s32 field_C00;
+    s32 field_C04;
+    };
+    u8 field_B68_model[sizeof(Model)];
+  };
+#endif
   s32 volley;  // Number of bullets discharged in a row. For pistols, it's always 1 even if the fire button is held.
   coord3d item_related;
+#if !defined(TARGET_N64) && UINTPTR_MAX > 0xFFFFFFFFu
+  /* 64-bit: the gun Model's own fields reach past modeldatas (+0x20), so its
+   * rwdata (32 words, modeldatas..field_C04 on N64) lives here instead
+   * (HAND_MODELDATAS). Last, so the positional initializers still line up;
+   * twice the N64 room, since rwdata records holding pointers are wider. */
+  s32 modeldatas64[64];
+#endif
 };
+#if !defined(TARGET_N64) && UINTPTR_MAX > 0xFFFFFFFFu
+#define HAND_MODELDATAS(hand) ((s32 *) (hand)->modeldatas64)
+#else
+#define HAND_MODELDATAS(hand) ((s32 *) &(hand)->modeldatas)
+#endif
 
 typedef struct InvItem {
     s32 type;
@@ -855,58 +917,13 @@ struct player
 
   // offset 0x594
   s32 standcnt;
-  Model *model;
-  s32 field_59C;
-  s32 field_5A0;
-  s32 field_5A4;
-  s32 field_5A8;
-  s32 field_5AC;
-  s32 field_5B0;
-  s32 field_5B4;
-  s32 field_5B8;
-  s8 animFlipFlag;
-  s8 field_5BD;
-  s8 field_5BE;
-  s8 field_5BF;
-
-  f32 field_5C0;
-
-  s32 field_5C4;
-  s32 field_5C8;
-  s32 field_5CC;
-  s32 field_5D0;
-  s32 field_5D4;
-  s32 field_5D8;
-  s32 field_5DC;
-  s32 field_5E0;
-  s32 field_5E4;
-  s32 field_5E8;
-  s32 field_5EC;
-  s32 field_5F0;
-  s32 field_5F4;
-  s32 field_5F8;
-  s32 field_5FC;
-  s32 field_600;
-  s32 field_604;
-  s32 field_608;
-  s32 field_60C;
-  s32 field_610;
-  s32 field_614;
-  s32 field_618;
-  s32 field_61C;
-  s32 field_620;
-  s32 field_624;
-  s32 field_628;
-  s32 field_62C;
-  s32 field_630;
-  s32 field_634;
-  s32 field_638;
-  s32 field_63C;
-  s32 field_640;
-  s32 field_644;
-  s32 field_648;
-  s32 field_64C;
-  s32 field_650;
+  /**
+   * 0x598-0x654: the gait model (animInit, its rwdata at field_654). A real
+   * Model so it keeps its size on 64-bit, like the pause watch's. The decomp
+   * had Model *model plus field_59C..field_650 here; the fields the game used
+   * by name were animFlipFlag (model.gunhand) and field_5C0 (model.animframe1).
+   */
+  Model model;
   s32 field_654;
   s32 field_658;
   s32 field_65C;
@@ -2290,6 +2307,11 @@ struct player
   s32 field_2A74;
   s32 field_2A78;
   s32 field_2A7C;
+#if !defined(TARGET_N64) && UINTPTR_MAX > 0xFFFFFFFFu
+  /* 64-bit: the pause watch's rwdata (50 words from field_2EC on N64), with
+   * twice the room since rwdata records holding pointers are wider. */
+  s32 watch_rwdata64[100];
+#endif
 };
 
 struct firing_anim_struct {
@@ -2359,13 +2381,14 @@ typedef struct Weapon1PTransformKeyframe {
 
 // placeholder while matching
 struct move_bond_temp_struct {
+#ifdef TARGET_N64
     s32 unk00;
     s32 unk04;
-#ifndef TARGET_N64
-    /* Padded to 16 bytes because the stan locus walk writes a full
-     * StandTileLocusCallbackRecord through this; N64 keeps the 8-byte layout. */
-    s32 pad08;
-    s32 pad0C;
+#else
+    /* The stan locus walk writes a full StandTileLocusCallbackRecord through
+     * this (24 bytes with the 64-bit rooms pointer, which also needs 8-byte
+     * alignment); N64 keeps the 8-byte layout. */
+    struct StandTileLocusCallbackRecord rec;
 #endif
 };
 

@@ -406,11 +406,10 @@ static void gfx_sdl_init(const struct GfxWindowInitSettings *set) {
         maximized_state = true;
     }
 
-#ifdef SDL_WINDOW_ALLOW_HIGHDPI
+    /* (SDL_WINDOW_ALLOW_HIGHDPI is an enum value, so an #ifdef on it was always false) */
     if (set->allow_hidpi) {
         flags |= SDL_WINDOW_ALLOW_HIGHDPI;
     }
-#endif
 
     // ideally we need 3.0 compat
     // if that doesn't work, try 3.2 core in case we're on mac, 2.1 compat as a last resort

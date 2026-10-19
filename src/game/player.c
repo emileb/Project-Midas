@@ -125,7 +125,10 @@ void initBONDdataforPlayer(s32 player_num)
     assert(players[num]==NULL); //according to assert, this file name is "player.c"
 #endif
     default_hand = g_DefaultHandStateTemplate;
-#if defined(VERSION_US) || defined(VERSION_JP)
+#if !defined(TARGET_N64) && UINTPTR_MAX > 0xFFFFFFFFu
+    /* 64-bit: the struct holds pointers, so it outgrows the N64's 0x2A80 */
+    g_playerPointers[player_num] = mempAllocBytesInBank((u32) ((sizeof(struct player) + 15) & ~(size_t) 15), MEMPOOL_STAGE);
+#elif defined(VERSION_US) || defined(VERSION_JP)
     g_playerPointers[player_num] = mempAllocBytesInBank(0x2A80U, MEMPOOL_STAGE);
 #elif defined(VERSION_EU)
     g_playerPointers[player_num] = mempAllocBytesInBank(0x2A70U, MEMPOOL_STAGE);

@@ -222,7 +222,10 @@ set(ASSET_C_FLAGS
     -m32 -malign-data=abi
     -fms-extensions -ffreestanding -fno-strict-aliasing -fwrapv -funsigned-char
     -fno-common -fno-zero-initialized-in-bss -fno-toplevel-reorder -fno-pic
-    -Og -w
+    -Og -w -std=gnu11
+    # GCC 14 made this an error that -w no longer hides (generated asset C);
+    # the -std keeps newer GCCs (C23 default, where bool is a keyword) on C11
+    -Wno-incompatible-pointer-types
     -DVERSION_US -DLANG_US -DREFRESH_NTSC
     -DLEFTOVERDEBUG -DLEFTOVERSPECTRUM -DBUGFIX_R0
     -DNONMATCHING -DAVOID_UB -D_LANGUAGE_C

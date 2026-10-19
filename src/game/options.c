@@ -575,8 +575,8 @@ Gfx * sub_GAME_7F0A4B40(Gfx *DL)
 
         textMeasure(&x, &y, buffer, pFontChars, pFontFile, 0);
         DL = textRender(DL, &D_80040B48, &D_80040B4C, buffer, pFontChars, pFontFile, 0xff0000ff, y, x, 0, 0);
-        // HACK: what is this: ((s32*)pFontChars)[0x224]
-        D_80040B4C = (D_80040B4C - ((s32*)pFontChars)[0x224]) + 1;
+        // was ((s32*)pFontChars)[0x224]: byte 0x890 = chars[91].height with 24-byte N64 fontchars
+        D_80040B4C = (D_80040B4C - pFontChars[91].height) + 1;
     }
 
     return DL;

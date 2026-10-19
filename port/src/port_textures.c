@@ -78,7 +78,7 @@ static s32 sXhairNum = -1;
 
 static s32 texCrosshairNum(void)
 {
-    if (crosshairimage != NULL && (u32) crosshairimage->index < 0x1000u)
+    if (crosshairimage != NULL && crosshairimage->index < 0x1000u)
     {
         sXhairNum = (s32) crosshairimage->index;
     }

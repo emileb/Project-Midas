@@ -361,10 +361,9 @@ void texSelect(Gfx **gdlptr, struct sImageTableEntry *tconfig, u32 arg2, s32 arg
         
         if ((u32) tconfig->index < NUM_TEXTURES)
         {
-            texLoad((s32 *)tconfig, NULL);
+            texLoad(&tconfig->index, NULL);
         }
 
-        /* TODO(64bit): index is a u32 that texLoad overwrites with a texel pointer */
         aa = (u16 *)PHYS_TO_K0(tconfig->index);
         tex = texFindInPool((aa)[-4], NULL);
 

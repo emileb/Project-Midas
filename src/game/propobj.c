@@ -852,8 +852,8 @@ void sub_GAME_7F04088C(ObjectRecord *baseobj, struct coord3d *pos, Mtxf *matrix,
     {
         ObjectRecord *roomObj;
         f32 distfromTileCenter;
-        f32 byrefA;
-        f32 byrefB;
+        struct rect4f *byrefA;
+        s32 byrefB;
         f32 byrefC;
         f32 byrefD;
 
@@ -7522,7 +7522,7 @@ void sub_GAME_7F04AC20(PropRecord *prop, ModelRenderData *mrData, s32 arg2)
 
                 if (nodedata != NULL)
                 {
-                    rwdataSlot = &obj->model->datas[nodedata->DisplayListCollisions.RwDataIndex];
+                    rwdataSlot = (void *)((s32 *)obj->model->datas + nodedata->DisplayListCollisions.RwDataIndex); /* word index */
 
                     if (nodedata->DisplayListCollisions.Vertices != (Vertex *)*rwdataSlot)
                     {
@@ -7911,7 +7911,7 @@ void objDeform(ObjectRecord *obj, E_EXPLOSIONTYPE explosiontype)
         return;
     }
     
-    vtxslot = (Vertex **) (&model->datas[rodata->RwDataIndex]);
+    vtxslot = (Vertex **)((s32 *)model->datas + rodata->RwDataIndex); /* word index */
     
 #ifdef VERSION_EU
     if (obj->obj < PROP_WINDOW)
@@ -15559,7 +15559,7 @@ void sub_GAME_7F056690(void)
                 }
                 if (sub_GAME_7F04B590(s1->model->obj, t0) != 0)
                 {
-                    new_var = &s3->datas[s0->RwDataIndex];
+                    new_var = (void *)((s32 *)s3->datas + s0->RwDataIndex); /* word index */
                     if ((uintptr_t)s0->Vertices != (uintptr_t)*new_var)
                     {
                         objFreePermanently(s1, 1);

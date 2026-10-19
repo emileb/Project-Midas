@@ -134,6 +134,16 @@ typedef struct {
     struct PVoice_s     *pvoice;
 } ALFreeParam;
 
+/* Every param variant is carved from the one ALParam pool (synthesizer.c). On
+ * N64 they are all 28 bytes; on 64-bit ALStartParamAlt's trailing pointer makes
+ * it bigger than ALParam, so the pool's element is the largest variant. */
+typedef union {
+    ALParam             param;
+    ALStartParamAlt     startalt;
+    ALStartParam        start;
+    ALFreeParam         free;
+} ALParamSlot;
+
 typedef Acmd *(*ALCmdHandler)(void *, s16 *, s32, s32, Acmd *);
 typedef s32   (*ALSetParam)(void *, s32, void *);
 

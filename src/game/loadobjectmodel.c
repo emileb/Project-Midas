@@ -48,9 +48,31 @@ s32 getposstan(struct coord3d *pos, StandTile *stan, f32 radius, struct coord3d 
  * @param pdef:  Prop Defenition to get size of
  * @return Size of prop in Words (32bit)
 */
+#if !defined(TARGET_N64) && UINTPTR_MAX > 0xFFFFFFFFu
+/* 64-bit hosts use the native setup image (port/src/romfile_setup.c), where
+ * each record is laid out as the struct the game reads it through: the
+ * stride is that struct's size, or the N64 record if it is longer (a
+ * pointer-free struct that doesn't name every word), 8-aligned so pointer
+ * slots stay aligned. The type -> struct table and the N64 word counts come
+ * from port/generated/setup_layout64.h (scripts/port/gen_setup_layout64.py,
+ * which also checks the i386 = N64 sizes). */
+#include "port/generated/setup_layout64.h"
+#define SIZEPROPDEF_NATIVE(T, n64words) \
+    ((s32) ((((sizeof(T) > (n64words) * 4u ? sizeof(T) : (n64words) * 4u) + 7u) & ~(size_t) 7u) / 4u))
+#endif
+
 s32 sizepropdef(PropDefHeaderRecord *pdef)
 {
-    #if 1
+#if !defined(TARGET_N64) && UINTPTR_MAX > 0xFFFFFFFFu
+    switch (pdef->type)
+    {
+#define SIZEPROPDEF_CASE(type, T, n64words) case type: return SIZEPROPDEF_NATIVE(T, n64words);
+        SL64_PROPDEF_STRUCTS(SIZEPROPDEF_CASE)
+#undef SIZEPROPDEF_CASE
+        default:
+            return SIZEPROPDEF_NATIVE(PropDefHeaderRecord, 1);
+    }
+    #elif 1
     switch (pdef->type)
     {
         case PROPDEF_GUARD:

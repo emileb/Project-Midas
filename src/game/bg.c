@@ -322,6 +322,25 @@ s32 sub_GAME_7F0B9F14(s32 portalnum, coord3d *pos1, coord3d *pos2);
 
 // end forward declarations
 
+#ifndef TARGET_N64
+#if UINTPTR_MAX > 0xFFFFFFFFu
+/* 64-bit: a served bg's room and portal tables are rebuilt natively beside the
+ * image (romfile_bg.c); point the globals at those */
+extern bg_room_data *romfileBgNativeRooms(const u8 *data);
+extern bg_portal_data_entry *romfileBgNativePortals(const u8 *data);
+#define BG_NATIVE_TABLES() \
+    do { \
+        bg_room_data *nr_ = romfileBgNativeRooms((const u8 *) ptr_bg_data); \
+        if (nr_ != NULL) { \
+            ptr_bgdata_room_fileposition_list = nr_; \
+            if (g_BgPortals != NULL) g_BgPortals = romfileBgNativePortals((const u8 *) ptr_bg_data); \
+        } \
+    } while (0)
+#else
+#define BG_NATIVE_TABLES() do { } while (0)
+#endif
+#endif
+
 
 void bgInit(void) 
 {
@@ -363,14 +382,22 @@ void sub_GAME_7F0B37EC(void) {
     u32 masked;
 
     ptr = (u8 *)specialportalarray;
+#ifdef TARGET_N64
     end = (u8 *)&g_BgCurrentRoom;
+#else
+    end = specialportalarray + sizeof(specialportalarray); /* don't rely on global order */
+#endif
 
     do {
         if (levelentry_index == *ptr++) {
             do {
                 portal = ptr[0];
                 while (ptr[1] >= portal) {
+#ifdef TARGET_N64
                     ((u8 *)g_BgPortals)[(portal << 3) + 6] |= 2;
+#else
+                    g_BgPortals[portal].controlbytes1 |= 2; /* byte 6 of the N64 entry */
+#endif
                     portal++;
                 }
 
@@ -1089,6 +1116,7 @@ void load_bg_file(LEVEL_INDEX levelid)
         ptr_bgdata_offsets = ptr_bg_data;
         ptr_bgdata_room_fileposition_list =
             (bg_room_data *) BG_SEG_TO_PTR(ptr_bg_data, ((s32 *) ptr_bg_data)[1]);
+        BG_NATIVE_TABLES();
     }
 #endif
  
@@ -1100,6 +1128,16 @@ void load_bg_file(LEVEL_INDEX levelid)
         extern s32 g_portStanFromRom;
         extern s32 romdataFileServed(s32 index);
         g_portStanFromRom = romdataFileServed(fileGetIndex((u8 *) levelinfotable[levelentry_index].bg_stan_filename));
+#if UINTPTR_MAX > 0xFFFFFFFFu
+        if (g_portStanFromRom) {
+            /* 64-bit: walk the native header built beside the image (romfile_stan.c) */
+            extern void *romfileStanNativeHeader(const u8 *data);
+            void *hdr = romfileStanNativeHeader(gptr_stan);
+            if (hdr != NULL) {
+                gptr_stan = (u8 *) hdr;
+            }
+        }
+#endif
     }
     { /* bring-up (sanitizer sweep): a stage whose stan asset is missing
        * hands stanDetermineEOF garbage - identify the stage FIRST */
@@ -1122,10 +1160,9 @@ void load_bg_file(LEVEL_INDEX levelid)
     sub_GAME_7F08976C(mCurrentLevelVisibilityScale);
     matrix_4x4_7F058C4C(mCurrentLevelVisibilityScale);
  
-    /* TODO(64bit) layout: the bg front matter is used in place. Header words
-     * [1..4] are 32-bit seg-0x0F offsets; bg_room_data (3 pointer fields +
-     * coord3d, ROM stride 24) and bg_portal_data_entry (pointer + 4 bytes, ROM
-     * stride 8) have pointer-typed fields, so host sizeof/offsets differ. */
+    /* The bg front matter is used in place; its header words [1..4] are 32-bit
+     * seg-0x0F offsets. On 64-bit the room and portal tables are native copies
+     * (BG_NATIVE_TABLES). */
     data = (s32 *)ptr_bg_data;
     dword_CODE_bss_8007BF98 = *data;
     dword_CODE_bss_8007FF88 = 1;
@@ -1135,6 +1172,9 @@ void load_bg_file(LEVEL_INDEX levelid)
         dword_CODE_bss_8007FF88 = 2;
         ptr_bgdata_offsets = (uintptr_t)data;
         ptr_bgdata_room_fileposition_list = (bg_room_data *) BG_SEG_TO_PTR(data, ((s32 *)ptr_bgdata_offsets)[1]);
+#ifndef TARGET_N64
+        BG_NATIVE_TABLES();
+#endif
         
         // Keep this fake goto for matching.
         goto dummy_label_543534; dummy_label_543534: ;
@@ -1147,6 +1187,9 @@ void load_bg_file(LEVEL_INDEX levelid)
         }
  
         g_BgPortals = (bg_portal_data_entry *) BG_SEG_TO_PTR(data, ((s32 *)ptr_bgdata_offsets)[2]);
+#ifndef TARGET_N64
+        BG_NATIVE_TABLES();
+#endif
 
         if (1);
 
@@ -3133,7 +3176,11 @@ s32 bgLoadRoomPrimaryGdl(s32 roomnum, u8 *dst, s32 allocsize)
      * texLoadFromGdl can then read from scratch and write the final
      * texture-processed GDL/data back to dst.
      */
-    scratch = dst + (allocsize - expanded_size);
+    /* (host Gfx can be twice the N64 commands' size: the staging copy grows) */
+    if (allocsize < expanded_size / 8 * (s32) sizeof(Gfx)) {
+        return -1;
+    }
+    scratch = dst + (allocsize - expanded_size / 8 * (s32) sizeof(Gfx));
 
     texCopyGdls((Gfx *)dst, (Gfx *)scratch, expanded_size);
 
@@ -3223,7 +3270,11 @@ s32 bgLoadRoomSecondaryGdl(s32 roomnum, u8 *dst, s32 allocsize)
      * texLoadFromGdl can then read from scratch and write the final
      * texture-processed GDL/data back to dst.
      */
-    scratch = dst + (allocsize - expanded_size);
+    /* (host Gfx can be twice the N64 commands' size: the staging copy grows) */
+    if (allocsize < expanded_size / 8 * (s32) sizeof(Gfx)) {
+        return -1;
+    }
+    scratch = dst + (allocsize - expanded_size / 8 * (s32) sizeof(Gfx));
 
     texCopyGdls((Gfx *)dst, (Gfx *)scratch, expanded_size);
 
@@ -4361,16 +4412,20 @@ bool bgTestRayIntersectionInRoom(coord3d *from, coord3d *to, coord3d *dir, RoomV
     /* PORT: room GDLs are native-word streams on PC (texCopyGdls swaps at
      * load), but the byte-position operand reads below assume the big-endian
      * image, so the walker's opcode test always missed and the exact wall-hit
-     * path (triangle, texture material, light fixture breaking) never ran. The
-     * w1 reads stay unconditional because ((u32 *) gdl)[1] yields the true word
-     * on both targets; same fix as propobj.c bgTestHitOnObj. */
+     * path (triangle, texture material, light fixture breaking) never ran.
+     * Same fix as propobj.c bgTestHitOnObj. (((u32 *) gdl)[1] is w1 only while
+     * Gfx words are 32-bit; on 64-bit it is the upper half of w0, always 0.) */
 #ifdef TARGET_N64
     vtxoff = ((u8 *) gdl)[1] & 0xf;
 #else
     vtxoff = (gdl->words.w0 >> 16) & 0xf;
 #endif
     temp.vertices = (Vertex *)g_BgRoomInfo[roomnum].vertices;
+#ifdef TARGET_N64
     vtxbase = (Vertex *)((intptr_t)temp.vertices + (((u32 *)gdl)[1] & 0x00ffffff));
+#else
+    vtxbase = (Vertex *)((u8 *)temp.vertices + ((u32)gdl->words.w1 & 0x00ffffff));
+#endif
     temp.roominfo = &g_BgRoomInfo[roomnum];
     bestScore = 0x7FFFFFFF;
     found = 0;
@@ -4870,12 +4925,21 @@ bool bgTestBulletHitBackground(coord3d *from, coord3d *to, s32 roomnum, struct H
     {
         point = (RoomVtxBatchBounds *)hit->tricmd;
 
+#ifdef TARGET_N64
         if (((u8 *)((Gfx*)point))[0] != G_SETTILE) 
+#else
+        /* PORT: native words, so test the opcode in w0 rather than byte 0 */
+        if ((((Gfx*)point)->words.w0 >> 24) != G_SETTILE)
+#endif
         {
             while ((Gfx *)g_BgRoomInfo[roomnum].ptr_expanded_mapping_info < ((Gfx*)point)) 
             {
                 point = (RoomVtxBatchBounds *)((Gfx *)point - 1);
+#ifdef TARGET_N64
                 if (((u8 *)((Gfx*)point))[0] == G_SETTILE) 
+#else
+                if ((((Gfx*)point)->words.w0 >> 24) == G_SETTILE)
+#endif
                 {
                     break;
                 }
@@ -4889,8 +4953,13 @@ bool bgTestBulletHitBackground(coord3d *from, coord3d *to, s32 roomnum, struct H
         } 
         else 
         {
+#ifdef TARGET_N64
             hit->tileformat = ((u32)((u8 *)((Gfx*)point))[1]) >> 5;
             hit->tilesize = (((Gfx*)point)->words.w0 << 11) >> 30;
+#else
+            hit->tileformat = ((u32)((Gfx*)point)->words.w0 >> 21) & 7;
+            hit->tilesize = ((u32)((Gfx*)point)->words.w0 >> 19) & 3;
+#endif
         }
     }
 

@@ -80,7 +80,7 @@ void cleanupObjects(s32 stage)
                 
             }
 
-            /* TODO(64bit) layout: N64 word stride over in-place propdefs, which embed pointer slots */
+            /* sizepropdef is the native stride on 64-bit (the native setup image) */
             obj =  obj + sizepropdef(obj) ;
         }
     }

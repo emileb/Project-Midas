@@ -532,8 +532,9 @@ void initializeGunBarrelIntro(u8 *gfxBuffer, s32 bufferSize)
     createGunbarrelRenderHole((struct s_display_list_something *)barrelDisplayListPtr, 0x1E);
     
     gunbarrelgfxListPointer = (Gfx*)gfxBuffer;
-    bufferSize -= 0x100;
-    gfxBuffer += 0x100;
+    /* 0x20 commands: 0x100 bytes on N64, twice that with 16-byte host Gfx */
+    bufferSize -= 0x20 * sizeof(Gfx);
+    gfxBuffer += 0x20 * sizeof(Gfx);
     
 #ifdef TARGET_N64
     sub_GAME_7F01BFF8(gunbarrelgfxListPointer, (Vtx *)(barrelDisplayListPtr + 0x80000000), 0x1E);

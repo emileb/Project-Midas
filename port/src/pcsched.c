@@ -23,6 +23,7 @@
 #endif
 #include "sched.h"
 #include "game/frametiming.h"   /* portTickHz: GE_TICKHZ pump rate */
+#include "port_hostptr.h"       /* PORT_IS_HOST_ADDR */
 
 #ifdef __APPLE__
 /* macOS has no clock_nanosleep: sleep what is left until the absolute
@@ -65,6 +66,21 @@ static void *portAllocHighRaw(void *hint, u32 size)
     void *p;
 #ifdef _WIN32
     p = VirtualAlloc(hint, size, 0x3000 /* MEM_COMMIT|MEM_RESERVE */, 0x04 /* PAGE_READWRITE */);
+#elif UINTPTR_MAX > 0xFFFFFFFFu
+    /* 64-bit: PORT_IS_HOST_ADDR means "above 4 GB", so a low arena's pointers
+     * would read as segment words. Linux/Android honour low hints when the range
+     * is free (macOS doesn't), so take no hint and refuse anything below 4 GB. */
+    (void) hint;
+    p = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (p == MAP_FAILED)
+    {
+        p = NULL;
+    }
+    else if (!PORT_IS_HOST_ADDR(p))
+    {
+        munmap(p, size);
+        p = NULL;
+    }
 #else
     p = mmap(hint, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (p == MAP_FAILED)

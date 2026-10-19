@@ -1459,9 +1459,9 @@ void setupDoor(s32 arg0, struct DoorRecord *door, s32 arg2)
 /* ROM loading (port/src/romfile_setup.c): a setup loaded from the ROM is the
  * N64 image (offsets), so it uses the N64 promotion. Set right after the file loads, below. */
 s32 g_portSetupFromRom;
-/* TODO(64bit) layout: the setup header and section records are used in place;
- * their pointer fields are 4-byte offsets in the ROM image, so on a 64-bit host
- * the field offsets/strides don't match until the loader expands them. */
+/* 64-bit hosts: the header and records are not used in place but from the
+ * native image romfile_setup.c builds (romfileSetupNative, swapped in below),
+ * whose offset fields are relative to that image, so this works unchanged. */
 #define SETUP_PROMOTE(base, val) (g_portSetupFromRom ? (void *) (((uintptr_t) (base)) + ((uintptr_t) (val))) : (void *) (uintptr_t) (val))
 
 /* bring-up (GE_DUMP_BOND): called at load milestones to find which step
@@ -1961,6 +1961,25 @@ void proplvreset2(enum LEVELID stageId)
             extern s32 romdataFileServed(s32 index);
             g_portSetupFromRom = romdataFileServed(fileGetIndex((u8 *) strResource));
         }
+#if UINTPTR_MAX > 0xFFFFFFFFu
+        /* 64-bit: the file is the N64 layout (4-byte pointer slots); use the
+         * native image romfile_setup.c built from it on this load. Its header
+         * and records hold offsets from the image base, so the promotion
+         * below works unchanged. */
+        if (g_portSetupFromRom)
+        {
+            extern void *romfileSetupNative(const void *data);
+            void *native = romfileSetupNative(g_ptrStageSetupFile);
+
+            if (native == NULL)
+            {
+                fprintf(stderr, "ge: setup %s: no native 64-bit image (conversion failed) - cannot load the stage\n", strResource);
+                fflush(stderr);
+                abort();
+            }
+            g_ptrStageSetupFile = native;
+        }
+#endif
 #endif
         local_stage = g_ptrStageSetupFile;
         langLoadToAddr(langGetLangBankIndexFromStagenum(stageId));
@@ -2036,7 +2055,11 @@ void proplvreset2(enum LEVELID stageId)
                         case PROPDEF_SAFE:
                         case PROPDEF_TANK:
                         case PROPDEF_TINTED_GLASS:
-                            pd[29] = (pd[29] >> 16) | (pd[29] << 16);
+                        {
+                            /* word 29 on N64; the field's offset on 64-bit */
+                            u32 *dmg = (u32 *) &((ObjectRecord *) pd)->damage;
+                            *dmg = (*dmg >> 16) | (*dmg << 16);
+                        }
                             break;
 
                         case PROPDEF_OBJECTIVE_START:
@@ -2549,7 +2572,7 @@ void proplvreset2(enum LEVELID stageId)
                             pdef_veh->turnrot60    = 0.0f;
                             pdef_veh->roty         = 0.0f;
                             pdef_veh->speedtime60  = -1.0f;
-                            /* TODO(64bit) layout: ailist holds the setup's 32-bit list id until resolved here */
+                            /* ailist holds the setup's 32-bit list id until resolved here (zero-extended into the slot on 64-bit) */
                             pdef_veh->ailist       = ailistFindById((s32) (intptr_t) pdef_veh->ailist);
                             pdef_veh->aioffset     = 0;
                             pdef_veh->aireturnlist = -1;
@@ -2572,7 +2595,7 @@ void proplvreset2(enum LEVELID stageId)
                             pdef_air->yrot            = 0.0f;
                             pdef_air->speedtime60     = -1.0f;
                             pdef_air->rotaryspeedtime = -1.0f;
-                            /* TODO(64bit) layout: as above, a 32-bit list id until resolved */
+                            /* as above, a 32-bit list id until resolved */
                             pdef_air->ailist          = ailistFindById((s32) (intptr_t) pdef_air->ailist);
                             pdef_air->aioffset        = 0;
                             pdef_air->aireturnlist    = -1;

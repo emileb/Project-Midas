@@ -561,7 +561,11 @@ void solo_char_load(void)
                 load_object_fill_header(headheader, (u8 *)c_item_entries[head].filename, weaponbuf0 + cursor, size0 - cursor, &pool);
                 cursor = ALIGN64_V3(get_pc_buffer_remaining_value((u8 *)c_item_entries[head].filename) + cursor + 0x3f);
                 model  = (Model *)(weaponbuf0 + cursor);
+#if !defined(TARGET_N64) && UINTPTR_MAX > 0xFFFFFFFFu
+                cursor = ALIGN64_V3(cursor + sizeof(Model) + 0x3f); /* 0xbc + 0x3f on N64; a Model is bigger on 64-bit */
+#else
                 cursor = ALIGN64_V3(cursor + 0xfb);
+#endif
                 modelCalculateRwDataLen(bodyheader);
                 modelCalculateRwDataLen(headheader);
 
@@ -4031,7 +4035,16 @@ void sub_GAME_7F07E7CC(void) {
 #endif
     /* PORT: were (u8 *)g_CurrentPlayer + 0x230 / 0x2ec / 0x220; named fields keep
      * N64 offsets and follow the 64-bit layout. */
+#if UINTPTR_MAX > 0xFFFFFFFFu
+    if (itemheader->numRecords > (s32) ARRAYCOUNT(g_CurrentPlayer->watch_rwdata64)) {
+        extern void portConLogf(const char *fmt, ...);
+        portConLogf("ge: watch model needs %d rwdata words, has %d\n", itemheader->numRecords,
+                (s32) ARRAYCOUNT(g_CurrentPlayer->watch_rwdata64));
+    }
+    animInit((Model *)&g_CurrentPlayer->something_with_watch_object_instance, itemheader, (u32 *)g_CurrentPlayer->watch_rwdata64);
+#else
     animInit((Model *)&g_CurrentPlayer->something_with_watch_object_instance, itemheader, (u32 *)&g_CurrentPlayer->field_2EC);
+#endif
     modelSetScale((Model *)&g_CurrentPlayer->something_with_watch_object_instance, c_item_entries[41].scale * 0.10000001f);
     modelSetAnimation((Model *)&g_CurrentPlayer->something_with_watch_object_instance, (ModelAnimation *)&ptr_animation_table->data[PTR_ANIM_bond_watch], 0, 0.0f, 0.5f * watch_transition_time, 0.0f);
     g_CurrentPlayer->step_in_view_watch_animation = 0;
@@ -11581,7 +11594,11 @@ void bondviewSelectCuff(Model *model, ModelFileHeader *header, s32 switchindex)
 
     local = fileGetBondForCurrentFolder();
     switches = header->Switches;
+#ifdef TARGET_N64
     offset = switchindex << 2;
+#else
+    offset = switchindex * (s32) sizeof(ModelNode *); /* 8-byte entries on 64-bit */
+#endif
 
     if (1);
 

@@ -27,6 +27,9 @@
 #include <stdio.h>
 #include <ultra64.h>
 #include "bondtypes.h"
+#include "game/bg.h"
+#include <stdlib.h>
+#include <string.h>
 
 /* port_console.c: same output as the fprintf(stderr, ...) this replaced,
  * plus a silent copy in the tilde console ring (spec section 7). */
@@ -54,6 +57,100 @@ static void bg_swap4run(u8 *p, u32 words)
 #define BG_MAX_CONVERTED 64
 static const u8 *bg_converted[BG_MAX_CONVERTED];
 static s32 bg_convertedCount;
+
+#if UINTPTR_MAX > 0xFFFFFFFFu
+/* 64-bit: bg_room_data (3 pointer slots + pos) and bg_portal_data_entry
+ * (a pointer + 4 bytes) are 24 and 8 bytes in the file but 40 and 16 on the
+ * host, so their tables are rebuilt natively beside the image, holding the same
+ * seg-0x0F offsets (BG_SEG_TO_PTR resolves them); bg.c swaps them in. */
+static struct {
+    const u8 *data;
+    bg_room_data *rooms;
+    bg_portal_data_entry *portals;
+} bg_native[BG_MAX_CONVERTED];
+
+static void romfileBgBuildNative(const u8 *data, u32 size, u32 roomOff, u32 visOff, u32 portalTableOff)
+{
+    s32 i, slot = -1;
+    u32 nrooms = 0, nportals = 0, o;
+    bg_room_data *rooms;
+    bg_portal_data_entry *portals;
+
+    for (i = 0; i < BG_MAX_CONVERTED; i++) {
+        if (bg_native[i].data == data || (slot < 0 && bg_native[i].data == NULL)) {
+            slot = i;
+            if (bg_native[i].data == data) {
+                break;
+            }
+        }
+    }
+    if (slot < 0) {
+        return;
+    }
+    free(bg_native[slot].rooms);
+    free(bg_native[slot].portals);
+
+    if (roomOff <= visOff && visOff <= size) {
+        nrooms = (visOff - roomOff) / 24u;
+    }
+    rooms = calloc(nrooms + 1, sizeof(*rooms)); /* + a NULL entry: the room count walk's end */
+    for (i = 0; i < (s32) nrooms; i++) {
+        const u8 *e = data + roomOff + (u32) i * 24;
+        u32 w[3];
+        memcpy(w, e, 12);
+        rooms[i].pPointTableBin = (void *) (uintptr_t) w[0];
+        rooms[i].pPriMappingBin = (void *) (uintptr_t) w[1];
+        rooms[i].pSecMappingBin = (void *) (uintptr_t) w[2];
+        memcpy(&rooms[i].pos, e + 12, 12);
+    }
+
+    for (o = portalTableOff; o + 8 <= size; o += 8) {
+        u32 w;
+        memcpy(&w, data + o, 4);
+        if (w == 0) {
+            break;
+        }
+        nportals++;
+    }
+    portals = calloc(nportals + 1, sizeof(*portals)); /* + the NULL terminator */
+    for (i = 0; i < (s32) nportals; i++) {
+        const u8 *e = data + portalTableOff + (u32) i * 8;
+        u32 w;
+        memcpy(&w, e, 4);
+        portals[i].offset_portal = (bg_portal_entry *) (uintptr_t) w;
+        portals[i].connectedRoom1 = e[4];
+        portals[i].connectedRoom2 = e[5];
+        portals[i].controlbytes1 = e[6];
+        portals[i].controlbytes2 = e[7];
+    }
+
+    bg_native[slot].data = data;
+    bg_native[slot].rooms = rooms;
+    bg_native[slot].portals = portals;
+}
+
+bg_room_data *romfileBgNativeRooms(const u8 *data)
+{
+    s32 i;
+    for (i = 0; i < BG_MAX_CONVERTED; i++) {
+        if (bg_native[i].data == data) {
+            return bg_native[i].rooms;
+        }
+    }
+    return NULL;
+}
+
+bg_portal_data_entry *romfileBgNativePortals(const u8 *data)
+{
+    s32 i;
+    for (i = 0; i < BG_MAX_CONVERTED; i++) {
+        if (bg_native[i].data == data) {
+            return bg_native[i].portals;
+        }
+    }
+    return NULL;
+}
+#endif
 
 /* Convert a served bg file's front matter to host layout, in place. Returns 1
  * (idempotent - a second call on the same file is a no-op). */
@@ -157,6 +254,9 @@ s32 romfileBgConvert(u8 *data, u32 size, const char *name)
         }
     }
 
+#if UINTPTR_MAX > 0xFFFFFFFFu
+    romfileBgBuildNative(data, size, roomOff, visOff, portalTableOff);
+#endif
     if (bg_convertedCount < BG_MAX_CONVERTED) {
         bg_converted[bg_convertedCount++] = data;
     }

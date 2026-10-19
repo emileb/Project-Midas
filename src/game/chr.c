@@ -3394,9 +3394,10 @@ after_opcode:
         paintval += 50;
     }
 
-    relatednode = (ModelNode *) ((ModelRoData_DisplayList_CollisionRecord *) node)->CollisionVertices[bestindex].CollisionRelatedNode;
+    relatednode = MODEL_COLLISION_NODE((ModelRoData_DisplayList_CollisionRecord *) node,
+                                       &((ModelRoData_DisplayList_CollisionRecord *) node)->CollisionVertices[bestindex]);
 
-    if (((ModelRoData_DisplayList_CollisionRecord *) node)->CollisionVertices[bestindex].CollisionRelatedNode != NULL)
+    if (relatednode != NULL)
     {
         relatedrodata = &relatednode->Data->DisplayListCollisions;
         relatedrwdata = (ModelRwData_DisplayList_CollisionRecord *) modelGetNodeRwData(model, relatednode);

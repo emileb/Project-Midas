@@ -16257,7 +16257,13 @@ void load_briefing_text_for_stage(void)
     ptrbriefingdata = _fileNameLoadToAddr(mission_folder_setup_entries[briefingpage].briefing_name_ptr, FILELOADMETHOD_DEFAULT, (u8 *) temp_s0, argg);
 
     // what is this
+#ifdef TARGET_N64
     temp_s0 += argg / 8;
+#else
+    /* PORT: argg bytes; argg / 8 Gfx would step twice as far with 16-byte Gfx
+     * and put the bank's end past the 0x78000 buffer */
+    temp_s0 = (Gfx *)((u8 *)temp_s0 + argg);
+#endif
 
     // what is this
     argg *= 879;

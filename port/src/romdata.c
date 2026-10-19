@@ -773,9 +773,11 @@ static enum romfileclass romdataClassOf(const char *name)
             /* the three inline-texture menu models embed segment-5 texture
              * blobs (objecthandler_2.c portSwapInlineTextures) that the model
              * converter does not yet handle - keep them compiled for now */
+#if UINTPTR_MAX <= 0xFFFFFFFFu /* 64-bit builds have no compiled-in copies: serve them */
             if (strcmp(name, "PlegalpageZ") == 0 || strcmp(name, "PnintendologoZ") == 0 || strcmp(name, "PgoldeneyelogoZ") == 0) {
                 return CLASS_NONE;
             }
+#endif
             return CLASS_MODEL; /* C<name>Z chr, G<name>Z gun, P<name>Z prop - converted in load_object_fill_header */
         }
     }
@@ -907,6 +909,9 @@ static const char **romdataTextTableFor(const u8 *data, u32 count)
         }
     }
     if (i == TEXT_TABLES_MAX) {
+        if (freeslot < 0) {
+            portConLogf("ge: romdata: %d text banks live, recycling slot 0\n", TEXT_TABLES_MAX);
+        }
         i = freeslot >= 0 ? freeslot : 0;
     }
     free(sTextTables[i].slots);
@@ -914,6 +919,20 @@ static const char **romdataTextTableFor(const u8 *data, u32 count)
     sTextTables[i].slots = calloc(count ? count : 1, sizeof(const char *));
     sTextTables[i].count = count;
     return sTextTables[i].slots;
+}
+
+/* A memory pool was reset (memp.c mempResetBank): drop the tables of the
+ * banks that lived in it, so the permanent banks never get evicted. */
+void romdataTextForget(const void *lo, const void *hi)
+{
+    s32 i;
+    for (i = 0; i < TEXT_TABLES_MAX; i++) {
+        if (sTextTables[i].data != NULL && (const void *) sTextTables[i].data >= lo
+                && (const void *) sTextTables[i].data < hi) {
+            free(sTextTables[i].slots);
+            memset(&sTextTables[i], 0, sizeof(sTextTables[i]));
+        }
+    }
 }
 
 const char *romdataTextSlot(const void *bank, u32 slot)

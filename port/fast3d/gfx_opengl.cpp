@@ -1507,6 +1507,18 @@ static void gfx_opengl_init(void) {
 
     gfx_opengl_init_extensions();
 
+    if (gl_es) {
+        /* glad's desktop loader files these under GL 4.1 and skips them for
+         * an "ES 3.0" version string, but every ES 2.0+ driver has them (the
+         * double-precision desktop forms may not exist at all) */
+        if (glad_glDepthRangef == NULL) {
+            glad_glDepthRangef = (PFNGLDEPTHRANGEFPROC) gl_load_proc("glDepthRangef");
+        }
+        if (glad_glClearDepthf == NULL) {
+            glad_glClearDepthf = (PFNGLCLEARDEPTHFPROC) gl_load_proc("glClearDepthf");
+        }
+    }
+
     if (gl_es && (GLVersion.major < 3 || (GLVersion.major == 3 && GLVersion.minor < 1))) {
         /* multisampled textures (and sampler2DMS) are ES 3.1; ANGLE can still
          * hand out the pointer, so drop it and keep the renderbuffer MSAA path */

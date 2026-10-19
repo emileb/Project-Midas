@@ -56,6 +56,50 @@ static void nibbleReverse(u8 *p)
     memcpy(p, &r, 2);
 }
 
+#if UINTPTR_MAX > 0xFFFFFFFFu
+/* 64-bit: the header's pointer slots are 4 bytes in the file, so the header the
+ * game walks ({unk1, firstTile, room pointers..., NULL}, portStanPack's shape)
+ * is built beside the image; bg.c swaps it in for the loaded file. */
+#include <stdlib.h>
+#define STAN_HEADERS_MAX 8
+static struct {
+    const u8 *data;
+    void **hdr;
+} sStanHeaders[STAN_HEADERS_MAX];
+
+static void **romfileStanHeaderSlot(const u8 *data, u32 nslots)
+{
+    s32 i, freeslot = -1;
+
+    for (i = 0; i < STAN_HEADERS_MAX; i++) {
+        if (sStanHeaders[i].data == data) {
+            break;
+        }
+        if (freeslot < 0 && sStanHeaders[i].data == NULL) {
+            freeslot = i;
+        }
+    }
+    if (i == STAN_HEADERS_MAX) {
+        i = freeslot >= 0 ? freeslot : 0;
+    }
+    free(sStanHeaders[i].hdr);
+    sStanHeaders[i].data = data;
+    sStanHeaders[i].hdr = calloc(nslots, sizeof(void *));
+    return sStanHeaders[i].hdr;
+}
+
+void *romfileStanNativeHeader(const u8 *data)
+{
+    s32 i;
+    for (i = 0; i < STAN_HEADERS_MAX; i++) {
+        if (sStanHeaders[i].data == data) {
+            return sStanHeaders[i].hdr;
+        }
+    }
+    return NULL;
+}
+#endif
+
 s32 romfileStanConvert(u8 *data, u32 size, const char *name, const u8 *compiled)
 {
     u32 first, o, nrooms, ntiles = 0;
@@ -73,6 +117,22 @@ s32 romfileStanConvert(u8 *data, u32 size, const char *name, const u8 *compiled)
                 name, first, 8 + (nrooms + 1) * 4, nrooms);
         return 0;
     }
+#if UINTPTR_MAX > 0xFFFFFFFFu
+    {
+        void **hdr = romfileStanHeaderSlot(data, 2 + nrooms + 1);
+        hdr[0] = NULL;
+        hdr[1] = data + first;
+        for (i = 0; i < nrooms; i++) {
+            u32 off = be32(data + 8 + i * 4);
+            if (off < first || off >= size) {
+                portConLogf("ge: romdata: stan %s: room %u tile offset 0x%X outside the tiles (0x%X..0x%X)\n", name, i, off, first, size);
+                return 0;
+            }
+            hdr[2 + i] = data + off;
+        }
+        /* hdr[2 + nrooms] stays NULL: the room table's terminator */
+    }
+#else
     put32(data, 0);
     put32(data + 4, (u32) (uintptr_t) (data + first));
     for (i = 0; i < nrooms; i++) {
@@ -83,6 +143,7 @@ s32 romfileStanConvert(u8 *data, u32 size, const char *name, const u8 *compiled)
         }
         put32(data + 8 + i * 4, (u32) (uintptr_t) (data + off));
     }
+#endif
     /* the zero terminator after the rooms stays zero */
 
     o = first;

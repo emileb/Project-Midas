@@ -71,7 +71,7 @@ Model *modelmgrInstantiateModel(ModelFileHeader *header)
 
         if (model == NULL)
         {
-            model = mempAllocBytesInBank(0x20, MEMPOOL_STAGE);
+            model = mempAllocBytesInBank(sizeof(struct ModelSlot), MEMPOOL_STAGE); /* 0x20 on N64 */
         }
 
         if (header->numRecords > 0)
@@ -141,7 +141,7 @@ Model *modelmgrInstantiateModelWithAnim(ModelFileHeader *modelFileHeader)
 
         if (newModel == NULL)
         {
-            newModel = mempAllocBytesInBank(0xc0, MEMPOOL_STAGE);
+            newModel = mempAllocBytesInBank(sizeof(Model), MEMPOOL_STAGE); /* 0xc0 on N64 */
         }
 
         requiredRwdatalen = modelFileHeader->numRecords;
@@ -461,7 +461,8 @@ union ModelRwData* modelGetNodeRwData(Model *Objinst, ModelNode *root)
         }
     }
 
-    return &data[index];
+    /* RwDataIndex counts 4-byte words (modelCalculateRwDataLen), not pointer slots */
+    return (union ModelRwData *)((s32 *)data + index);
 }
 
 
@@ -5039,8 +5040,7 @@ void dogfnegx(ModelRenderData *renderdata, Model *model, ModelNode *node)
         vertices[3].coord.y = sp90.f[1] - spc4;
         vertices[3].coord.z = sp90.f[2] + negspc8 + -spbc;
 
-        /* TODO(64bit) layout: GunfireRecord.BaseAddr is a u32 slot holding a pointer. */
-        gSPSegment(renderdata->gdl++, SPSEGMENT_MODEL_COL1, osVirtualToPhysical((void *)(uintptr_t)rodata->BaseAddr));
+        gSPSegment(renderdata->gdl++, SPSEGMENT_MODEL_COL1, osVirtualToPhysical(rodata->BaseAddr));
 
         if (rodata->Image)
         {
@@ -5233,8 +5233,7 @@ void doshadow(ModelRenderData *renderdata, Model *model, ModelNode *node)
                 {
                     extern struct tex *texFindInPool(s32 texturenum, struct texpool *pool);
                     extern struct texpool *portModelTexPool(void);
-                    /* TODO(64bit) layout: sImageTableEntry.index is a u32 slot holding a pointer. */
-                    u16 texnum = ((u16 *)(uintptr_t)image->index)[-4];
+                    u16 texnum = ((u16 *)image->index)[-4];
                     struct tex *recglobal = texFindInPool(texnum, NULL);
                     struct tex *recmodel = texFindInPool(texnum, portModelTexPool());
                     v[0] = (f32)texnum;
@@ -5963,9 +5962,9 @@ void modelResetAnimationsScratchBuffer(void)
 }
 
 
-/* TODO(64bit) layout: every PROMOTE'd field is a pointer member of a struct
- * overlaid on the in-place N64 file image, whose pointer slots are 4 bytes.
- * On a 64-bit host the struct offsets no longer match the file. */
+/* The promote rewrites the file image in place, so it only runs where pointers
+ * fit its 4-byte slots; 64-bit hosts build the graph natively instead
+ * (port/src/romfile_model_native.c). */
 #ifdef TARGET_N64
 #define PROMOTE(var) \
     if (var) \
@@ -6059,6 +6058,7 @@ void modelPromoteNodeOffsetsToPointers(ModelNode *node, uintptr_t vma, uintptr_t
                     PROMOTE(rodata->Vertices);
                     PROMOTE(rodata->CollisionVertices);
                     PROMOTE(rodata->PointUsage);
+#if defined(TARGET_N64) || UINTPTR_MAX <= 0xFFFFFFFFu /* 64-bit: romfile_model_native.c */
                     for (i = 0; i < rodata->numCollisionVertices; i++)
                     {
 #ifndef TARGET_N64
@@ -6069,7 +6069,6 @@ void modelPromoteNodeOffsetsToPointers(ModelNode *node, uintptr_t vma, uintptr_t
                              * texcoords, so on little-endian its halves are
                              * swapped; unswap it (low half 0x0500) or
                              * chrCreateBloodStain crashes. */
-                            /* TODO(64bit) layout: LinkedTo is a 4-byte word in the file image. */
                             u32 w = (u32) (uintptr_t) rodata->CollisionVertices[i].LinkedTo;
 
                             if (w != 0 && (w & 0x0000FFFFu) == 0x00000500u)
@@ -6092,6 +6091,7 @@ void modelPromoteNodeOffsetsToPointers(ModelNode *node, uintptr_t vma, uintptr_t
 #endif
                         PROMOTE(rodata->CollisionVertices[i].LinkedTo);
                     }
+#endif
                     rodata->BaseAddr = (void *)fileramaddr;
                     break;
                 }
@@ -6179,7 +6179,6 @@ void modelPromoteNodeOffsetsToPointers(ModelNode *node, uintptr_t vma, uintptr_t
             case MODELNODE_OPCODE_OP11:
                 {
                     ModelRoData_Op11Record* rodata = &node->Data->Op11;
-                    /* TODO(64bit) layout: Op11Record.unk0c[15] is a u32 pointer slot. */
                     PROMOTE_WORD(rodata->unk0c[15]);
                     rodata->BaseAddr = (void *)fileramaddr;
                     break;
@@ -6189,8 +6188,7 @@ void modelPromoteNodeOffsetsToPointers(ModelNode *node, uintptr_t vma, uintptr_t
                 {
                     ModelRoData_GunfireRecord* rodata = &node->Data->Gunfire;
                     PROMOTE(rodata->Image);
-                    /* TODO(64bit) layout: GunfireRecord.BaseAddr is a u32 slot. */
-                    rodata->BaseAddr = fileramaddr;
+                    rodata->BaseAddr = (void *)fileramaddr;
                     break;
                 }
 
@@ -6245,7 +6243,6 @@ void sub_GAME_7F075A90(ModelFileHeader *header, uintptr_t vma, uintptr_t addr) {
     intptr_t diff = addr - vma;
     s32 i;
 
-    /* TODO(64bit) layout: Switches[] is a u32 array in the file image. */
     for(i = 0;i < header->numSwitches;i++)
     {
         PROMOTE(header->Switches[i]);
@@ -6293,7 +6290,7 @@ void portModelCollisionAudit(ModelNode *node, const char *name)
 
             for (i = 0; i < rodata->numCollisionVertices; i++)
             {
-                ModelNode  *rel = (ModelNode *) rodata->CollisionVertices[i].CollisionRelatedNode;
+                ModelNode  *rel = MODEL_COLLISION_NODE(rodata, &rodata->CollisionVertices[i]);
                 s32         idx = rodata->CollisionVertices[i].CollisionRelatedIndex;
                 const char *fault = NULL;
 
@@ -6699,7 +6696,7 @@ void modelAttachPart(Model *pmodel, ModelFileHeader *pmodeldef, ModelNode *pnode
     ModelNode *node;
 
     rwdata->ModelFileHeader = cmodeldef;
-    rwdata->RwDatas = &pmodel->datas[pmodeldef->numRecords];
+    rwdata->RwDatas = (s32 *)pmodel->datas + pmodeldef->numRecords; /* numRecords counts 4-byte words */
 
     pnode->Child = cmodeldef->RootNode;
 

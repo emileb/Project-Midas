@@ -282,6 +282,15 @@ void mempResetBank(u8 bank) {
 
         portTexCrosshairForget(g_mempPools[bank].start, g_mempPools[bank].end);
     }
+#if UINTPTR_MAX > 0xFFFFFFFFu
+    { /* the 64-bit side tables keyed by image address (native models, text slots) */
+        extern void romfileModelNativeForget(const void *lo, const void *hi);
+        extern void romdataTextForget(const void *lo, const void *hi);
+
+        romfileModelNativeForget(g_mempPools[bank].start, g_mempPools[bank].end);
+        romdataTextForget(g_mempPools[bank].start, g_mempPools[bank].end);
+    }
+#endif
 #endif
     g_mempPools[bank].prevpos = 0;
     g_mempPools[bank].pos = g_mempPools[bank].start;

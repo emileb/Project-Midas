@@ -163,7 +163,7 @@ s32 sub_GAME_7F03130C                         (ChrRecord *self,coord3d *arg1,s32
 void chrlvTickStand                           (ChrRecord *self);
 PadRecord * chrlvGetPatrolStepPad             (ChrRecord *self, s32 numsteps);
 
-// unknown type for arg1, reads offsets 0x30,0x34,0x40,0x44
+// arg1 is a struct weapon_firing_animation_table *
 // arg2 is only used to compare to zero, either flag or pointer
 void chrlvUpdateAimendbackShoulders           (ChrRecord *, void *, s32, s32, f32);
 
@@ -334,9 +334,7 @@ u32 weaponIsOneHanded(PropRecord *arg0)
 {
     if (arg0 != NULL)
     {
-        ChrRecord *v = (ChrRecord*)arg0->voidp;
-
-        return bondwalkItemCheckBitflags(v->act_bytes.padding[84], WEAPONSTATBITFLAG_ONLY_1_HANDED);
+        return bondwalkItemCheckBitflags(arg0->weapon->weaponnum, WEAPONSTATBITFLAG_ONLY_1_HANDED);
     }
 
     return 0U;
@@ -3728,7 +3726,7 @@ void get_sound_at_range(ChrRecord *self, s32 arg1, s32 arg2)
 */
 void play_hit_soundeffect_and_proper_volume( ChrRecord *self)
 {
-    get_sound_at_range(self, self->act_ubytes.padding[45], c_item_entries[self->bodynum].isMale);
+    get_sound_at_range(self, self->act_gopos.unk59, c_item_entries[self->bodynum].isMale);
 }
 
 
@@ -3935,7 +3933,7 @@ void set_actor_on_path(ChrRecord *self, struct patrol_path *path)
     self->act_patrol.forward = 1;
     self->act_patrol.waydata.age = randomGetNext() % 0x64U;
     self->act_patrol.waydata.unk03 = 0;
-    self->act_init.padding[0x13] = -1;
+    self->act_patrol.lastvisible60 = -1;
     self->act_patrol.speed = 0.0f;
 
     chrlvSetNextActPatrolStepPadPos(self);
@@ -5884,7 +5882,7 @@ f32 chrlvGetSubrotySideback(ChrRecord *self)
     {
         if (self->act_bondmulti.unk2c != NULL)
         {
-            phi_f12 = self->act_bondmulti.unk2c[3];
+            phi_f12 = ((struct weapon_firing_animation_table *)self->act_bondmulti.unk2c)->angle_offset;
         }
     }
 
@@ -6366,25 +6364,27 @@ void chrlvUpdateAimendbackShoulders(ChrRecord *self, void *arg1, s32 same, s32 s
 
     if (arg1 != NULL)
     {
-        if (((f32*)arg1)[12] < next)
+        struct weapon_firing_animation_table *table = arg1;
+
+        if (table->max_up < next)
         {
-            next_aimendback = next - ((f32*)arg1)[12];
-            next_lshoulder = ((f32*)arg1)[12];
+            next_aimendback = next - table->max_up;
+            next_lshoulder = table->max_up;
         }
 
-        else if (next < ((f32*)arg1)[13])
+        else if (next < table->max_down)
         {
-            next_aimendback = next - ((f32*)arg1)[13];
-            next_lshoulder = ((f32*)arg1)[13];
+            next_aimendback = next - table->max_down;
+            next_lshoulder = table->max_down;
         }
 
         if (next_lshoulder > 0.0f)
         {
-            next_rshoulder = ((f32*)arg1)[16] * next_lshoulder;
+            next_rshoulder = table->free_arm_frac_up * next_lshoulder;
         }
         else
         {
-            next_rshoulder = ((f32*)arg1)[17] * next_lshoulder;
+            next_rshoulder = table->free_arm_frac_down * next_lshoulder;
         }
     }
 

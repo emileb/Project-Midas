@@ -100,7 +100,7 @@ struct tex *texFindInPool(s32 texturenum, struct texpool *arg1);
 s32 texFreeBytesInBuffer(struct texpool *arg0);
 s32 texInflateNonZlib(u8 *src, u8 *dst, s32 arg2, s32 forcenumimages, struct texpool *arg4);
 s32 texInflateZlib(u8 *src, u8 *dst, s32 arg2, s32 forcenumimages, struct texpool *arg4);
-void texLoad(s32 *updateword, struct texpool *pool);
+void texLoad(uintptr_t *updateword, struct texpool *pool);
 void texInitPool(struct texpool *arg0, u8 *arg1, s32 arg2);
 void texLoadFromTextureNum(s32 texturenum, struct texpool *arg1);
 void texLoadFromModelFileHeader(ModelFileHeader* arg0, struct texpool* arg1);

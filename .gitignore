@@ -259,6 +259,7 @@ cmake_*.log
 third_party/
 build_win/
 build_mac/
+build_mac2/
 build_pc_video/
 nm_v.log
 win_conf.log

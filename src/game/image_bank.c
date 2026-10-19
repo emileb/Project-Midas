@@ -177,25 +177,33 @@ void texReset(void)
 
 #ifndef TARGET_N64
     /* The PC texture bank is compiled in and texLoad/texSelect overwrite its ids
-     * with pointers in place, so snapshot the pristine bytes on first call and
+     * with pointers in place, so snapshot the pristine tables on first call and
      * restore them on every later stage load (otherwise the second load reads
-     * pointers as ids and crashes). The bounds rely on oddtextures.c being one
-     * TU built -fno-toplevel-reorder, contiguous from s_mpstageselimages to
-     * globalDL_0x000 (+0x78). */
+     * pointers as ids and crashes). oddtextures.c lists the tables itself. */
     {
-        extern void *s_mpstageselimages;
-        extern Gfx *globalDL_0x000;
+        extern const struct portOddTexturesTable {
+            void *table;
+            u32 size;
+        } port_oddtextures_tables[];
+        extern const s32 port_oddtextures_count;
         static u8 *pristine;
-        u8 *lo = (u8 *) &s_mpstageselimages;
-        u8 *hi = (u8 *) &globalDL_0x000 + 0x78;
+        u32 total = 0;
+        u8 *q;
 
+        for (i = 0; i < port_oddtextures_count; i++) {
+            total += port_oddtextures_tables[i].size;
+        }
         if (pristine == NULL) {
-            pristine = malloc(hi - lo);
-            if (pristine != NULL) {
-                memcpy(pristine, lo, hi - lo);
+            pristine = malloc(total);
+            for (q = pristine, i = 0; pristine != NULL && i < port_oddtextures_count; i++) {
+                memcpy(q, port_oddtextures_tables[i].table, port_oddtextures_tables[i].size);
+                q += port_oddtextures_tables[i].size;
             }
         } else {
-            memcpy(lo, pristine, hi - lo);
+            for (q = pristine, i = 0; i < port_oddtextures_count; i++) {
+                memcpy(port_oddtextures_tables[i].table, q, port_oddtextures_tables[i].size);
+                q += port_oddtextures_tables[i].size;
+            }
         }
     }
 

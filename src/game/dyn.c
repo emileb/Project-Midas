@@ -62,7 +62,7 @@ void dynInitMemory(void) {
 
 #ifndef TARGET_N64
     // Double graphics buffers size on PC to avoid graphics corruption bugs
-    g_GfxSizesByPlayerCount[getPlayerCount() - 1] *= 2;
+    g_GfxSizesByPlayerCount[getPlayerCount() - 1] *= 2 * (s32)(sizeof(Gfx) / 8); /* 16-byte Gfx on 64-bit */
     g_VtxSizesByPlayerCount[getPlayerCount() - 1] *= 2;
 #endif
 

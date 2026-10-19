@@ -4698,6 +4698,11 @@ s32 videoInit(void)
     set.window_settings.fullscreen = s_CfgFullscreen != VIDEO_FS_WINDOWED;
     set.window_settings.fullscreen_is_exclusive = s_CfgFullscreen == VIDEO_FS_EXCLUSIVE;
     set.window_settings.maximized = false;
+#ifdef __APPLE__
+    /* Retina: without this the drawable is half the panel's pixels and macOS
+     * upscales it (the renderer sizes itself from the drawable) */
+    set.window_settings.allow_hidpi = true;
+#endif
     set.window_settings.x = 100;
     set.window_settings.y = 100;
     set.window_settings.display = s_CfgWindowDisplay;

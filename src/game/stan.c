@@ -762,9 +762,8 @@ struct StanPrefixRecord *portStanPackForProbe(struct StanPrefixRecord *file)
 /* set by load_bg_file (bg.c) right after the stan loads: a ROM-served
  * stan (port/src/romfile_stan.c) arrives ALREADY in the packed shape, with
  * real pointers in its header - portStanPack must not run on it */
-/* TODO(64bit) layout: romfile_stan.c writes 4-byte header pointer slots, but
- * StanPrefixRecord reads pointer-width ptr_firstroom/room slots (as
- * portStanPack now builds them); the ROM converter must match. */
+/* (on 64-bit the header with pointer-width slots is built beside the image,
+ * romfile_stan.c, and bg.c hands that over instead) */
 s32 g_portStanFromRom;
 #endif
 

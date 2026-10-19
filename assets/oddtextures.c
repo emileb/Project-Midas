@@ -756,5 +756,63 @@ sImageTableEntry s_mpstageselimages[] = {
     {IMAGE_MP_RANDOM, 0x44, 0x2C, 0, G_IM_FMT_I, G_IM_SIZ_8b, G_TX_CLAMP, G_TX_CLAMP, 0}      // bg/where
 };
 
-
-
+#ifndef TARGET_N64
+/* PC: texLoad overwrites these tables' texture numbers with data pointers in
+ * place, and the bank is compiled in rather than re-copied per stage, so
+ * texReset (image_bank.c) snapshots and restores them through this list. */
+const struct portOddTexturesTable {
+    void *table;
+    u32 size;
+} port_oddtextures_tables[] = {
+    { globalDL_0x000, sizeof(globalDL_0x000) },
+    { globalDL_0x078, sizeof(globalDL_0x078) },
+    { globalDL_0x120, sizeof(globalDL_0x120) },
+    { globalDL_0x1c8, sizeof(globalDL_0x1c8) },
+    { globalDL_0x270, sizeof(globalDL_0x270) },
+    { globalDL_0x318, sizeof(globalDL_0x318) },
+    { globalDL_0x3c0, sizeof(globalDL_0x3c0) },
+    { globalDL_0x468, sizeof(globalDL_0x468) },
+    { globalDL_0x510, sizeof(globalDL_0x510) },
+    { globalDL_0x5b8, sizeof(globalDL_0x5b8) },
+    { globalDL_0x660, sizeof(globalDL_0x660) },
+    { globalDL_0x708, sizeof(globalDL_0x708) },
+    { globalDL_0x7b0, sizeof(globalDL_0x7b0) },
+    { globalDL_0x858, sizeof(globalDL_0x858) },
+    { globalDL_0x900, sizeof(globalDL_0x900) },
+    { globalDL_0x9a8, sizeof(globalDL_0x9a8) },
+    { globalDL_0xa50, sizeof(globalDL_0xa50) },
+    { s_genericimage, sizeof(s_genericimage) },
+    { s_impactimages, sizeof(s_impactimages) },
+    { s_explosion_smokeimages, sizeof(s_explosion_smokeimages) },
+    { s_scattered_explosions, sizeof(s_scattered_explosions) },
+    { s_flareimage1, sizeof(s_flareimage1) },
+    { s_flareimage2, sizeof(s_flareimage2) },
+    { s_flareimage3, sizeof(s_flareimage3) },
+    { s_flareimage4, sizeof(s_flareimage4) },
+    { s_flareimage5, sizeof(s_flareimage5) },
+    { s_ammo9mmimage, sizeof(s_ammo9mmimage) },
+    { s_rifleammoimage, sizeof(s_rifleammoimage) },
+    { s_shotgunammoimage, sizeof(s_shotgunammoimage) },
+    { s_knifeammoimage, sizeof(s_knifeammoimage) },
+    { s_glammoimage, sizeof(s_glammoimage) },
+    { s_rocketammoimage, sizeof(s_rocketammoimage) },
+    { s_genericmineammoimage, sizeof(s_genericmineammoimage) },
+    { s_grenadeammoimage, sizeof(s_grenadeammoimage) },
+    { s_magnumammoimage, sizeof(s_magnumammoimage) },
+    { s_goldengunammoimage, sizeof(s_goldengunammoimage) },
+    { s_remotemineammoimage, sizeof(s_remotemineammoimage) },
+    { s_timedmineammoimage, sizeof(s_timedmineammoimage) },
+    { s_proxmineammoimage, sizeof(s_proxmineammoimage) },
+    { s_tankammoimage, sizeof(s_tankammoimage) },
+    { s_crosshairimage, sizeof(s_crosshairimage) },
+    { s_betacrosshairimage, sizeof(s_betacrosshairimage) },
+    { s_glassoverlayimage, sizeof(s_glassoverlayimage) },
+    { s_monitorimages, sizeof(s_monitorimages) },
+    { s_skywaterimages, sizeof(s_skywaterimages) },
+    { s_mainfolderimages, sizeof(s_mainfolderimages) },
+    { s_mpradarimages, sizeof(s_mpradarimages) },
+    { s_mpcharselimages, sizeof(s_mpcharselimages) },
+    { s_mpstageselimages, sizeof(s_mpstageselimages) },
+};
+const s32 port_oddtextures_count = sizeof(port_oddtextures_tables) / sizeof(port_oddtextures_tables[0]);
+#endif

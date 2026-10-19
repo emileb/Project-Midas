@@ -8,8 +8,14 @@
 #define MODEL_SPARE_SLOTS          30
 #define ANIM_MODEL_SPARE_SLOTS     10
 
+#if defined(TARGET_N64) || UINTPTR_MAX <= 0xFFFFFFFFu
 #define MODEL_SPARE_RWDATALEN      0x14
 #define ANIM_MODEL_SPARE_RWDATALEN 0x8c
+#else
+/* 64-bit: rwdata records that hold pointers take twice the words */
+#define MODEL_SPARE_RWDATALEN      (0x14 * 2)
+#define ANIM_MODEL_SPARE_RWDATALEN (0x8c * 2)
+#endif
 
 
 void modelmgrResetSlotCounts(void)

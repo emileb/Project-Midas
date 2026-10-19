@@ -130,5 +130,15 @@ u32 modelFindNextProjectileHitCandidate(Model *model, coord3d *arg1, coord3d *ar
 bool modelTestRayIntersectsNodeBBox(Model *model, ModelNode *node, coord3d *pos, coord3d *dir);
 s32 sub_GAME_7F074CAC(Model *model, ModelNode *node, coord3d *raypos, coord3d *raydir);
 
+/* A collision vertex's related DLCOLLISION node. On 64-bit the vertex keeps the
+ * node's segment-5 file offset (bondtypes.h Vertex), which the native model
+ * built at load resolves (romfile_model_native.c). */
+#if !defined(TARGET_N64) && UINTPTR_MAX > 0xFFFFFFFFu
+ModelNode *portModelCollisionNode(void *baseaddr, u32 offset);
+#define MODEL_COLLISION_NODE(rodata, vtx) portModelCollisionNode((rodata)->BaseAddr, (vtx)->CollisionRelatedNode)
+#else
+#define MODEL_COLLISION_NODE(rodata, vtx) ((ModelNode *)(vtx)->CollisionRelatedNode)
+#endif
+
 #endif
 

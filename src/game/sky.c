@@ -1158,7 +1158,7 @@ Gfx *skyRender(Gfx *gdl)
                        * the REAL format (texSelect reads it, not the entry) */
                         extern void ge_dbg_gfxdump(const char *tag, void *gdl, int count);
                         extern struct tex *texFindInPool(s32 texturenum, struct texpool *pool);
-                        u16 texnum = ((u16 *)(uintptr_t)ent->index)[-4]; /* TODO(64bit): u32 index holds a pointer */
+                        u16 texnum = ((u16 *)ent->index)[-4];
                         struct tex *rec = texFindInPool(texnum, NULL);
                         f32 w2[2];
                         w2[0] = (f32)texnum;

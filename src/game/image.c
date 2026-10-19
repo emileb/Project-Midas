@@ -2452,7 +2452,7 @@ void texLoadFromDisplayList(Gfx *gdl, struct texpool *arg1)
         // Look for GBI sequence: fd...... abcd....
         if (bytes[0] == G_SETTIMG && bytes[4] == 0xab && bytes[5] == 0xcd)
         {
-            texLoad((u32 *)((s32)bytes + 4), arg1);
+            texLoad((uintptr_t *)((s32)bytes + 4), arg1);
         }
 
         bytes += 8;
@@ -2469,7 +2469,7 @@ void texLoadFromDisplayList(Gfx *gdl, struct texpool *arg1)
         if ((cmd->words.w0 >> 24) == (u8)G_SETTIMG &&
             (cmd->words.w1 >> 16) == 0xABCDu)
         {
-            texLoad((s32 *)&cmd->words.w1, arg1);
+            texLoad(&cmd->words.w1, arg1);
         }
 
         cmd++;
@@ -2523,7 +2523,7 @@ extern u8 *port_imagesSegmentRomStart;
  * u = unknown z = texture is compressed with zlib l = number of levels of
  * detail within the texture
  */
-void texLoad(s32 *updateword, struct texpool *pool)
+void texLoad(uintptr_t *updateword, struct texpool *pool)
 {
     u8 compbuffer[4000];
     u8 *compptr;
@@ -2626,7 +2626,6 @@ void texLoad(s32 *updateword, struct texpool *pool)
                     }
                 }
 #endif
-                /* TODO(64bit) layout: see the store at the end of texLoad. */
                 *updateword = osVirtualToPhysical(pool->start);
                 return;
             }
@@ -2722,9 +2721,6 @@ void texLoad(s32 *updateword, struct texpool *pool)
 #endif
     }
 
-    /* TODO(64bit) layout: updateword is a 32-bit slot (ModelFileTextures.TextureID,
-     * sImageTableEntry.index, or the low half of a host Gfx w1 from
-     * texLoadFromDisplayList), so the pointer is truncated on a 64-bit host. */
     *updateword = osVirtualToPhysical(tex->data);
 }
 
@@ -2745,10 +2741,10 @@ void texLoadFromModelFileHeader(ModelFileHeader* arg0, struct texpool* arg1)
          * original signed compare guards against already-converted entries. A
          * host pointer can be >= 0x80000000 (negative as s32), so use an
          * unsigned compare to reject converted values on both platforms. */
-        if (textures[i].TextureID < (u32)MAX_TEXTURES)
+        if (textures[i].TextureID < (uintptr_t)MAX_TEXTURES)
 #endif
         {
-            texLoad(&textures[i], arg1);
+            texLoad(&textures[i].TextureID, arg1);
         }
     }
 }
@@ -2773,7 +2769,7 @@ u32 portTexRomBytes(s32 texnum)
 
 void texLoadFromTextureNum(s32 texturenum, struct texpool *arg1)
 {
-    u32 texturenumcopy;
+    uintptr_t texturenumcopy;
     texturenumcopy = texturenum;
     texLoad(&texturenumcopy, arg1);
 }

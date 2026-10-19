@@ -17,6 +17,8 @@
 #ifndef TARGET_N64
 #include <stdlib.h>
 
+extern s32 romdataFileServed(s32 index);
+
 /**
  * PC arm of the model texture pass: convert ONE node display list.
  *
@@ -224,7 +226,7 @@ static void portSwapInlineTextures(struct ModelFileHeader *objheader, u8 *fileda
 
     for (i = 0; i < objheader->numtextures; i++)
     {
-        u32 id = objheader->Textures[i].TextureID;
+        uintptr_t id = objheader->Textures[i].TextureID;
 
         if ((id >> 24) == 0x05)
         {
@@ -268,6 +270,52 @@ static void portSwapInlineTextures(struct ModelFileHeader *objheader, u8 *fileda
 }
 #endif
 
+/* The same inline textures in a model served from the ROM arrive as the N64
+ * byte image (the converter never touches texture bytes): 4/8-bit texels are
+ * already right, 16-bit texels need each halfword swapped to the importer's
+ * native u16s, 32-bit texels each word. The image is freshly loaded, so this
+ * runs once per load. */
+static void portFixInlineTexturesRom(struct ModelFileHeader *objheader, u8 *filedata)
+{
+    s32 i;
+
+    for (i = 0; i < objheader->numtextures; i++)
+    {
+        uintptr_t id = objheader->Textures[i].TextureID;
+        s32 j;
+
+        /* two entries naming the same inline texels must not swap them back */
+        for (j = 0; j < i && objheader->Textures[j].TextureID != id; j++)
+        {
+        }
+
+        if ((id >> 24) == 0x05 && j == i)
+        {
+            u8 *p = filedata + (id & 0x00FFFFFFu);
+            u32 depth = objheader->Textures[i].RenderDepth;
+            u32 len = (((u32) objheader->Textures[i].Width *
+                        objheader->Textures[i].Height) << depth) >> 1;
+            u32 b;
+
+            if (depth == 2)
+            {
+                for (b = 0; b + 1 < len; b += 2)
+                {
+                    u8 t = p[b]; p[b] = p[b + 1]; p[b + 1] = t;
+                }
+            }
+            else if (depth == 3)
+            {
+                for (b = 0; b + 3 < len; b += 4)
+                {
+                    u8 t = p[b]; p[b] = p[b + 3]; p[b + 3] = t;
+                    t = p[b + 1]; p[b + 1] = p[b + 2]; p[b + 2] = t;
+                }
+            }
+        }
+    }
+}
+
 /***
  * NTSC addres 0x7F0764A4.
 */
@@ -302,8 +350,7 @@ void load_object_fill_header(struct ModelFileHeader *objheader, u8 *name, u8* ds
     objheader->Switches = (struct ModelNode **)filedata;
     
     // hmmmmmmmmmmmm
-    /* TODO(64bit) layout: the file's Switches[] is u32 slots, but Switches is
-     * ModelNode ** (8-byte stride on a 64-bit host). */
+    /* 64-bit hosts replace these three with native arrays (romfileModelBuildNative) */
     objheader->Textures = (struct ModelFileTextures *)&((s32*)filedata)[objheader->numSwitches];
     
     objheader->RootNode = (struct ModelNode *)&objheader->Textures[objheader->numtextures];
@@ -353,10 +400,24 @@ void load_object_fill_header(struct ModelFileHeader *objheader, u8 *name, u8* ds
                 fileSetSize(idx, (u8 *) filedata, (poolsz + 0xf) & ~0xfu, dst == 0);
             }
 
+#if UINTPTR_MAX > 0xFFFFFFFFu
+            if (converted)
+            {
+                /* 64-bit: pointers don't fit the file's slots, so the graph is
+                 * built natively beside the image (romfile_model_native.c) */
+                extern s32 romfileModelBuildNative(ModelFileHeader *hdr, u8 *img, u32 size, const char *name);
+                converted = romfileModelBuildNative(objheader, (u8 *) filedata, poolsz, (const char *) name);
+            }
+            if (converted)
+            {
+                /* built; a failed native build falls through to the empty node */
+            }
+#else
             if (converted)
             {
                 sub_GAME_7F075A90(objheader, 0x5000000, (uintptr_t) filedata);
             }
+#endif
             else
             {
                 /* The served file did not convert cleanly (romfile_model.c
@@ -376,7 +437,14 @@ void load_object_fill_header(struct ModelFileHeader *objheader, u8 *name, u8* ds
             sub_GAME_7F075A90(objheader, (uintptr_t) filedata, (uintptr_t) filedata);
         }
     }
-    portSwapInlineTextures(objheader, filedata);
+    if (romdataFileServed(fileGetIndex(name)))
+    {
+        portFixInlineTexturesRom(objheader, filedata);
+    }
+    else
+    {
+        portSwapInlineTextures(objheader, filedata);
+    }
     /* PORT: GE_COLAUDIT=1 proves the collision-vertex byte-order fixups
      * stayed exact across reloads of this shared compiled-in blob. */
     portModelCollisionAudit(objheader->RootNode, (const char *) name);
@@ -407,9 +475,8 @@ void load_object_fill_header(struct ModelFileHeader *objheader, u8 *name, u8* ds
         {
             /* texLoad replaced TextureID with the data pointer; the texture
              * number sits 8 bytes before it (portGunTexAudit, gun.c) */
-            /* TODO(64bit) layout: TextureID is a u32 slot holding a pointer. */
-            u32 id = objheader->Textures[t].TextureID;
-            s32 texnum = (id >= (u32) MAX_TEXTURES) ? *(s16 *) ((u8 *) (uintptr_t) id - 8) : (s32) id;
+            uintptr_t id = objheader->Textures[t].TextureID;
+            s32 texnum = (id >= (uintptr_t) MAX_TEXTURES) ? *(s16 *) ((u8 *) id - 8) : (s32) id;
 
             portHwNoteTexture(texnum, portTexRomBytes(texnum)); /* cart read + last-priced decode */
         }

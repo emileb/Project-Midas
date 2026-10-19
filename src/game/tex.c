@@ -836,8 +836,8 @@ s32 texLoadFromGdl(Gfx *src, s32 srcsize, Gfx *dst, void *texpool)
     s32 dbgSeen = 0, dbgFound = 0, dbgMissed = 0, dbgFirstMiss = -1;
 #endif
 
-    /* TODO(64bit) layout: srcsize is in N64 bytes (8 per command), not
-     * host bytes; host Gfx is 16 bytes on a 64-bit host. */
+    /* srcsize is in N64 bytes (8 per command) on every platform; the walk
+     * itself steps by host Gfx */
     count = srcsize >> 3;
 
     sub_GAME_7F0CC4C8();
@@ -1171,8 +1171,25 @@ s32 texLoadFromGdl(Gfx *src, s32 srcsize, Gfx *dst, void *texpool)
 */
 void texCopyGdls(Gfx *arg0, Gfx *arg1, s32 arg2)
 {
-    /* TODO(64bit) layout: 8-byte N64 Gfx count, but arg0/arg1 step by host
-     * sizeof(Gfx) (16) and only 8 bytes of each slot are written on PC. */
+#if !defined(TARGET_N64) && UINTPTR_MAX > 0xFFFFFFFFu
+    /* 64-bit: arg0 holds arg2 bytes of decompressed big-endian N64 commands (8
+     * bytes each) and arg1 receives them as host Gfx (16 bytes each), so the
+     * staging area is twice the size (bg.c). Copy from the end: arg1 sits
+     * above arg0, so no command is overwritten before it is read. */
+    {
+        const u8 *s = (const u8 *) arg0;
+        s32 i;
+
+        for (i = (arg2 >> 3) - 1; i >= 0; i--)
+        {
+            const u8 *c = s + i * 8;
+
+            arg1[i].words.w0 = ((u32) c[0] << 24) | ((u32) c[1] << 16) | ((u32) c[2] << 8) | c[3];
+            arg1[i].words.w1 = ((u32) c[4] << 24) | ((u32) c[5] << 16) | ((u32) c[6] << 8) | c[7];
+        }
+        return;
+    }
+#endif
     arg2 = (arg2 >> 3);
     arg0 = arg0 + (arg2 - 1);
     arg1 = arg1 + (arg2 - 1);

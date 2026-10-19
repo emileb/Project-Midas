@@ -10,7 +10,8 @@
  * below, which the free-list init walks by adjacency. GCC doesn't keep bss
  * order (the init used to corrupt unrelated globals), so on PC the pool gets
  * its real size here and the stand-ins are N64-only. */
-char g_ModelHitEntries[600 * 0x14];
+/* sizeof, not the N64's 0x14: the entry holds pointers (0x28 on 64-bit) */
+char g_ModelHitEntries[600 * sizeof(ModelHitEntry)] __attribute__((aligned(8)));
 #else
 char g_ModelHitEntries[0xC];
 //CODE.bss:80076A5C

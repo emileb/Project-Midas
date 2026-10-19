@@ -16,6 +16,7 @@ struct bondstruct_unk_op07_related {
     s32 unk0C;
 };
 
+#ifdef TARGET_N64
 struct AnimModelSlot {
     s16 unk00;
     s16 unk02;
@@ -69,7 +70,25 @@ struct AnimModelSlot {
     // is this struct size 0xbc or 0xc0 ?
     //s32 unkbc;
 };
+#else
+/* PC: model.c uses an anim slot as a whole Model, so make it one; the named
+ * fields alias Model's unk00, rwdatalen, obj and datas at any pointer size */
+struct AnimModelSlot {
+    union {
+        Model model;
+        struct {
+            s16 unk00;
+            s16 unk02;
+            void *unk04;
+            void *unk08;
+            void *unk0c;
+            void *unk10;
+        };
+    };
+};
+#endif
 
+#ifdef TARGET_N64
 struct ModelSlot {
     s16 unk00;
     s16 unk02;
@@ -81,6 +100,22 @@ struct ModelSlot {
     s32 unk18;
     s32 unk1c;
 };
+#else
+/* PC: a plain slot is the first 0x20 bytes of a Model on N64 (unk08 = obj,
+ * unk10 = datas, unk02 = rwdatalen); with Model's own field types the overlay
+ * holds on 64-bit too, where that prefix is 0x40 bytes */
+struct ModelSlot {
+    s16 unk00;
+    s16 unk02;
+    void *unk04;
+    void *unk08;
+    void *unk0c;
+    void *unk10;
+    s32 unk14;
+    void *unk18;
+    void *unk1c;
+};
+#endif
 
 extern struct AnimModelSlot *g_AnimModelSlots;
 extern struct ModelSlot *g_ModelSlots;

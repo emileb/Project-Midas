@@ -511,8 +511,15 @@ add_custom_target(ge_buildinfo
 add_dependencies(ge ge_buildinfo)
 target_include_directories(ge PRIVATE ${CMAKE_BINARY_DIR}/generated)
 
-# libm: sinf/cosf/sqrtf (math_sincos.s and gu asm on N64; libm on PC).
+# libm: sqrtf (gu asm on N64; libm on PC, both correctly rounded). sinf/cosf
+# are the game's own polynomial (math_sincos.s), translated in
+# port/src/n64_sincos.c: libm's differ in the last bits and the simulation
+# drifts from the N64. Mapped by name so the compiler can't treat them as
+# builtins (constant folding, sincos merging) or bind them to libm's.
 target_link_libraries(ge m)
+target_compile_definitions(ge PRIVATE
+    $<$<COMPILE_LANGUAGE:C>:sinf=portN64Sinf>
+    $<$<COMPILE_LANGUAGE:C>:cosf=portN64Cosf>)
 
 if(GE_VIDEO)
     if(WIN32)

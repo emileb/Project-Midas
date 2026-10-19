@@ -406,7 +406,7 @@ static void niRecord(struct nimg *n, u32 dst, const u8 *src, u32 words, const st
         memcpy(&v, src + w * 4, 4);
         if (w < m->nwords) {
             u16 e = m->word[w];
-            if (offsets & (1u << w)) {
+            if (w < 32 && (offsets & (1u << w))) { /* the mask only covers words 0-31 */
                 niPut(n, dst + SL64_OFS(e), v != 0 ? (uintptr_t) v + NI_FILE : 0, (e & SL64_PTR) != 0);
             } else {
                 niPut(n, dst + SL64_OFS(e), v, 0); /* a pointer slot's high half stays 0 */

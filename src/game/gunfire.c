@@ -146,6 +146,7 @@ extern Weapon1PTransformKeyframe taserFireKeyFrames[];
 extern Weapon1PTransformKeyframe taserRaiseKeyframes[];
 extern struct ModelSkeleton skeleton_gun_kf7;
 
+#ifdef TARGET_N64
 typedef struct ModelHeader {
     s16 unk00;
     s16 Type;
@@ -157,6 +158,12 @@ typedef struct ModelHeader {
     struct Model *attachedto;
     ModelNode *attachedto_objinst;
 } ModelHeader;
+#else
+/* PORT: as in gun.c - this truncated Model is stack-allocated and cast to a
+ * full Model*, so modelInit/animation writes ran past it onto the stack. On PC
+ * the name is the full Model (a macro, so `struct ModelHeader` resolves too). */
+#define ModelHeader Model
+#endif
 
 void gunCreateBeamForHand(enum GUNHAND hand);
 void bullet_path_from_screen_center(coord3d *arg0, coord3d *arg1, enum GUNHAND arg2);
@@ -5754,7 +5761,13 @@ void sub_GAME_7F068508(GUNHAND handnum, f32 floor_y_pos)
 
         rand = ((f32) ((u32) randomGetNext())) * 2.3283064e-10f;
         casing->vel.y = ((rand * 2.5f) * 0.0625f) + 2.5f;
+#ifdef TARGET_N64
         casing->vel.z = frac * 0.0f;
+#else
+        /* PORT: frac is uninitialised here; an N64 register held a finite
+         * value, but a NaN stack slot made every casing's position NaN */
+        casing->vel.z = 0.0f;
+#endif
 
         mtx4RotateVecInPlace(THROWMTX, &casing->vel);
 
@@ -6112,7 +6125,13 @@ void sub_GAME_7F068508(GUNHAND handnum, f32 floor_y_pos)
 
         rand = ((f32) ((u32) randomGetNext())) * 2.3283064e-10f;
         casing->vel.y = ((rand * 2.5f) * 0.0625f) + 2.5f;
+#ifdef TARGET_N64
         casing->vel.z = frac * 0.0f;
+#else
+        /* PORT: frac is uninitialised here; an N64 register held a finite
+         * value, but a NaN stack slot made every casing's position NaN */
+        casing->vel.z = 0.0f;
+#endif
 
         mtx4RotateVecInPlace(THROWMTX, &casing->vel);
 
@@ -6287,6 +6306,7 @@ void update_bullet_casings(void)
     }
 }
 
+#ifdef TARGET_N64
 typedef struct ModelHead {
     s16 unk00;
     s16 rwdatalen;
@@ -6298,6 +6318,10 @@ typedef struct ModelHead {
     Model *attachedto;
     ModelNode *attachedto_objinst;
 } ModelHead;
+#else
+/* PORT: a truncated Model cast to Model* (see ModelHeader above); use the full one */
+#define ModelHead Model
+#endif
 
 void sub_GAME_7F068EC4(CasingRecord *casing, Gfx **gdl)
 {
@@ -6321,6 +6345,9 @@ void sub_GAME_7F068EC4(CasingRecord *casing, Gfx **gdl)
     portRenderDataFromWords(&render_data, g_DefaultCasingModelRenderData);
 #endif
     modelCalculateRwDataLen(model_header);
+#ifndef TARGET_N64
+    memset(&model, 0, sizeof(model));
+#endif
     modelInit((Model *)&model, model_header, NULL);
 
     model.render_pos = model_matrices;

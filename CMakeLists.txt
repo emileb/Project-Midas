@@ -376,14 +376,24 @@ if(GE_SANITIZE)
     endif()
     # -g3 gives file:line in reports and no-sanitize-recover=all makes every UBSan
     # finding fatal; if deliberate decomp UB floods it, exempt specific checks here.
-    add_compile_options(-g3 -fsanitize=address -fsanitize=undefined
-                        -fno-omit-frame-pointer -fno-sanitize-recover=all)
+    if(GE_64BIT)
+        # 64-bit (clang): keep UBSan recoverable so one run lists every finding
+        # (ASan still stops at the first memory error). The undefined group
+        # includes -fsanitize=function, which catches callbacks whose
+        # prototype doesn't match the call (arm64 passes floats and ints in
+        # different registers).
+        add_compile_options(-g3 -fsanitize=address -fsanitize=undefined
+                            -fno-omit-frame-pointer)
+    else()
+        add_compile_options(-g3 -fsanitize=address -fsanitize=undefined
+                            -fno-omit-frame-pointer -fno-sanitize-recover=all)
+    endif()
     add_link_options(-fsanitize=address -fsanitize=undefined)
     # ASan redzones put gaps between globals and break animdata's contiguous
     # tiling, so exempt the data-only TUs (manifest assets are already
     # uninstrumented).
     set_source_files_properties(assets/animationtable_data.c assets/animationtable_entries.c
-        PROPERTIES COMPILE_OPTIONS "-fno-toplevel-reorder;-malign-data=abi;-Og;-fno-sanitize=all")
+        PROPERTIES COMPILE_OPTIONS "$<IF:$<C_COMPILER_ID:GNU>,-fno-toplevel-reorder;-malign-data=abi;-Og;-fno-sanitize=all,-fno-sanitize=all>")
     set_source_files_properties(assets/oddtextures.c assets/rarewarelogo.c
         assets/font_dl.c assets/font/fontBankGothic.c assets/font/fontZurichBold.c
         PROPERTIES COMPILE_OPTIONS "-fno-sanitize=all")

@@ -1279,15 +1279,22 @@ void chraiDefaultWeaponFireHandler(s32 hand)
             {
                 recall_joy2_hits_edit_flag(shotdata.weapon, finalpos, besttexture);
 
-                /* besttexture is -1 when there's no BG hit (e.g. shooting
-                 * at the sky/ceiling with only hitbgstan set) -
-                 * g_Textures[besttexture * 8] then reads 8 bytes before
-                 * the array.
-                 * gotbghit (the only path that sets besttexture >= 0,
-                 * see the impact_sounds lookup above) gates this the
-                 * same way. */
-                if ((besttexture >= 0) &&
-                    ((0xf & ((u8 *) g_Textures)[besttexture * 8]) != 5) && ((((u8 *) g_Textures)[besttexture * 8] & 0xf) != 6))
+#ifdef TARGET_N64
+                if (((0xf & ((u8 *) g_Textures)[besttexture * 8]) != 5) && ((((u8 *) g_Textures)[besttexture * 8] & 0xf) != 6))
+#else
+                /* DEMO DESYNC FIX #1 (tools/n64trace/DESYNC_FIXES.md):
+                 * besttexture is -1 when only the stan test hit (no BG
+                 * triangle). The N64 then reads g_Textures[-1], the 8 zero
+                 * bytes before the table (0x800492F8, checked in an emulator),
+                 * so material 0 passes and the dust puff (explosionCreate,
+                 * ~240 RNG draws) still spawns; keep that without reading out
+                 * of bounds. The port's earlier besttexture >= 0 guard dropped
+                 * the puff and desynced the attract demos.
+                 * Also: on LE the raw byte's low nibble is hitSound, not
+                 * hitTexture (see the impact_sounds twin above). */
+                if ((besttexture < 0) ||
+                    ((g_Textures[besttexture].hitTexture != 5) && (g_Textures[besttexture].hitTexture != 6)))
+#endif
                 {
                     rooms[0] = bestroom;
                     rooms[1] = 255;

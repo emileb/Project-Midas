@@ -11219,7 +11219,14 @@ void bondviewMovePlayerUpdateViewport(s8 stick_x, s8 stick_y, u16 buttons)
         {   /* PILLARBOX (video.c portSetScenePillar): an MP gameplay frame asks
              * for the centred 4:3 - set before the wide factor, which then reads 1 */
             extern void portSetScenePillar(s32 on);
-            portSetScenePillar(getPlayerCount() >= 2);
+            /* DEMO DESYNC FIX #2 (tools/n64trace/DESYNC_FIXES.md): an attract
+             * demo always plays in 4:3. The wide factor widens the culling
+             * frustum along with the projection, so a wide window changes which
+             * rooms load (what bullets hit), which monitors run their scripts
+             * and what guards see, and the demo desyncs. In fullscreen the
+             * window reaches its final shape at a wall-clock-dependent tick,
+             * so the result also varied from run to run. */
+            portSetScenePillar((getPlayerCount() >= 2 ? 1 : 0) | (get_is_ramrom_flag() ? 2 : 0));
         }
         wf = portWideFactor();
 

@@ -51,6 +51,7 @@ s32  portWatchValuesFitPublic(s32 page, s32 row, s32 count);
 s32  portWatchRowDropdown(s32 page, s32 row);
 extern s32 portVideoDeleteEdge(void);   /* the Delete key, edge-latched */
 extern s32 portReturnStartThisTick(void); /* video.c: START came from Return alone; weak 0 headless */
+extern s32 get_is_ramrom_flag(void);      /* ramromreplay.c: a demo is playing (DEMO DESYNC FIX #4) */
 static void portWatchDropAnchor(s32 row);   /* park the list window at open */
 static s32  portWatchDropVisible(void);
 static void portWatchDropBox(s32 rowy, s32 *x0, s32 *y0, s32 *w, s32 *vis);
@@ -3407,27 +3408,35 @@ void sub_GAME_7F0A6A80(void)
 
         case WATCH_INDEX_CONTROL_OPTIONS:
 #ifndef TARGET_N64
-            if (portWatchAssignTick())
+            /* DEMO DESYNC FIX #4 (tools/n64trace/DESYNC_FIXES.md): a demo
+             * plays this tab as the N64 does (Rare's two rows, style and
+             * inputs), since its recorded presses were made on that page. */
+            if (get_is_ramrom_flag() == 0)
             {
-                break;   /* "press a button": no walk, no tab flip, until it answers */
-            }
-            if (!portWatchRaphnetView())
-            {
-                /* the port page owns this tab unless a raphnet adapter is
-                 * the selected device */
-                portModal = portWatchNavModal();
-                portWatchRowNavigate();
-                if (!portModal) /* a list or an armed capture owns left/right */
+                if (portWatchAssignTick())
                 {
-                    watch_screen2_navigation();
+                    break;   /* "press a button": no walk, no tab flip, until it answers */
                 }
+                if (!portWatchRaphnetView())
+                {
+                    /* the port page owns this tab unless a raphnet adapter is
+                     * the selected device */
+                    portModal = portWatchNavModal();
+                    portWatchRowNavigate();
+                    if (!portModal) /* a list or an armed capture owns left/right */
+                    {
+                        watch_screen2_navigation();
+                    }
+                    break;
+                }
+                /* the raphnet page is THREE rows, so Rare's two handlers below -
+                 * each of which means "go to the other row" in both directions -
+                 * cannot walk it. One navigator owns all three. */
+                portWatchRaphnetNavigate();
+                watch_screen2_navigation();
                 break;
             }
-            /* the raphnet page is THREE rows, so Rare's two handlers below -
-             * each of which means "go to the other row" in both directions -
-             * cannot walk it. One navigator owns all three. */
-            portWatchRaphnetNavigate();
-#else
+#endif
             switch (controller_options_index)
             {
                 case CONTROLLER_OPTIONS_INDEX_STYLE:
@@ -3437,7 +3446,6 @@ void sub_GAME_7F0A6A80(void)
                 case CONTROLLER_OPTIONS_INDEX_INPUTS:
                     controller_options_inputs_navigation();
             }
-#endif
             watch_screen2_navigation();
             break;
 
@@ -5002,7 +5010,8 @@ Gfx *draw_controller_style_text(Gfx *gdl)
                 const s32 pn = get_cur_playernum();
 
                 if (g_CurrentPlayer->cur_player_control_type_0 != wasType && portInputStyleGet(pn) >= 0
-                    && portInputSlotDevice(pn) > 0)
+                    && portInputSlotDevice(pn) > 0
+                    && get_is_ramrom_flag() == 0) /* a demo's pick is the recording's, not the player's */
                 {
                     portInputDeviceStyleSet(portInputSlotDevice(pn), g_CurrentPlayer->cur_player_control_type_0);
                 }
@@ -7257,8 +7266,13 @@ s32 portWatchRaphnetView(void)
     extern s32 portInputDeviceSlot(s32 dev);
     static s32 lastDev = -1;
     static s32 lastId = -100;   /* -100 = nothing seen yet (an id is >= -2) */
-    const s32 pre = portWatchDevice();
+    s32 pre;
 
+    if (get_is_ramrom_flag() != 0)
+    {
+        return 1; /* DEMO DESYNC FIX #4: a demo gets Rare's page, which edits the style */
+    }
+    pre = portWatchDevice();
     portWatchDeviceValidate();
     {   /* A hotplug under the tab can leave the picker's device index naming a
          * different pad, so the page, lists or pending edits would act on the
@@ -8288,6 +8302,13 @@ Gfx *draw_watch_current_page(Gfx *gdl, Mtx *arg1, s32 watch_transitioning)
             )
         {
 #ifndef TARGET_N64
+            if (get_is_ramrom_flag() != 0)
+            {
+                /* DEMO DESYNC FIX #4: a demo's A / Z is Rare's select toggle
+                 * on every page, as recorded */
+                watch_play_beep_sound();
+            }
+            else
             if (portInputAssignActive() || portWatchAssignSwallowing())
             {
                 /* armed: this press is the ANSWER (a key, or mouse left = Z),

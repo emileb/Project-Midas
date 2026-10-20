@@ -476,8 +476,10 @@ static s32 videoSceneWideFresh(void)
     return s_SceneWide && ((s_FrameNum - s_SceneWideFrame) <= 2);
 }
 
-/* Pillarbox: an MP gameplay frame asserts it (bondview2.c, beside
- * portSetSceneMp), self-expiring like the other assertions. While it holds,
+/* Pillarbox: a gameplay frame asserts it (bondview2.c, beside
+ * portSetSceneMp), self-expiring like the other assertions: bit 1 for an MP
+ * frame (honoured when mp_pillarbox is on), bit 2 for an attract-demo frame
+ * (always: a demo must simulate in 4:3, DEMO DESYNC FIX #2). While it holds,
  * gfx_start_frame treats the window as a centred 4:3 and the frame clear leaves
  * black side bars. */
 static s32 s_ScenePillar = 0;
@@ -496,7 +498,7 @@ void portSetScenePillar(s32 on)
 s32 portPillarboxFrame(void)
 {
     return s_CfgWidescreen == 2   /* Widescreen 4:3: every frame */
-        || (s_CfgMpPillarbox && s_ScenePillar && ((s_FrameNum - s_ScenePillarFrame) <= 2));
+        || ((s_ScenePillar & (s_CfgMpPillarbox ? 3 : 2)) && ((s_FrameNum - s_ScenePillarFrame) <= 2));
 }
 
 /* the mouse is in REAL window pixels; a pillarbox narrows the logical window

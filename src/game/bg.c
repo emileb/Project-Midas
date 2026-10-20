@@ -6037,6 +6037,7 @@ void bgDetermineVisibleRooms(void)
        * geometry. Portal recursion and the room set stay vanilla; keep
        * GE_PORTALPAD small (0 = off) or far rooms draw outside their opening. */
         extern char *getenv(const char *);
+        extern s32 get_is_ramrom_flag(void);
         static f32 scpad = -1.0f;
         if (scpad < 0.0f)
         {
@@ -6044,7 +6045,12 @@ void bgDetermineVisibleRooms(void)
             scpad = (e != NULL) ? (f32) atof(e) : 12.0f;
             if (scpad < 0.0f) scpad = 0.0f;
         }
-        if (scpad > 0.0f)
+        /* DEMO DESYNC FIX #3 (tools/n64trace/DESYNC_FIXES.md): not in demos.
+         * These boxes also decide which props are on screen
+         * (getPropCombinedRoomsBBox2D -> posIsOnScreen), so a padded box
+         * shows objects early: a monitor runs its RNG-drawing script, guards
+         * see what is on screen, and the demo desyncs. */
+        if (scpad > 0.0f && get_is_ramrom_flag() == 0)
         {
             for (i = 0; i < g_BgNumberOfRoomsDrawn; i++)
             {

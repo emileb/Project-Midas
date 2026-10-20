@@ -1286,6 +1286,56 @@ static void gfx_opengl_set_use_alpha(bool use_alpha, bool modulate) {
  * room decals keep the one-sided test. GE_DEC_CLIP=0 = old behaviour,
  * GE_DEC_TOL=<world units> (default 8). */
 extern float gfx_ge_dec_b, gfx_ge_dec_d;
+#ifdef __ANDROID__
+/* Adreno 5xx renames a buffer the GPU still uses on every glBufferData, a kernel
+ * allocation per draw (4 fps in Dam's tunnel on an Adreno 530). Draw the
+ * interpreter's batches from client memory instead, which GLES 3 allows on VAO 0. */
+static uint32_t gl_client_enabled; /* attribute arrays enabled on VAO 0 */
+
+static void gl_draw_client(const float* data, size_t len, size_t nv) {
+    struct ShaderProgram* prg = gl_current_prg;
+    uint32_t want = 0;
+    size_t pos = 0;
+
+    if (prg == nullptr) {
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * len, data, GL_STREAM_DRAW);
+        glDrawArrays(GL_TRIANGLES, 0, nv);
+        return;
+    }
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    for (int i = 0; i < prg->num_attribs; i++) {
+        const GLint loc = prg->attrib_locations[i];
+        if (loc >= 0 && loc < 32) {
+            want |= 1u << loc;
+            glVertexAttribPointer(loc, prg->attrib_sizes[i], GL_FLOAT, GL_FALSE, prg->num_floats * sizeof(float), data + pos);
+        }
+        pos += prg->attrib_sizes[i];
+    }
+    for (int loc = 0; loc < 32; loc++) {
+        const uint32_t bit = 1u << loc;
+        if ((gl_client_enabled ^ want) & bit) {
+            if (want & bit) {
+                glEnableVertexAttribArray(loc);
+            } else {
+                glDisableVertexAttribArray(loc);
+            }
+        }
+    }
+    gl_client_enabled = want;
+    glDrawArrays(GL_TRIANGLES, 0, nv);
+    glBindVertexArray(opengl_vao);
+    glBindBuffer(GL_ARRAY_BUFFER, opengl_vbo);
+}
+#define GL_STREAM_DRAW_TRIS(data, len, nv) gl_draw_client((data), (len), (nv))
+#else
+#define GL_STREAM_DRAW_TRIS(data, len, nv) \
+    do { \
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * (len), (data), GL_STREAM_DRAW); \
+        glDrawArrays(GL_TRIANGLES, 0, (nv)); \
+    } while (0)
+#endif
+
 static void gfx_opengl_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_t buf_vbo_num_tris) {
     // printf("flushing %d tris\n", buf_vbo_num_tris);
     static int clip = -1;
@@ -1298,8 +1348,7 @@ static void gfx_opengl_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_
     }
     gl_ret_restore(); /* after a retained draw: the stream VBO + this program's arrays again */
     if (!clip || !ge_dec_draw || gfx_ge_dec_b >= 0.0f || buf_vbo_num_tris == 0) {
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * buf_vbo_len, buf_vbo, GL_STREAM_DRAW);
-        glDrawArrays(GL_TRIANGLES, 0, 3 * buf_vbo_num_tris);
+        GL_STREAM_DRAW_TRIS(buf_vbo, buf_vbo_len, 3 * buf_vbo_num_tris);
         return;
     }
 
@@ -1329,22 +1378,24 @@ static void gfx_opengl_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_
     glDisable(GL_POLYGON_OFFSET_FILL);
     glStencilFunc(GL_ALWAYS, 1, 0xFF);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * buf_vbo_len, pushed.data(), GL_STREAM_DRAW);
-    glDrawArrays(GL_TRIANGLES, 0, nv);
+    GL_STREAM_DRAW_TRIS(pushed.data(), buf_vbo_len, nv);
     /* 2. draw */
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     gfx_opengl_set_depth_mode(ge_dm_args[0], ge_dm_args[1], ge_dm_args[2], ge_dm_args[3], ge_dm_zmode);
     glStencilFunc(GL_EQUAL, 1, 0xFF);
     glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * buf_vbo_len, buf_vbo, GL_STREAM_DRAW);
-    glDrawArrays(GL_TRIANGLES, 0, nv);
+    GL_STREAM_DRAW_TRIS(buf_vbo, buf_vbo_len, nv);
     /* 3. clear */
     glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
     glDepthMask(GL_FALSE);
     glDepthFunc(GL_ALWAYS);
     glStencilFunc(GL_ALWAYS, 0, 0xFF);
     glStencilOp(GL_ZERO, GL_ZERO, GL_ZERO);
+#ifdef __ANDROID__
+    GL_STREAM_DRAW_TRIS(buf_vbo, buf_vbo_len, nv);
+#else
     glDrawArrays(GL_TRIANGLES, 0, nv);
+#endif
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     glDisable(GL_STENCIL_TEST);
     gfx_opengl_set_depth_mode(ge_dm_args[0], ge_dm_args[1], ge_dm_args[2], ge_dm_args[3], ge_dm_zmode);

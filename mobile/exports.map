@@ -1,0 +1,8 @@
+# Only what Java looks up by name; everything else (including GE's own str* and sprintf) stays local
+{
+  global:
+    JNI_OnLoad;
+    Java_*;
+  local:
+    *;
+};

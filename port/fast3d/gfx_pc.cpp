@@ -7805,7 +7805,17 @@ extern "C" void gfx_run(Gfx* commands) {
     }
 
     gfx_rapi->end_frame();
+#ifdef __ANDROID__
+    // The touch controls are drawn on swap and must not be clipped
+    gfx_rapi->set_scissor(0, 0, gfx_real_window_width ? gfx_real_window_width : gfx_current_window_dimensions.width,
+                          gfx_current_window_dimensions.height);
+#endif
     gfx_wapi->swap_buffers_begin();
+#ifdef __ANDROID__
+    // ...and they changed blend, depth, program and textures: forget what we think is set
+    gfx_ge_gpu_reset_c();
+    gfx_rapi->set_use_alpha(false, false);
+#endif
     { /* The upload path no longer asks glGetError per texture (gfx_opengl.cpp
        * upload_texture). Every ~2 s one check, right after the swap is queued (at the top of
        * a frame it waited a whole refresh, 8.3 ms measured; here the render

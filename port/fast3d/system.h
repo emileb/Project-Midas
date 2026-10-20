@@ -9,7 +9,11 @@
 #include <stdint.h>
 
 typedef int32_t s32;
+#ifdef __ANDROID__
+typedef long long s64; /* as PR/ultratypes.h: bionic's int64_t is long */
+#else
 typedef int64_t s64;
+#endif
 typedef uint32_t u32;
 
 #define LOGFLAG_SHOWMSG 0x100

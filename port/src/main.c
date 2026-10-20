@@ -512,6 +512,8 @@ static void portArmWatchpoints(void)
         CloseHandle(th);
     }
 }
+#elif defined(__ANDROID__)
+/* Android leaves crashes to debuggerd (tombstones) */
 #else
 #include <execinfo.h>
 #include <unistd.h> /* _exit */
@@ -595,6 +597,14 @@ static void portInitRootDir(const char *argv0)
 {
     int last = -1;
     int i;
+#ifdef __ANDROID__
+    /* settings, saves and logs go in the launcher's user files folder */
+    (void) argv0;
+    snprintf(sPortRootDir, sizeof(sPortRootDir), "%s/goldeneye/", getenv("USER_FILES"));
+    mkdir(sPortRootDir, 0755);
+    portConLogf("ge: root: %s\n", sPortRootDir);
+    return;
+#endif
 #ifdef _WIN32
     /* authoritative on Windows regardless of how we were launched */
     DWORD n = GetModuleFileNameA(NULL, sPortRootDir, sizeof(sPortRootDir) - 1);
@@ -747,7 +757,11 @@ static void portDirectLaunchLog(void)
 }
 #endif
 
+#ifdef __ANDROID__
+int main_mobile(int argc, char **argv)
+#else
 int main(int argc, char **argv)
+#endif
 {
     { /* before the first log line, so the tilde console's ring holds the
        * whole run from `ge: root:` onward (spec section 7) */
@@ -792,17 +806,21 @@ int main(int argc, char **argv)
      * below (arena reservation, overlay check, SDL/GL, controller init) can
      * hang in a hooked process. The watchdog's 60 s boot grace covers all of
      * it. */
+#ifndef __ANDROID__
     signal(SIGSEGV, portCrashHandler);
+#endif
 #ifdef _WIN32
     SetUnhandledExceptionFilter(portSehHandler);
     portArmWatchpoints(); /* GE_WATCH=1: see comment above */
     portArmStallWatchdog(); /* always on: hangs become backtraces */
     AddVectoredExceptionHandler(1, portFirstChanceAV); /* crashes report even if a filter swallows them */
-#else
+#elif !defined(__ANDROID__)
     signal(SIGBUS, portCrashHandler);
 #endif
+#ifndef __ANDROID__
     signal(SIGFPE, portCrashHandler);
     signal(SIGILL, portCrashHandler);
+#endif
 #ifdef _WIN32
     /* GE_STALLTEST=1: park the main thread here forever so the stall
      * watchdog's boot-grace path + loader-lock-free module naming can be

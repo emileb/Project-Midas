@@ -22,6 +22,10 @@
 #include <ultra64.h>
 
 #include "port_console.h"
+#ifdef __ANDROID__
+#include <android/log.h>
+#include "LogWritter.h"
+#endif
 #include "port_console_env.h"
 #include "game/textrelated.h"
 #include "game/dyn.h"
@@ -321,7 +325,12 @@ void portConLogf(const char *fmt, ...)
     va_end(ap);
     tmp[sizeof(tmp) - 1] = '\0';
 
+#ifdef __ANDROID__
+    __android_log_print(ANDROID_LOG_INFO, "GOLDENEYE", "%s", tmp);
+    LogWritter_Write(tmp);
+#else
     fputs(tmp, stderr);
+#endif
     portConPrint(0, tmp);
 }
 

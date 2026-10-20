@@ -131,6 +131,9 @@ static bool gl_es = false;
 static bool gl_core_profile = false;
 
 static void gl_ret_restore(void); /* GE retained geometry: back to the interpreter's VBO / program (defined below) */
+#ifdef __ANDROID__
+static void gl_android_overlay_restore(void); /* defined after the retained-geometry state it resets */
+#endif
 static struct ShaderProgram* gl_current_prg_set(struct ShaderProgram* prg);
 
 static int gfx_opengl_get_max_texture_size() {
@@ -1519,7 +1522,12 @@ static void gfx_opengl_init(void) {
         }
     }
 
+#ifdef __ANDROID__
+    // ES has no glTexImage2DMultisample at any version, and some drivers hand out a pointer anyway
+    if (gl_es) {
+#else
     if (gl_es && (GLVersion.major < 3 || (GLVersion.major == 3 && GLVersion.minor < 1))) {
+#endif
         /* multisampled textures (and sampler2DMS) are ES 3.1; ANGLE can still
          * hand out the pointer, so drop it and keep the renderbuffer MSAA path */
         glad_glTexImage2DMultisample = NULL;
@@ -1603,10 +1611,19 @@ static void gfx_opengl_on_resize(void) {
 
 static void gfx_opengl_start_frame(void) {
     frame_count++;
+#ifdef __ANDROID__
+    gl_android_overlay_restore();
+#endif
 }
 
 static void gfx_opengl_end_frame(void) {
+#ifdef __ANDROID__
+    // Leave no engine VAO bound: the touch controls unbind the element buffer before their own VAO switch
+    gl_ret_restore();
+    glBindVertexArray(0);
+#else
     glFlush();
+#endif
 }
 
 static void gfx_opengl_finish_render(void) {
@@ -2114,6 +2131,26 @@ static void gl_ret_restore(void) {
     gl_ret_active = false;
     gl_ret_bound = nullptr;
 }
+
+#ifdef __ANDROID__
+static void gl_android_overlay_restore(void) {
+    // The touch controls draw between frames: put back the arrays, textures and program they changed
+    glBindVertexArray((gl_core_profile || gl_es) ? opengl_vao : 0);
+    glBindBuffer(GL_ARRAY_BUFFER, opengl_vbo);
+    glDisable(GL_CULL_FACE);
+    gl_ret_cull_state = 0;
+    for (int i = 1; i >= 0; i--) {
+        glActiveTexture(GL_TEXTURE0 + i);
+        glBindTexture(GL_TEXTURE_2D, current_texture_ids[i]);
+    }
+    glActiveTexture(GL_TEXTURE0 + last_selected_tile);
+    if (gl_current_prg != nullptr) {
+        glUseProgram(gl_current_prg->opengl_program_id);
+        gfx_opengl_vertex_array_set_attribs(gl_current_prg);
+        gfx_opengl_set_uniforms(gl_current_prg);
+    }
+}
+#endif
 
 static GlRetainedProgram* gl_ret_program_get(struct ShaderProgram* prg) {
     auto it = gl_ret_programs.find(prg);

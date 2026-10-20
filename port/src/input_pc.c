@@ -30,7 +30,10 @@
 #include <ultra64.h>
 
 #include <SDL.h>
-#include "port_console.h" /* the tilde console: fixed keys feed it below */
+#include "port_console.h"
+#if defined(__ANDROID__) && !defined(SDL_clamp)
+#define SDL_clamp(x, a, b) (((x) < (a)) ? (a) : (((x) > (b)) ? (b) : (x))) /* SDL 2.0.18 */
+#endif /* the tilde console: fixed keys feed it below */
 extern s32 portInputDeviceIniKey(s32 dev, const char *name, char *buf, s32 len);
 static const char *inputDevRecPath(const char *id);   /* per-device records, below */
 
@@ -1990,6 +1993,10 @@ static int inputEnvOverride(const char *name, int cur)
 
 static void inputBackendHints(void)
 {
+#if defined(__ANDROID__) && defined(SDL_HINT_ACCELEROMETER_AS_JOYSTICK)
+    /* SDL lists the accelerometer as a joystick, which would become player 1's pad */
+    SDL_SetHint(SDL_HINT_ACCELEROMETER_AS_JOYSTICK, "0");
+#endif
     /* GE_DINPUT=1: the launcher's probe / capture / calibrate / rumble-test
      * runs happen BEFORE main.c parses midas.ini (otherwise e.g. an 8BitDo N64 in
      * DInput mode is invisible to GE Options) - the launcher passes its
@@ -2003,7 +2010,9 @@ static void inputBackendHints(void)
     }
     if (!s_OptDInput)
     {
+#ifdef SDL_HINT_DIRECTINPUT_ENABLED
         SDL_SetHint(SDL_HINT_DIRECTINPUT_ENABLED, "0");
+#endif
     }
 
     /* the other four backends (hidapi = PS4/PS5/Switch class, rawinput =
@@ -2033,7 +2042,9 @@ static void inputBackendHints(void)
     }
 #endif
     SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI, s_OptHidapi ? "1" : "0");
+#ifdef SDL_HINT_JOYSTICK_RAWINPUT
     SDL_SetHint(SDL_HINT_JOYSTICK_RAWINPUT, s_OptRawInput ? "1" : "0");
+#endif
 #ifdef SDL_HINT_JOYSTICK_WGI
     SDL_SetHint(SDL_HINT_JOYSTICK_WGI, s_OptWgi ? "1" : "0");
 #endif
@@ -8531,10 +8542,20 @@ void portInputMouseUpdate(void)
  * Every reader (portInputMouseLookDelta / ...Deg / the aim path) keeps
  * seeing one stable s_MouseDX/DY for the whole tick.
  */
+#ifdef __ANDROID__
+static float s_AndroidLookDX, s_AndroidLookDY; /* the touch look drag this tick, in mouse counts */
+#endif
+
 void portInputMouseTickConsume(void)
 {
     s_MouseDX = s_MouseAccDX;
     s_MouseDY = s_MouseAccDY;
+#ifdef __ANDROID__
+    {
+        extern void IN_ANDROID_MouseLook(float *dx, float *dy);
+        IN_ANDROID_MouseLook(&s_AndroidLookDX, &s_AndroidLookDY);
+    }
+#endif
     s_MouseAccDX = s_MouseAccDY = 0;
     s_MouseMovedTick = s_MouseMovedAcc;
     s_MouseMovedAcc = 0;
@@ -8676,6 +8697,14 @@ void portInputMouseLookDelta(f32 *dx, f32 *dy)
         mx = s_OptMouseSensX * ((f32)s_MouseDX / 3.5f) * 0.022f;
         my = s_OptMouseSensY * ((f32)s_MouseDY / 3.5f) * 0.022f;
     }
+#ifdef __ANDROID__
+    /* the touch look drag needs no pointer capture */
+    if (s_OptMouse)
+    {
+        mx += s_OptMouseSensX * (s_AndroidLookDX / 3.5f) * 0.022f;
+        my += s_OptMouseSensY * (s_AndroidLookDY / 3.5f) * 0.022f;
+    }
+#endif
     if (dx) *dx = mx;
     if (dy) *dy = my;
 }
@@ -8703,6 +8732,13 @@ void portInputMouseLookDeltaDeg(f32 *dxdeg, f32 *dydeg)
         mx = ((f32) s_MouseDX / 10.0f) * (s_OptMouseSensX / 2.5f);
         my = ((f32) s_MouseDY / 10.0f) * (s_OptMouseSensY / 2.5f);
     }
+#ifdef __ANDROID__
+    if (s_OptMouse)
+    {
+        mx += (s_AndroidLookDX / 10.0f) * (s_OptMouseSensX / 2.5f);
+        my += (s_AndroidLookDY / 10.0f) * (s_OptMouseSensY / 2.5f);
+    }
+#endif
     if (dxdeg) *dxdeg = mx;
     if (dydeg) *dydeg = my;
 }
@@ -8892,3 +8928,30 @@ void portInputRumble(s32 channel, s32 on)
     }
 #endif
 }
+
+#ifdef __ANDROID__
+/**
+ * libultra_shim osContGetReadData, after every pad has merged: the touch controls
+ * and the launcher's gamepad mapping (mobile/game_interface.c) drive player 1 as
+ * a port-mode pad - Move stick, Look stick, N64 buttons and Port actions.
+ */
+void portInputAndroidMerge(OSContPad *pad)
+{
+    extern void IN_ANDROID(int liveGame, uint16_t *buttons, int32_t *moveX, int32_t *moveY, int32_t *lookX, int32_t *lookY);
+    extern s32 portStageRunning(void);
+    extern s32 portP1ControlsLive(void);
+    uint16_t buttons = 0;
+    int32_t mx = 0, my = 0, lx = 0, ly = 0;
+
+    IN_ANDROID(portStageRunning() && portP1ControlsLive(), &buttons, &mx, &my, &lx, &ly);
+    pad->button |= buttons;
+    if (mx != 0 || my != 0)
+    {
+        pad->stick_x = (s8) mx;
+        pad->stick_y = (s8) my;
+    }
+    s_PadRightX[0] = (s8) lx;
+    s_PadRightY[0] = (s8) ly;
+    s_PadHasRight[0] = 1;
+}
+#endif

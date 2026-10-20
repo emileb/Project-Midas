@@ -773,7 +773,7 @@ static enum romfileclass romdataClassOf(const char *name)
             /* the three inline-texture menu models embed segment-5 texture
              * blobs (objecthandler_2.c portSwapInlineTextures) that the model
              * converter does not yet handle - keep them compiled for now */
-#if UINTPTR_MAX <= 0xFFFFFFFFu /* 64-bit builds have no compiled-in copies: serve them */
+#if UINTPTR_MAX <= 0xFFFFFFFFu && !defined(__ANDROID__) /* 64-bit and Android builds have no compiled-in copies: serve them */
             if (strcmp(name, "PlegalpageZ") == 0 || strcmp(name, "PnintendologoZ") == 0 || strcmp(name, "PgoldeneyelogoZ") == 0) {
                 return CLASS_NONE;
             }

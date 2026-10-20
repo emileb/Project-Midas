@@ -39,9 +39,18 @@ void sysFatalError(const char *fmt, ...)
     va_start(ap, fmt);
     /* stderr only, not portConLogf: exit(1) follows, so a ring copy is never
      * seen, and shader info logs (gfx_opengl.cpp) can outgrow its buffer */
+#ifdef __ANDROID__
+    {
+        extern void portConLogf(const char *fmt, ...);
+        char msg[4096];
+        vsnprintf(msg, sizeof(msg), fmt, ap);
+        portConLogf("ge: FATAL: %s\n", msg);
+    }
+#else
     fprintf(stderr, "ge: FATAL: ");
     vfprintf(stderr, fmt, ap);
     fprintf(stderr, "\n");
+#endif
     va_end(ap);
     fflush(NULL);
     exit(1);
@@ -52,8 +61,17 @@ void sysLogPrintf(int32_t level, const char *fmt, ...)
     va_list ap;
     (void) level;
     va_start(ap, fmt);
+#ifdef __ANDROID__
+    {
+        extern void portConLogf(const char *fmt, ...);
+        char msg[4096];
+        vsnprintf(msg, sizeof(msg), fmt, ap);
+        portConLogf("%s\n", msg);
+    }
+#else
     vprintf(fmt, ap);
     printf("\n");
+#endif
     va_end(ap);
 }
 

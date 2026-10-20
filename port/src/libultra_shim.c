@@ -1369,6 +1369,12 @@ void osContGetReadData(OSContPad *data)
                     portInputPadMerge(i, &data[i]);
                     portInputPadGadgetChord(i, &data[i]); /* padN_gadget_switch: B then Z = next gadget */
                 }
+#ifdef __ANDROID__
+                {
+                    extern void portInputAndroidMerge(OSContPad *pad);
+                    portInputAndroidMerge(&data[0]); /* touch controls and the launcher's gamepad: player 1 */
+                }
+#endif
             }
         }
 

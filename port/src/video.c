@@ -150,7 +150,11 @@ static int s_CfgScopeSteady = 0; /* [display] scope_steady: 1 = anchor the head
 static int s_CfgMsaa = 1;             /* 1 = off; 2/4/8 = MSAA samples */
 static int s_CfgMaxFps = 120;         /* render pace cap; 0 = uncapped */
 static int s_CfgVsync = 1;            /* 0 = never wait for vblank */
+#ifdef __ANDROID__
+static int s_CfgAnisotropy = 4;       /* mips for every texture: distant ones alias at phone resolutions */
+#else
 static int s_CfgAnisotropy = 0;       /* 0/1 = off; 2..16 samples */
+#endif
 /* [display] filter_2d: 0 = point-sample HUD/menu texrects. The menu overhaul
  * made OFF the default (spec 2.1) - crisp 2D is what the art was drawn for;
  * the Nintendo 64 preset turns it back on. */
@@ -259,7 +263,11 @@ static int s_CfgTickLoadDone = 0;
 static int s_CfgTickHz = 60;          /* the ini's tickhz as written (frametiming.c holds the
                                        * effective rate, which GE_TICKHZ can override - the
                                        * Port Options page must show and save the ini value) */
+#ifdef __ANDROID__
+static char s_CfgFiltering[16] = "trilinear";
+#else
 static char s_CfgFiltering[16] = "3point";   /* point | bilinear | 3point | trilinear */
+#endif
 static float s_CfgFov = 60.0f;        /* 3D viewport FOV, 40..120 (60 = vanilla) */
 /* GLOBAL VOLUMES: vanilla keeps Sound / Music volume in the
  * SAVE FILE, and the frontend forces both to full - so the intros and menus
@@ -686,6 +694,27 @@ s32 portMouseMenuPos(f32 *gx, f32 *gy, f32 left, f32 top, f32 width, f32 height)
     if (gy) *gy = top + (f32)my * height / winh;
     return 1;
 }
+
+#ifdef __ANDROID__
+/* The touch menu mouse (mobile/game_interface.c) keeps its pointer inside the band the menus map */
+void portMouseMenuBand(f32 *left, f32 *width)
+{
+    f32 winw = videoRealWinW();
+    f32 winh = (f32)gfx_current_window_dimensions.height;
+    f32 bandw = winw;
+
+    if (s_CfgWidescreen && winh > 0.0f)
+    {
+        bandw = winh * (4.0f / 3.0f);
+        if (bandw > winw)
+        {
+            bandw = winw;
+        }
+    }
+    *left = (winw - bandw) * 0.5f;
+    *width = bandw;
+}
+#endif
 
 /**
  * Watch-menu cursor: the virtual mouse in NATIVE 320x240 band coordinates

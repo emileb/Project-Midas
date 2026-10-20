@@ -131,6 +131,68 @@ void PortableMouseButton(int state, int button, float dx, float dy)
 {
 }
 
+// Menu mouse (touch_interface_ge.cpp): the port's menus put the crosshair where an SDL mouse moves to
+extern int SDL_SendMouseMotion(SDL_Window *window, Uint32 mouseID, int relative, int x, int y);
+extern SDL_Window *gfx_sdl_get_window(void);
+
+extern void portMouseMenuBand(float *left, float *width);
+
+// The pointer in float window pixels, so slow drags keep their fractions instead of creeping
+static float menuMouseX, menuMouseY;
+static int menuMouseSentX = -1, menuMouseSentY = -1;
+
+static void menuMouseTo(SDL_Window *w, float x, float y)
+{
+    int ww = 0, wh = 0;
+    float left = 0.0f, width = 0.0f;
+
+    SDL_GetWindowSize(w, &ww, &wh);
+    portMouseMenuBand(&left, &width);
+    if (width <= 0.0f)
+    {
+        left = 0.0f;
+        width = (float)ww;
+    }
+    // Inside the band the menus map, or the pointer wanders off into the black bars
+    x = x < left ? left : (x > left + width - 1 ? left + width - 1 : x);
+    y = y < 0.0f ? 0.0f : (y > wh - 1 ? wh - 1 : y);
+    menuMouseX = x;
+    menuMouseY = y;
+    menuMouseSentX = (int)(x + 0.5f);
+    menuMouseSentY = (int)(y + 0.5f);
+    SDL_SendMouseMotion(w, SDL_TOUCH_MOUSEID, 0, menuMouseSentX, menuMouseSentY);
+}
+
+void GE_MenuMouseTap(float x, float y)
+{
+    SDL_Window *w = gfx_sdl_get_window();
+    int ww = 0, wh = 0;
+
+    if (w == NULL)
+        return;
+    SDL_GetWindowSize(w, &ww, &wh);
+    menuMouseTo(w, x * ww, y * wh);
+}
+
+void GE_MenuMouseDrag(float dx, float dy)
+{
+    SDL_Window *w = gfx_sdl_get_window();
+    int ww = 0, wh = 0, mx = 0, my = 0;
+
+    if (w == NULL)
+        return;
+    SDL_GetWindowSize(w, &ww, &wh);
+    // The menus park the pointer on the crosshair when they move it: carry on from there
+    SDL_GetMouseState(&mx, &my);
+    if (mx != menuMouseSentX || my != menuMouseSentY)
+    {
+        menuMouseX = (float)mx;
+        menuMouseY = (float)my;
+    }
+    menuMouseTo(w, menuMouseX + dx * ww, menuMouseY + dy * wh);
+}
+
+
 void PortableMouse(float dx, float dy)
 {
 }
@@ -292,14 +354,8 @@ void IN_ANDROID(int liveGame, int inStage, uint16_t *buttons, int32_t *moveX, in
 
     if (!liveGame)
     {
-        uint32_t m = menuButtons | menuTaps;
-
-        b |= m;
-        // Menus that move a pointer take the stick, not the D-pad
-        if (m & N64_DUP)    *moveY = 64;
-        if (m & N64_DDOWN)  *moveY = -64;
-        if (m & N64_DLEFT)  *moveX = -64;
-        if (m & N64_DRIGHT) *moveX = 64;
+        // The arrows are the D-pad only: the crosshair menus are pointed at with the menu mouse
+        b |= menuButtons | menuTaps;
     }
 
     *buttons |= (uint16_t)b;

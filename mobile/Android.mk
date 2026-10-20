@@ -58,7 +58,7 @@ LOCAL_C_INCLUDES := $(TOP_DIR)/SDL2_OpenTouch/SDL2-2.0.12/include \
 
 # Clibs_OpenTouch sources
 LOCAL_SRC_FILES := ../../Clibs_OpenTouch/alpha/android_jni.cpp \
-                   ../../Clibs_OpenTouch/alpha/touch_interface.cpp \
+                   mobile/touch_interface_ge.cpp \
                    ../../Clibs_OpenTouch/touch_interface_base.cpp
 
 MIDAS_WILD = $(subst $(MIDAS_PATH)/,,$(wildcard $(addprefix $(MIDAS_PATH)/,$(1))))

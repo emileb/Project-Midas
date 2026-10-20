@@ -18,11 +18,15 @@ N64 = re.compile(r'n64: demo tick (\d+) draws=(\d+) seed=([0-9a-f]{16})')
 
 
 def ticks(path, pat):
+    # only the first demo: attract mode may go on to play another one
     out = {}
     for line in open(path, errors='replace'):
         m = pat.search(line)
         if m:
-            out[int(m.group(1))] = (int(m.group(2)), m.group(3))
+            t = int(m.group(1))
+            if t in out:
+                break
+            out[t] = (int(m.group(2)), m.group(3))
     return out
 
 

@@ -11,6 +11,12 @@
  *                     and the three floats behind any pointer argument
  *   --stack ADDR      at the first traced RNG draw whose caller is in
  *                     [ADDR, ADDR+0x4000), list code addresses on the stack
+ *   --peek ADDR,...   at each seed check in the trace ticks, print the 32-bit
+ *                     words at these KSEG0 addresses (game globals)
+ *   --jals N          at each --break hit, list the jal targets in the N
+ *                     instructions after ra (finds the address of a function
+ *                     the caller calls next, e.g. one with no address in the
+ *                     decomp); reads only ra's own page, which is resident
  *   --core/--rsp/--data PATH   override the libraries built by build.sh
  *
  * Output (stdout), one event per line:
@@ -64,6 +70,9 @@ static uint32_t s_breaks[MAX_BREAKS];
 static int s_nbreaks;
 static uint32_t s_stackLo;
 static int s_stackDone;
+static int s_jals;
+static uint32_t s_peeks[MAX_BREAKS];
+static int s_npeeks;
 
 static int s_active, s_checks, s_draws, s_stopping, s_vi;
 
@@ -167,6 +176,16 @@ static void onBreak(uint32_t pc)
             printf("n64:   a%d -> (%g %g %g)\n", i - 4, ramFloat(a), ramFloat(a + 4), ramFloat(a + 8));
         }
     }
+    if (s_jals > 0) {
+        /* the caller is executing, so ra's 4KB page is mapped; stay inside it */
+        uint32_t ra = (uint32_t) r[31], x;
+        for (x = ra; x < ra + 4u * (uint32_t) s_jals && (x & ~0xfffu) == (ra & ~0xfffu); x += 4) {
+            uint32_t op = pDebugMemRead32(x);
+            if ((op >> 26) == 3) { /* jal */
+                printf("n64:   %08x: jal %08x\n", x, (x & 0xf0000000u) | ((op & 0x03ffffffu) << 2));
+            }
+        }
+    }
 }
 
 static void dbgUpdate(unsigned int pc)
@@ -204,6 +223,14 @@ static void dbgUpdate(unsigned int pc)
             printf("n64: demo tick %d draws=%d seed=%016llx\n", s_checks, s_draws,
                    (unsigned long long) pDebugMemRead64(A_RANDOM_SEED));
             s_draws = 0;
+            if (s_npeeks > 0 && s_checks >= s_traceFrom && s_checks <= s_traceTo) {
+                int k;
+                printf("n64: peek tick %d", s_checks);
+                for (k = 0; k < s_npeeks; k++) {
+                    printf(" %08x=%08x", s_peeks[k], pDebugMemRead32(s_peeks[k]));
+                }
+                printf("\n");
+            }
             if (s_checks >= s_stop && !s_stopping) {
                 s_stopping = 1;
                 pCoreDoCommand(M64CMD_STOP, 0, NULL);
@@ -298,6 +325,20 @@ int main(int argc, char **argv)
             i++;
         }
         else if (!strcmp(a, "--stack") && v) { s_stackLo = (uint32_t) strtoul(v, NULL, 16); i++; }
+        else if (!strcmp(a, "--jals") && v) { s_jals = atoi(v); i++; }
+        else if (!strcmp(a, "--peek") && v) {
+            char *e = (char *) v;
+            while (*e && s_npeeks < MAX_BREAKS) {
+                uint32_t x = (uint32_t) strtoul(e, &e, 16);
+                if (isRam(x)) {
+                    s_peeks[s_npeeks++] = x;
+                } else {
+                    fprintf(stderr, "getrace: --peek %08x is not KSEG0 RAM, skipped\n", x);
+                }
+                if (*e == ',') e++; else break;
+            }
+            i++;
+        }
         else if (!strcmp(a, "--core") && v) { snprintf(core_path, sizeof(core_path), "%s", v); i++; }
         else if (!strcmp(a, "--rsp") && v) { snprintf(rsp_path, sizeof(rsp_path), "%s", v); i++; }
         else if (!strcmp(a, "--data") && v) { snprintf(data_path, sizeof(data_path), "%s", v); i++; }
@@ -305,7 +346,7 @@ int main(int argc, char **argv)
         else { fprintf(stderr, "getrace: unknown option %s (see the header of getrace.c)\n", a); return 2; }
     }
     if (!rom_path || s_demo < 0 || s_demo >= N_DEMOS) {
-        fprintf(stderr, "usage: %s [--demo N] [--stop T] [--trace A-B] [--break ADDR,...] [--stack ADDR] baserom.u.z64\n", argv[0]);
+        fprintf(stderr, "usage: %s [--demo N] [--stop T] [--trace A-B] [--break ADDR,...] [--stack ADDR] [--jals N] [--peek ADDR,...] baserom.u.z64\n", argv[0]);
         return 2;
     }
 

@@ -32,9 +32,9 @@ mupen64plus is GPL-2.0 and is downloaded, not vendored.
 
    Don't touch the game windows while it runs: a key press ends a demo.
    It plays the demos unpaced (`GE_DEMOFAST=1 GE_NOSLEEP=1`, several times
-   faster; `vsync=0` in the build's `midas.ini` helps further). For now use
-   `PACED=1` when the exact tick matters: two demos still change when
-   unpaced (see DESYNC_FIXES.md, open issues).
+   faster; `vsync=0` in the build's `midas.ini` helps further). `PACED=1`
+   plays them at N64 speed; the per-tick logs are the same either way, and
+   the same in any window size (DESYNC_FIXES.md #2).
 
 2. Log the same demo on the N64 and compare:
 
@@ -80,7 +80,15 @@ mupen64plus is GPL-2.0 and is downloaded, not vendored.
    first traced draw from `[ADDR, ADDR+0x4000)`, i.e. who called it.
    Function addresses come from the decomp (`Address 0x7F...` comments,
    `sub_GAME_7F...` names, asm files); `n64syms.py table` lists the ~1200 it
-   can find.
+   can find. For a function with no address, break on one its caller calls
+   just before it and add `--jals 16`: that lists the `jal` targets in the 16
+   instructions after the return address (e.g. breaking on
+   `getPropCombinedRoomsBBox2D` showed `camIsPosInScreenBox` at `0x7F078BF4`).
+
+5. Read game state. `--peek ADDR,...` prints the 32-bit words at those KSEG0
+   addresses at every seed check in the traced ticks: globals with a
+   `//D:8004xxxx` comment in the decomp, such as the watch menu's screen and
+   row (`--peek 80040994,80040998,800409A8`).
 
 ## Traps
 
@@ -113,3 +121,9 @@ mupen64plus is GPL-2.0 and is downloaded, not vendored.
 | `bgTestBulletHitBackground` | `0x7F0B7A78` |
 | `walkTilesBetweenPoints_NoCallback` | `0x7F0B0BE4` |
 | `chrlvStanLineDirIntersection` | `0x7F02624C` |
+| `sub_GAME_7F04AC20` (draw one object) | `0x7F04AC20` |
+| `getPropCombinedRoomsBBox2D` | `0x7F054A64` |
+| `camIsPosInScreen` | `0x7F078A58` |
+| `camIsPosInScreenBox` | `0x7F078BF4` |
+| `sub_GAME_7F0A6A80` (watch menu tick) | `0x7F0A6A80` |
+| `watch_screen_index`, `controller_options_index`, `watch_item_is_actively_selected` | `0x80040994`, `0x80040998`, `0x800409A8` |

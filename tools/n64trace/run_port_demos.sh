@@ -2,7 +2,8 @@
 # Play the 14 attract demos on a port build and print, per demo, the first
 # RNG desync tick and how playback ended.
 #   run_port_demos.sh <dir with ProjectMidas> [out dir] [extra args...]
-# Each run stops at its first "demo exit" line (or after 150 s). Logs keep the
+# Each run stops at its first "demo exit" line, when a second demo starts
+# (attract mode plays on), or after 150 s. Logs keep the
 # GE_DEMODIAG lines for tools/n64trace/compare.py. Don't touch the game
 # windows while it runs: a real key or button press ends a demo.
 # Demos run unpaced (GE_DEMOFAST=1 GE_NOSLEEP=1; same results, ~5x faster);
@@ -20,10 +21,12 @@ for i in $(seq 0 13); do
     sleep 0.25
     kill -0 $pid 2>/dev/null || break
     grep -q "demo exit:" "$log" && break
+    # a multiplayer demo can end without an exit line; stop when the next starts
+    [ "$(grep -c "demo start:" "$log")" -gt 1 ] && break
   done
   kill $pid 2>/dev/null; wait $pid 2>/dev/null
   desync=$(grep -m1 "RANDSEED desync at tick" "$log" | sed -E 's/.*at tick ([0-9]+).*/\1/')
-  ex=$(grep -m1 "demo exit:" "$log" | sed 's/.*demo exit: //; s/, gametime.*//')
+  ex=$(awk '/demo start:/{n++} n<=1' "$log" | grep -m1 "demo exit:" | sed 's/.*demo exit: //; s/, gametime.*//')
   fatal=$(grep -m1 -i "fatal signal\|AddressSanitizer\|runtime error" "$log")
   printf "demo%-2d desync@%-5s %s%s\n" "$i" "${desync:-none}" "${ex:-NO EXIT}" "${fatal:+ | $fatal}"
 done

@@ -5118,6 +5118,11 @@ static void portRenderThreadStop(void)
 /* the [display] render_thread rule, one copy: -1 auto = ON when tickhz != 60 */
 static s32 portRenderThreadWanted(void)
 {
+#ifdef __ANDROID__
+    /* SDL makes the context current on the event thread when the app resumes,
+     * so a render thread is left drawing to a dead surface (black screen) */
+    return 0;
+#endif
     const char *e = getenv("GE_RENDERTHREAD");
     s32 mode = (e != NULL) ? atoi(e) : s_CfgRenderThread;
 

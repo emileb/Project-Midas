@@ -8937,13 +8937,13 @@ void portInputRumble(s32 channel, s32 on)
  */
 void portInputAndroidMerge(OSContPad *pad)
 {
-    extern void IN_ANDROID(int liveGame, uint16_t *buttons, int32_t *moveX, int32_t *moveY, int32_t *lookX, int32_t *lookY);
+    extern void IN_ANDROID(int liveGame, int inStage, uint16_t *buttons, int32_t *moveX, int32_t *moveY, int32_t *lookX, int32_t *lookY);
     extern s32 portStageRunning(void);
     extern s32 portP1ControlsLive(void);
     uint16_t buttons = 0;
     int32_t mx = 0, my = 0, lx = 0, ly = 0;
 
-    IN_ANDROID(portStageRunning() && portP1ControlsLive(), &buttons, &mx, &my, &lx, &ly);
+    IN_ANDROID(portStageRunning() && portP1ControlsLive(), portStageRunning(), &buttons, &mx, &my, &lx, &ly);
     pad->button |= buttons;
     if (mx != 0 || my != 0)
     {

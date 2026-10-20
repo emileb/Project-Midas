@@ -274,7 +274,7 @@ static int32_t toN64(float v)
 }
 
 // Game thread, once per controller poll. Sticks are N64 units (+/-80, up and right positive).
-void IN_ANDROID(int liveGame, uint16_t *buttons, int32_t *moveX, int32_t *moveY, int32_t *lookX, int32_t *lookY)
+void IN_ANDROID(int liveGame, int inStage, uint16_t *buttons, int32_t *moveX, int32_t *moveY, int32_t *lookX, int32_t *lookY)
 {
     uint32_t b = padButtons | __atomic_exchange_n(&padPressed, 0, __ATOMIC_ACQUIRE);
     uint32_t acts = actsHeld | __atomic_exchange_n(&actsPressed, 0, __ATOMIC_ACQUIRE);
@@ -286,7 +286,8 @@ void IN_ANDROID(int liveGame, uint16_t *buttons, int32_t *moveX, int32_t *moveY,
     if (backPolls > 0)
     {
         backPolls--;
-        b |= liveGame ? N64_START : N64_B;
+        // START opens and closes the watch, so it stays START for the whole mission
+        b |= inStage ? N64_START : N64_B;
     }
 
     if (!liveGame)
@@ -323,7 +324,7 @@ void IN_ANDROID(int liveGame, uint16_t *buttons, int32_t *moveX, int32_t *moveY,
 void IN_ANDROID_MouseLook(float *dx, float *dy)
 {
     *dx = -lookYawMouse * 3000.0f; // the touch layer turns left for positive yaw, as Quake does
-    *dy = lookPitchMouse * 1500.0f;
+    *dy = -lookPitchMouse * 1500.0f;
     lookYawMouse = 0.0f;
     lookPitchMouse = 0.0f;
 }

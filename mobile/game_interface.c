@@ -39,24 +39,31 @@ enum
     ACT_NEXT_WEAPON,
     ACT_PREV_WEAPON,
     ACT_NEXT_INV,
+    ACT_PREV_INV,
     ACT_CROUCH_HOLD,
     ACT_CROUCH_TOGGLE,
     ACT_WATCH_OBJECTIVES,
+    ACT_ZOOM_IN,
+    ACT_ZOOM_OUT,
     ACT_COUNT
 };
 
 static const char *const actNames[ACT_COUNT] = {
-    "use", "reload", "next_weapon", "prev_weapon", "next_inventory", "crouch_hold", "crouch_toggle", "watch_objectives"
+    "use", "reload", "next_weapon", "prev_weapon", "next_inventory", "prev_inventory", "crouch_hold", "crouch_toggle", "watch_objectives",
+    "zoom_in", "zoom_out"
 };
 
 extern int32_t portJoyPortBindCount(void);
 extern const char *portJoyPortBindName(int32_t i);
 extern void portJoyPortPadDown(int32_t pad, int32_t act);
+extern int32_t portJoyPortAndroidAiming(void);
+extern int32_t portJoyPortAndroidAimToggle(void);
 
 static volatile uint32_t padButtons;   // N64 bits held
 static volatile uint32_t menuButtons;  // N64 bits held, menu arrows only
 static volatile uint32_t actsHeld;     // 1 << ACT_*
 static volatile int backPolls;         // polls left of a back button press
+static volatile int aimFlip;           // the aim button was tapped
 
 // Pressed since the last poll, so a tap shorter than a poll still counts
 static uint32_t padPressed, menuPressed, actsPressed;
@@ -107,7 +114,9 @@ void PortableAction(int state, int action)
     switch (action)
     {
         case PORT_ACT_ATTACK:        setBit(&padButtons, &padPressed, state, N64_Z); break;
-        case PORT_ACT_ZOOM_IN:       setBit(&padButtons, &padPressed, state, N64_R); break; // aim mode
+        case PORT_ACT_ZOOM_IN:       if (state) aimFlip = 1; break; // aim on/off
+        case PORT_ACT_MAP_ZOOM_IN:   setBit(&actsHeld, &actsPressed, state, 1 << ACT_ZOOM_IN); break;
+        case PORT_ACT_MAP_ZOOM_OUT:  setBit(&actsHeld, &actsPressed, state, 1 << ACT_ZOOM_OUT); break;
         case PORT_ACT_ALT_ATTACK:    setBit(&padButtons, &padPressed, state, N64_L); break;
         case PORT_ACT_N64_BUTTON_A:  setBit(&padButtons, &padPressed, state, N64_A); break;
         case PORT_ACT_N64_BUTTON_B:  setBit(&padButtons, &padPressed, state, N64_B); break;
@@ -115,7 +124,9 @@ void PortableAction(int state, int action)
         case PORT_ACT_RELOAD:        setBit(&actsHeld, &actsPressed, state, 1 << ACT_RELOAD); break;
         case PORT_ACT_NEXT_WEP:      setBit(&actsHeld, &actsPressed, state, 1 << ACT_NEXT_WEAPON); break;
         case PORT_ACT_PREV_WEP:      setBit(&actsHeld, &actsPressed, state, 1 << ACT_PREV_WEAPON); break;
-        case PORT_ACT_INVEN:         setBit(&actsHeld, &actsPressed, state, 1 << ACT_NEXT_INV); break;
+        case PORT_ACT_INVEN:
+        case PORT_ACT_INVNEXT:       setBit(&actsHeld, &actsPressed, state, 1 << ACT_NEXT_INV); break;
+        case PORT_ACT_INVPREV:       setBit(&actsHeld, &actsPressed, state, 1 << ACT_PREV_INV); break;
         case PORT_ACT_DOWN:          setBit(&actsHeld, &actsPressed, state, 1 << ACT_CROUCH_HOLD); break;
         case PORT_ACT_TOGGLE_CROUCH: setBit(&actsHeld, &actsPressed, state, 1 << ACT_CROUCH_TOGGLE); break;
         case PORT_ACT_MAP:           setBit(&actsHeld, &actsPressed, state, 1 << ACT_WATCH_OBJECTIVES); break;
@@ -330,6 +341,52 @@ static void findActs(void)
     }
 }
 
+// Aim as a toggle on the touch screen: held R under Hold aim control, a tap of R under Toggle
+static int aimHold;      // Hold: R held while on
+static int aimWant = -1; // Toggle: the aim state asked for, -1 = none
+static int aimTries;     // Toggle: polls left to reach it (R needs a release between taps)
+
+static uint32_t aimButtons(int liveGame, uint32_t acts)
+{
+    int flip = __atomic_exchange_n(&aimFlip, 0, __ATOMIC_ACQUIRE);
+    int zoom = (acts & ((1u << ACT_ZOOM_IN) | (1u << ACT_ZOOM_OUT))) != 0;
+    int aiming, want = -1;
+
+    if (!liveGame)
+    {
+        // R also turns watch pages; a Hold aim comes back with the game
+        aimWant = -1;
+        return 0;
+    }
+
+    aiming = portJoyPortAndroidAiming();
+    if (flip)
+        want = !aiming;
+    else if (zoom && !aiming)
+        want = 1; // zooming only works while aiming
+
+    if (!portJoyPortAndroidAimToggle())
+    {
+        aimWant = -1;
+        if (want >= 0)
+            aimHold = want;
+        return aimHold ? N64_R : 0;
+    }
+
+    aimHold = 0;
+    if (want >= 0 && aimWant < 0)
+    {
+        aimWant = want;
+        aimTries = 6;
+    }
+    if (aimWant < 0 || aimWant == aiming || aimTries <= 0)
+    {
+        aimWant = -1;
+        return 0;
+    }
+    return (aimTries-- & 1) ? 0 : N64_R;
+}
+
 static int32_t toN64(float v)
 {
     return (int32_t)(clampUnit(v) * 80.0f);
@@ -357,6 +414,10 @@ void IN_ANDROID(int liveGame, int inStage, uint16_t *buttons, int32_t *moveX, in
         // The arrows are the D-pad only: the crosshair menus are pointed at with the menu mouse
         b |= menuButtons | menuTaps;
     }
+
+    if (!inStage)
+        aimHold = 0; // a new mission starts unaimed
+    b |= aimButtons(liveGame, acts);
 
     *buttons |= (uint16_t)b;
 

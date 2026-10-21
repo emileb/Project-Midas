@@ -662,6 +662,12 @@ s32 portJoyPortClassicTogglePressed(s32 pad)
 s32 portJoyPortActZoomIn(void)    { return PORTACT_ZOOM_IN; }
 s32 portJoyPortActZoomOut(void)   { return PORTACT_ZOOM_OUT; }
 
+#ifdef __ANDROID__
+/** mobile/game_interface.c: the touch aim button turns aim on and off under either Aim Control. */
+s32 portJoyPortAndroidAiming(void)    { return g_CurrentPlayer != NULL && g_CurrentPlayer->insightaimmode; }
+s32 portJoyPortAndroidAimToggle(void) { extern u32 cur_player_get_aim_control(void); return cur_player_get_aim_control() != 0; }
+#endif
+
 /** MoveBond: 1 while Bond should move at half speed. */
 s32 portJoyPortWalkActive(void)
 {

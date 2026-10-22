@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <strings.h>
 
 #include <android/log.h>
 
@@ -20,6 +21,15 @@ static char sCode[16];
 static int sUmlautE; // German writes ä as ae when it can't show the umlaut
 static int sLoaded;
 static char **sText[LANG_BANKS];
+
+// The port's own menus are C strings, so they are found by their English (P:<English>=...)
+#define PORT_TABLE 1024 // power of two, well over the ~330 strings
+static struct
+{
+    char *english, *text;
+    char *lower, *upper; // for a lowercased or capitalised copy of the English (the watch lowercases its labels)
+} sPort[PORT_TABLE];
+static int sPortCount;
 
 void GE_LangSetCode(const char *code)
 {
@@ -137,6 +147,68 @@ static char **slotFor(const char *key, int create)
     return &sText[bank][slot];
 }
 
+static unsigned portHash(const char *s)
+{
+    unsigned h = 2166136261u;
+
+    while (*s)
+        h = (h ^ (unsigned char)tolower((unsigned char)*s++)) * 16777619u;
+    return h & (PORT_TABLE - 1);
+}
+
+static void portAdd(char *english, char *text)
+{
+    unsigned h = portHash(english);
+
+    while (sPort[h].english != NULL && strcmp(sPort[h].english, english) != 0)
+        h = (h + 1) & (PORT_TABLE - 1);
+    if (sPort[h].english == NULL)
+    {
+        if (sPortCount >= PORT_TABLE / 2)
+        {
+            free(english);
+            free(text);
+            return;
+        }
+        sPortCount++;
+    }
+    free(sPort[h].english);
+    free(sPort[h].text);
+    free(sPort[h].lower);
+    free(sPort[h].upper);
+    sPort[h].english = english;
+    sPort[h].text = text;
+    sPort[h].lower = strdup(text);
+    sPort[h].upper = strdup(text);
+    for (char *c = sPort[h].lower; *c; c++)
+        *c = (char)tolower((unsigned char)*c);
+    for (char *c = sPort[h].upper; *c; c++)
+        *c = (char)toupper((unsigned char)*c);
+}
+
+static int hasCase(const char *s, int (*is)(int))
+{
+    for (; *s; s++)
+    {
+        if (is((unsigned char)*s))
+            return 1;
+    }
+    return 0;
+}
+
+// The "=" between key and value: the first one not escaped as \= (port keys are English text)
+static char *splitEntry(char *line)
+{
+    for (char *c = line; *c; c++)
+    {
+        if (*c == '\\' && c[1])
+            c++;
+        else if (*c == '=')
+            return c;
+    }
+    return NULL;
+}
+
 static void langLoad(void)
 {
     char name[64];
@@ -158,9 +230,15 @@ static void langLoad(void)
         char *eq, **slot;
 
         line[strcspn(line, "\r\n")] = '\0';
-        if (line[0] == '#' || (eq = strchr(line, '=')) == NULL || eq[1] == '\0')
+        if (line[0] == '#' || (eq = splitEntry(line)) == NULL || eq[1] == '\0')
             continue;
         *eq = '\0';
+        if (strncmp(line, "P:", 2) == 0)
+        {
+            portAdd(decodeValue(line + 2), decodeValue(eq + 1));
+            count++;
+            continue;
+        }
         if (strncmp(eq + 1, "@lower ", 7) == 0)
         {
             if (nlower < 512)
@@ -195,18 +273,49 @@ static void langLoad(void)
     LOGI("lang: %s, %d lines", name, count);
 }
 
-// language.c langGet: the translated slot, or NULL for the English one
-const char *GE_LangGet(int slotID)
+static void langEnsureLoaded(void)
 {
-    int bank = slotID >> 10;
-
     if (!sLoaded)
     {
         sLoaded = 1;
         if (sCode[0] != '\0' && strcmp(sCode, "en") != 0)
             langLoad();
     }
+}
+
+// language.c langGet: the translated slot, or NULL for the English one
+const char *GE_LangGet(int slotID)
+{
+    int bank = slotID >> 10;
+
+    langEnsureLoaded();
     if (bank < 0 || bank >= LANG_BANKS || sText[bank] == NULL)
         return NULL;
     return sText[bank][slotID & (LANG_SLOTS - 1)];
+}
+
+// textrelated.c, as text is drawn, measured or wrapped: the port's menu strings translated
+const char *GE_LangPortText(const char *text)
+{
+    unsigned h;
+    int other = -1;
+
+    langEnsureLoaded();
+    if (sPortCount == 0 || text == NULL)
+        return text;
+    // An exact match first, else the same words in another case, given back in the case asked for
+    for (h = portHash(text); sPort[h].english != NULL; h = (h + 1) & (PORT_TABLE - 1))
+    {
+        if (strcmp(sPort[h].english, text) == 0)
+            return sPort[h].text;
+        if (other < 0 && strcasecmp(sPort[h].english, text) == 0)
+            other = (int)h;
+    }
+    if (other < 0)
+        return text;
+    if (!hasCase(text, isupper))
+        return sPort[other].lower;
+    if (!hasCase(text, islower))
+        return sPort[other].upper;
+    return sPort[other].text;
 }

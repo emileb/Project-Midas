@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Writes a translation template from the English text banks (assets/obseg/text/L*E.c).
+r"""Writes a translation template from the English text banks (assets/obseg/text/L*E.c).
 
     extract_text.py <out.txt> [existing translation to carry over]
 
@@ -11,6 +11,12 @@ One entry per text slot, keyed <bank>.<slot> as langGet sees it (slot = index in
 \\n is a new line. An empty value, or a missing line, falls back to English in game.
 "@lower <key>" reuses another entry lower-cased (the banks keep lower-case copies).
 Banks the game never loads are left out.
+
+The port's own menus are C strings, not bank slots: they are keyed by the English itself,
+
+    P:Rebind Inputs\n=Spanish text
+
+(\= for an "=" in the English) and swapped where text is drawn.
 """
 import os
 import re
@@ -33,6 +39,11 @@ BANKS = [
     ("LpropobjE", "Pickups"), ("LmpweaponsE", "Multiplayer weapon sets"), ("LoptionsE", "Solo menus"),
     ("LmiscE", "Cheats"),
 ]
+
+# The port's menus (watch pages, Port Options, front-end sheets): drawn strings end in \n
+PORT_FILES = ["port/src/port_watchpages.c", "port/src/port_options.c", "port/src/input_pc.c", "src/game/front.c",
+              "src/game/options.c", "src/game/bondview2.c"]
+PORT_SKIP = re.compile(r'(printf|portConLogf|LOG|fprintf|fputs|snprintf|SDL_Log|perror|portIniWrite|SDL_strcasecmp|strcmp|getenv|fopen)\s*\(')
 
 TOKEN = re.compile(r'\s*(?://[^\n]*|/\*.*?\*/|"((?:[^"\\]|\\.)*)"|(NULL|0)\b|,|\}|\{)', re.S)
 
@@ -72,14 +83,37 @@ def escape(s):
     return s.replace("\\", "\\\\").replace("\n", "\\n")
 
 
+def split_entry(line):
+    """key, value at the first "=" that isn't escaped as \\=."""
+    m = re.match(r'((?:[^=\\]|\\.)*)=(.*)$', line)
+    return (m.group(1), m.group(2)) if m else (None, None)
+
+
 def load_existing(path):
     out = {}
     if path and os.path.exists(path):
         for line in open(path, encoding="utf-8"):
-            if not line.startswith("#") and "=" in line:
-                k, v = line.rstrip("\n").split("=", 1)
-                out[k] = v
+            if not line.startswith("#"):
+                k, v = split_entry(line.rstrip("\n"))
+                if k:
+                    out[k] = v
     return out
+
+
+def port_strings():
+    """The port's menu strings, in file order, without logs, ini text and assembler."""
+    lit = re.compile(r'"((?:[^"\\]|\\.)*)"')
+    seen = []
+    for rel in PORT_FILES:
+        for line in open(os.path.join(ROOT, rel), encoding="latin-1"):
+            if PORT_SKIP.search(line) or line.strip().startswith(("*", "//", "/*")):
+                continue
+            for s in lit.findall(line):
+                if (s.endswith("\\n") and "%" not in s and re.search("[A-Za-z]{2}", s) and len(s) < 90
+                        and not re.match(r'(\s|\[|\.|\(|ge[: ])', s) and '\\"' not in s
+                        and s not in seen):
+                    seen.append(s)
+    return seen
 
 
 def main():
@@ -104,6 +138,13 @@ def main():
                 lines.append("%s=%s" % (key, old.get(key, "")))
             count += 1
         lines.append("")
+    lines.append("## PORT - the port's own menus (keyed by the English)")
+    for s in port_strings():
+        key = "P:" + s.replace("=", "\\=")
+        lines.append("# " + s)
+        lines.append("%s=%s" % (key, old.get(key, "")))
+        count += 1
+    lines.append("")
     open(sys.argv[1], "w", encoding="utf-8", newline="\n").write("\n".join(lines))
     print("%d entries -> %s" % (count, sys.argv[1]))
 

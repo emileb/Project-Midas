@@ -3544,3 +3544,675 @@ LmiscE.65=Schnelle Anim.
 LmiscE.66=Langsame Anim.
 # No Radar [Multi]
 LmiscE.67=Kein Radar [Multi]
+
+## PORT - the port's own menus (keyed by the English)
+# Gameplay\n
+P:Gameplay\n=Spiel\n
+# Audio Visual\n
+P:Audio Visual\n=Bild & Ton\n
+# General Settings\n
+P:General Settings\n=Allgemein\n
+# HUD\n
+P:HUD\n=HUD\n
+# Port Options\n
+P:Port Options\n=Port-Optionen\n
+# Back\n
+P:Back\n=Zurück\n
+# Video\n
+P:Video\n=Video\n
+# Audio\n
+P:Audio\n=Audio\n
+# Crosshair Colour\n
+P:Crosshair Colour\n=Fadenkreuzfarbe\n
+# High Detail Models\n
+P:High Detail Models\n=Detailmodelle\n
+# Resolution\n
+P:Resolution\n=Auflösung\n
+# Classic Mode\n
+P:Classic Mode\n=Klassikmodus\n
+# Music\n
+P:Music\n=Musik\n
+# FX\n
+P:FX\n=FX\n
+# Move Forward\n
+P:Move Forward\n=Vorwärts\n
+# Move Back\n
+P:Move Back\n=Rückwärts\n
+# Strafe Left\n
+P:Strafe Left\n=Seitw. links\n
+# Strafe Right\n
+P:Strafe Right\n=Seitw. rechts\n
+# Turn Left\n
+P:Turn Left\n=Links drehen\n
+# Turn Right\n
+P:Turn Right\n=Rechts drehen\n
+# Look Up\n
+P:Look Up\n=Blick auf\n
+# Look Down\n
+P:Look Down\n=Blick ab\n
+# Fire\n
+P:Fire\n=Feuer\n
+# Aim\n
+P:Aim\n=Zielen\n
+# Use\n
+P:Use\n=Aktion\n
+# Reload\n
+P:Reload\n=Nachladen\n
+# Next Weapon\n
+P:Next Weapon\n=Nächste Waffe\n
+# Previous Weapon\n
+P:Previous Weapon\n=Vorige Waffe\n
+# Next Gadget\n
+P:Next Gadget\n=Nächstes Gerät\n
+# Previous Gadget\n
+P:Previous Gadget\n=Voriges Gerät\n
+# Detonate\n
+P:Detonate\n=Zünden\n
+# Zoom In\n
+P:Zoom In\n=Zoom rein\n
+# Zoom Out\n
+P:Zoom Out\n=Zoom raus\n
+# Crouch (Hold)\n
+P:Crouch (Hold)\n=Ducken (halten)\n
+# Crouch (Toggle)\n
+P:Crouch (Toggle)\n=Ducken (Wechsel)\n
+# Walk\n
+P:Walk\n=Gehen\n
+# Pause\n
+P:Pause\n=Pause\n
+# Watch Page Left\n
+P:Watch Page Left\n=Uhrseite links\n
+# Watch Page Right\n
+P:Watch Page Right\n=Uhrseite rechts\n
+# Objectives\n
+P:Objectives\n=Ziele\n
+# Menu Accept\n
+P:Menu Accept\n=Menü OK\n
+# Menu Back\n
+P:Menu Back\n=Menü zurück\n
+# Stick Up\n
+P:Stick Up\n=Stick oben\n
+# Stick Down\n
+P:Stick Down\n=Stick unten\n
+# Stick Left\n
+P:Stick Left\n=Stick links\n
+# Stick Right\n
+P:Stick Right\n=Stick rechts\n
+# A Button\n
+P:A Button\n=A-Taste\n
+# B Button\n
+P:B Button\n=B-Taste\n
+# Z Trigger\n
+P:Z Trigger\n=Z-Trigger\n
+# L Button\n
+P:L Button\n=L-Taste\n
+# R Button\n
+P:R Button\n=R-Taste\n
+# Start\n
+P:Start\n=Start\n
+# C Up\n
+P:C Up\n=C oben\n
+# C Down\n
+P:C Down\n=C unten\n
+# C Left\n
+P:C Left\n=C links\n
+# C Right\n
+P:C Right\n=C rechts\n
+# D-Pad Up\n
+P:D-Pad Up\n=Steuerkreuz oben\n
+# D-Pad Down\n
+P:D-Pad Down\n=Steuerkreuz unten\n
+# D-Pad Left\n
+P:D-Pad Left\n=Steuerkreuz links\n
+# D-Pad Right\n
+P:D-Pad Right\n=Steuerkreuz rechts\n
+# Mouse Unlock\n
+P:Mouse Unlock\n=Maus freigeben\n
+# B then Z = Next Gadget\n
+P:B then Z \= Next Gadget\n=B, dann Z = nächstes Gerät\n
+# Hold L+R = Classic Mode\n
+P:Hold L+R \= Classic Mode\n=L+R halten = Klassikmodus\n
+# Input\n
+P:Input\n=Eingabe\n
+# Raphnet: Use the Control Styles\n
+P:Raphnet: Use the Control Styles\n=Raphnet: Steuerstile nutzen\n
+# Rebind Inputs\n
+P:Rebind Inputs\n=Tasten belegen\n
+# Mouse and Keyboard\n
+P:Mouse and Keyboard\n=Maus & Tastatur\n
+# Controller\n
+P:Controller\n=Controller\n
+# General Control Options\n
+P:General Control Options\n=Allg. Steuerung\n
+# Del or Hold to Unbind\n
+P:Del or Hold to Unbind\n=Entf o. halten: lösen\n
+# Bindings\n
+P:Bindings\n=Belegung\n
+# Bind Config\n
+P:Bind Config\n=Tastenkonfig\n
+# Connect a Controller\n
+P:Connect a Controller\n=Controller anschließen\n
+# Confirm Reset\n
+P:Confirm Reset\n=Reset bestätigen\n
+# Reset to Default\n
+P:Reset to Default\n=Standard laden\n
+# Custom\n
+P:Custom\n=Eigene\n
+# Nintendo 64\n
+P:Nintendo 64\n=Nintendo 64\n
+# Modern\n
+P:Modern\n=Modern\n
+# Press a Button\n
+P:Press a Button\n=Taste drücken\n
+# Port\n
+P:Port\n=Port\n
+# Press a Key\n
+P:Press a Key\n=Taste drücken\n
+# display\n
+P:display\n=anzeige\n
+# Display\n
+P:Display\n=Anzeige\n
+# Mouse\n
+P:Mouse\n=Maus\n
+# Point\n
+P:Point\n=Punkt\n
+# Bilinear\n
+P:Bilinear\n=Bilinear\n
+# 3-Point\n
+P:3-Point\n=3-Punkt\n
+# Trilinear\n
+P:Trilinear\n=Trilinear\n
+# Windowed\n
+P:Windowed\n=Fenster\n
+# Borderless\n
+P:Borderless\n=Rahmenlos\n
+# Fullscreen\n
+P:Fullscreen\n=Vollbild\n
+# OFF\n
+P:OFF\n=AUS\n
+# Hardware\n
+P:Hardware\n=Hardware\n
+# Uncapped\n
+P:Uncapped\n=Unbegr.\n
+# Stretch\n
+P:Stretch\n=Strecken\n
+# Wide\n
+P:Wide\n=Breit\n
+# Native\n
+P:Native\n=Nativ\n
+# Upright\n
+P:Upright\n=Normal\n
+# Reverse\n
+P:Reverse\n=Umgekehrt\n
+# Hold\n
+P:Hold\n=Halten\n
+# Toggle\n
+P:Toggle\n=Wechsel\n
+# Display Mode\n
+P:Display Mode\n=Anzeigemodus\n
+# Widescreen\n
+P:Widescreen\n=Breitbild\n
+# VSync\n
+P:VSync\n=
+# Max FPS\n
+P:Max FPS\n=Max. FPS\n
+# Texture Filter\n
+P:Texture Filter\n=Texturfilter\n
+# Anisotropy\n
+P:Anisotropy\n=Anisotropie\n
+# MSAA\n
+P:MSAA\n=
+# 2D Filtering\n
+P:2D Filtering\n=2D-Filter\n
+# High Detail\n
+P:High Detail\n=Hohe Details\n
+# 3D Resolution\n
+P:3D Resolution\n=3D-Auflösung\n
+# Mipmaps\n
+P:Mipmaps\n=
+# 4:3 Pillars\n
+P:4:3 Pillars\n=4:3-Balken\n
+# Load Hitches\n
+P:Load Hitches\n=Laderuckler\n
+# N64 AA\n
+P:N64 AA\n=
+# Composite Video\n
+P:Composite Video\n=
+# Field of View\n
+P:Field of View\n=Sichtfeld\n
+# Mission Timer\n
+P:Mission Timer\n=Missionszeit\n
+# Pause Pillars\n
+P:Pause Pillars\n=Pause-Balken\n
+# Health\n
+P:Health\n=Energie\n
+# Steady Scope\n
+P:Steady Scope\n=Ruhiger Zoom\n
+# Distance Fading\n
+P:Distance Fading\n=Fernausblendung\n
+# Shoot-Through Fix\n
+P:Shoot-Through Fix\n=Durchschuss-Fix\n
+# True Enemy Rockets\n
+P:True Enemy Rockets\n=Echte Feindraketen\n
+# Unlock All\n
+P:Unlock All\n=Alles frei\n
+# Always Crosshair\n
+P:Always Crosshair\n=Immer Fadenkreuz\n
+# Aim Lock\n
+P:Aim Lock\n=Zielsperre\n
+# Stamina Sway\n
+P:Stamina Sway\n=Ausdauerwanken\n
+# Sight on Screen\n
+P:Sight on Screen\n=Visier zeigen\n
+# No Auto Aim\n
+P:No Auto Aim\n=Kein Auto-Zielen\n
+# Player Names\n
+P:Player Names\n=Spielernamen\n
+# Spawn with Weapon\n
+P:Spawn with Weapon\n=Start mit Waffe\n
+# Random Spawns\n
+P:Random Spawns\n=Zufallsstart\n
+# Unlimited Explosions\n
+P:Unlimited Explosions\n=Endlose Explosionen\n
+# LTK Health\n
+P:LTK Health\n=LTK-Energie\n
+# No Armor\n
+P:No Armor\n=Keine Weste\n
+# Friendly Fire\n
+P:Friendly Fire\n=Eigenbeschuss\n
+# Mouse Auto Aim\n
+P:Mouse Auto Aim\n=Maus-Auto-Zielen\n
+# Watch Static\n
+P:Watch Static\n=Uhr-Rauschen\n
+# Invisibility\n
+P:Invisibility\n=Unsichtbarkeit\n
+# DK Mode\n
+P:DK Mode\n=DK-Modus\n
+# Tiny Players\n
+P:Tiny Players\n=Mini-Spieler\n
+# Paintball Mode\n
+P:Paintball Mode\n=Paintball-Modus\n
+# No Radar\n
+P:No Radar\n=Kein Radar\n
+# Turbo Mode\n
+P:Turbo Mode\n=Turbomodus\n
+# Unlimited Ammo\n
+P:Unlimited Ammo\n=Endlose Munition\n
+# HUD Layout\n
+P:HUD Layout\n=HUD-Layout\n
+# Pillarbox\n
+P:Pillarbox\n=Balken\n
+# Look Up/Down\n
+P:Look Up/Down\n=Blick auf/ab\n
+# Auto-Aim\n
+P:Auto-Aim\n=Auto-Zielen\n
+# Aim Control\n
+P:Aim Control\n=Zielmodus\n
+# Look Ahead\n
+P:Look Ahead\n=Blick voraus\n
+# Ammo on Screen\n
+P:Ammo on Screen\n=Mun. anzeigen\n
+# Mouse Look\n
+P:Mouse Look\n=Mausblick\n
+# Smart Mouse Lock\n
+P:Smart Mouse Lock\n=Smarter Mausfang\n
+# P1 Hybrid Input\n
+P:P1 Hybrid Input\n=S1-Hybrideingabe\n
+# Sensitivity X\n
+P:Sensitivity X\n=Empfindl. X\n
+# Sensitivity Y\n
+P:Sensitivity Y\n=Empfindl. Y\n
+# Aim Sensitivity\n
+P:Aim Sensitivity\n=Ziel-Empfindl.\n
+# Move Deadzone\n
+P:Move Deadzone\n=Lauf-Totzone\n
+# Look Deadzone\n
+P:Look Deadzone\n=Blick-Totzone\n
+# Trigger Point\n
+P:Trigger Point\n=Auslösepunkt\n
+# Stick Sensitivity\n
+P:Stick Sensitivity\n=Stick-Empfindl.\n
+# Controllers\n
+P:Controllers\n=Controller\n
+# Rumble\n
+P:Rumble\n=Vibration\n
+# Use+Rld Detonate\n
+P:Use+Rld Detonate\n=Akt.+Lad. zündet\n
+# Shoot+Next = Prev\n
+P:Shoot+Next \= Prev\n=Feuer+Vor = Zurück\n
+# Gadget Switch\n
+P:Gadget Switch\n=Gerätewechsel\n
+# L+R Classic Mode\n
+P:L+R Classic Mode\n=L+R Klassikmodus\n
+# Music Volume\n
+P:Music Volume\n=Musiklautstärke\n
+# Sound Volume\n
+P:Sound Volume\n=Tonlautstärke\n
+# Stereo Pan\n
+P:Stereo Pan\n=Stereo-Panning\n
+# ON\n
+P:ON\n=AN\n
+# 'ge: raphnet:' lines above for the interfaces that were tried.\n
+P:'ge: raphnet:' lines above for the interfaces that were tried.\n=
+# every other controller is scaled (padN_calib = calibrated)\n
+P:every other controller is scaled (padN_calib \= calibrated)\n=
+# TWYCROSS BOARD OF GAME CLASSIFICATION\n
+P:TWYCROSS BOARD OF GAME CLASSIFICATION\n=
+# This is to certify\n
+P:This is to certify\n=
+# U.A.C. All Rights Reserved\n
+P:U.A.C. All Rights Reserved\n=
+# Ltd. & Mac B. Inc.\n
+P:Ltd. & Mac B. Inc.\n=
+# Suitable only for 1-4 persons\n
+P:Suitable only for 1-4 persons\n=
+# PRESIDENT\n
+P:PRESIDENT\n=
+# VICE\n
+P:VICE\n=
+# James Bond theme by Monty Norman.\n
+P:James Bond theme by Monty Norman.\n=James-Bond-Thema von Monty Norman.\n
+# Used by permission of EMI Unart Catalog Inc.\n
+P:Used by permission of EMI Unart Catalog Inc.\n=
+# NEXT\n
+P:NEXT\n=WEITER\n
+# Are you sure?\n
+P:Are you sure?\n=Wirklich?\n
+# Yes\n
+P:Yes\n=Ja\n
+# No\n
+P:No\n=Nein\n
+# Mission <chapter>.<part>\n
+P:Mission <chapter>.<part>\n=Mission <chapter>.<part>\n
+# Options\n
+P:Options\n=Optionen\n
+# Exit Game\n
+P:Exit Game\n=Beenden\n
+# GAMEPLAY\n
+P:GAMEPLAY\n=SPIEL\n
+# CONTROL\n
+P:CONTROL\n=STEUERUNG\n
+# AUDIO VISUAL\n
+P:AUDIO VISUAL\n=BILD & TON\n
+# CREDITS\n
+P:CREDITS\n=CREDITS\n
+# PLAYER\n
+P:PLAYER\n=SPIELER\n
+# REBIND\n
+P:REBIND\n=BELEGUNG\n
+# VIDEO\n
+P:VIDEO\n=VIDEO\n
+# AUDIO\n
+P:AUDIO\n=AUDIO\n
+# GRAPHICS\n
+P:GRAPHICS\n=GRAFIK\n
+# GENERAL SETTINGS\n
+P:GENERAL SETTINGS\n=ALLGEMEIN\n
+# MOUSE AND KEYBOARD\n
+P:MOUSE AND KEYBOARD\n=MAUS & TASTATUR\n
+# CONTROLLER\n
+P:CONTROLLER\n=CONTROLLER\n
+# GENERAL CONTROL OPTIONS\n
+P:GENERAL CONTROL OPTIONS\n=ALLG. STEUERUNG\n
+# PORT OPTIONS\n
+P:PORT OPTIONS\n=PORT-OPTIONEN\n
+# GAMEPLAY OPTIONS\n
+P:GAMEPLAY OPTIONS\n=SPIELOPTIONEN\n
+# CLASSIC\n
+P:CLASSIC\n=KLASSISCH\n
+# RESET ALL\n
+P:RESET ALL\n=ALLES ZURÜCK\n
+# RESET\n
+P:RESET\n=RESET\n
+# Default\n
+P:Default\n=Standard\n
+# White\n
+P:White\n=Weiß\n
+# Orange\n
+P:Orange\n=Orange\n
+# Yellow\n
+P:Yellow\n=Gelb\n
+# Green\n
+P:Green\n=Grün\n
+# Cyan\n
+P:Cyan\n=Cyan\n
+# Blue\n
+P:Blue\n=Blau\n
+# Purple\n
+P:Purple\n=Lila\n
+# Magenta\n
+P:Magenta\n=Magenta\n
+# Grey\n
+P:Grey\n=Grau\n
+# Graphics\n
+P:Graphics\n=Grafik\n
+# Press A\n
+P:Press A\n=A drücken\n
+# No Pad\n
+P:No Pad\n=Kein Pad\n
+# Auto\n
+P:Auto\n=Auto\n
+# 1.1 Honey\n
+P:1.1 Honey\n=
+# 1.2 Solitaire\n
+P:1.2 Solitaire\n=
+# 1.3 Kissy\n
+P:1.3 Kissy\n=
+# 1.4 Goodnight\n
+P:1.4 Goodnight\n=
+# 2.1 Plenty P1\n
+P:2.1 Plenty P1\n=
+# 2.1 Plenty P2\n
+P:2.1 Plenty P2\n=
+# 2.2 Galore P1\n
+P:2.2 Galore P1\n=
+# 2.2 Galore P2\n
+P:2.2 Galore P2\n=
+# 2.3 Domino P1\n
+P:2.3 Domino P1\n=
+# 2.3 Domino P2\n
+P:2.3 Domino P2\n=
+# 2.4 Goodhead P1\n
+P:2.4 Goodhead P1\n=
+# 2.4 Goodhead P2\n
+P:2.4 Goodhead P2\n=
+# Built In\n
+P:Built In\n=Eingebaut\n
+# Save This Layout\n
+P:Save This Layout\n=Layout speichern\n
+# Delete This Layout\n
+P:Delete This Layout\n=Layout löschen\n
+# Manage Config\n
+P:Manage Config\n=Konfig verwalten\n
+# Rebind Controller\n
+P:Rebind Controller\n=Controller belegen\n
+# Input Device\n
+P:Input Device\n=Eingabegerät\n
+# No Input\n
+P:No Input\n=Keine Eingabe\n
+# Press a Button on the Device\n
+P:Press a Button on the Device\n=Taste am Gerät drücken\n
+# Input Mode\n
+P:Input Mode\n=Eingabemodus\n
+# Control Style\n
+P:Control Style\n=Steuerstil\n
+# DEL\n
+P:DEL\n=ENTF\n
+# CAPS\n
+P:CAPS\n=GROSS\n
+# BACK\n
+P:BACK\n=ZURÜCK\n
+# OK\n
+P:OK\n=OK\n
+# TYPING - PRESS TO STOP\n
+P:TYPING - PRESS TO STOP\n=TIPPEN - DRÜCKEN: STOPP\n
+# TYPE WITH KEYBOARD\n
+P:TYPE WITH KEYBOARD\n=MIT TASTATUR TIPPEN\n
+# Reset All Settings?\n
+P:Reset All Settings?\n=Alles zurücksetzen?\n
+# Reset All Binds?\n
+P:Reset All Binds?\n=Tasten zurücksetzen?\n
+# Save\n
+P:Save\n=Speichern\n
+# Delete\n
+P:Delete\n=Löschen\n
+# Cancel\n
+P:Cancel\n=Abbrechen\n
+# Placeholder\n
+P:Placeholder\n=
+# Apply Changes\n
+P:Apply Changes\n=Übernehmen\n
+# Pending\n
+P:Pending\n=Offen\n
+# OPTIONS\n
+P:OPTIONS\n=OPTIONEN\n
+# Agent\n
+P:Agent\n=Agent\n
+# Secret Agent\n
+P:Secret Agent\n=Geheimagent\n
+# 00 Agent\n
+P:00 Agent\n=00-Agent\n
+# Trevelyan (Janus)\n
+P:Trevelyan (Janus)\n=Trevelyan (Janus)\n
+# Scientist (M)\n
+P:Scientist (M)\n=Forscher (M)\n
+# Scientist (F)\n
+P:Scientist (F)\n=Forscher (W)\n
+# Civilian (F)\n
+P:Civilian (F)\n=Zivilist (W)\n
+# Civilian (M) 1\n
+P:Civilian (M) 1\n=Zivilist (M) 1\n
+# Civilian (M) 2\n
+P:Civilian (M) 2\n=Zivilist (M) 2\n
+# Civilian (M) 3\n
+P:Civilian (M) 3\n=Zivilist (M) 3\n
+# Siberian Guard 1\n
+P:Siberian Guard 1\n=Sibir. Wache 1\n
+# Siberian Guard 2\n
+P:Siberian Guard 2\n=Sibir. Wache 2\n
+# Moonraker Elite (M)\n
+P:Moonraker Elite (M)\n=Moonraker-Elite (M)\n
+# Moonraker Elite (F)\n
+P:Moonraker Elite (F)\n=Moonraker-Elite (W)\n
+# Bond (Boiler Suit)\n
+P:Bond (Boiler Suit)\n=Bond (Overall)\n
+# Bond (Formal)\n
+P:Bond (Formal)\n=Bond (Anzug)\n
+# Bond (Jungle)\n
+P:Bond (Jungle)\n=Bond (Dschungel)\n
+# Bond (Parka)\n
+P:Bond (Parka)\n=Bond (Parka)\n
+# Trevelyan (006)\n
+P:Trevelyan (006)\n=Trevelyan (006)\n
+# Natalya (Jungle)\n
+P:Natalya (Jungle)\n=Natalya (Dschungel)\n
+# Game Limits:\n
+P:Game Limits:\n=Spiellimits:\n
+# Player Options\n
+P:Player Options\n=Spieleroptionen\n
+# Gameplay Options\n
+P:Gameplay Options\n=Spieloptionen\n
+# Load / Save Settings\n
+P:Load / Save Settings\n=Laden / Speichern\n
+# Profile\n
+P:Profile\n=Profil\n
+# Character\n
+P:Character\n=Charakter\n
+# Style\n
+P:Style\n=Stil\n
+# Config\n
+P:Config\n=Konfig\n
+# Crosshair\n
+P:Crosshair\n=Fadenkreuz\n
+# Done\n
+P:Done\n=Fertig\n
+# Ready\n
+P:Ready\n=Bereit\n
+# Win Rate\n
+P:Win Rate\n=Siegquote\n
+# Time Played\n
+P:Time Played\n=Spielzeit\n
+# Lemming Award\n
+P:Lemming Award\n=Lemming-Preis\n
+# Where's the Ammo?\n
+P:Where's the Ammo?\n=Wo ist die Munition?\n
+# Where's the Armor?\n
+P:Where's the Armor?\n=Wo ist die Weste?\n
+# AC -10 Award\n
+P:AC -10 Award\n=AC -10-Preis\n
+# Marksmanship Award\n
+P:Marksmanship Award\n=Meisterschütze\n
+# Most Professional\n
+P:Most Professional\n=Größter Profi\n
+# Most Deadly\n
+P:Most Deadly\n=Tödlichster\n
+# Mostly Harmless\n
+P:Mostly Harmless\n=Weitgehend harmlos\n
+# Most Cowardly\n
+P:Most Cowardly\n=Größter Feigling\n
+# Most Frantic\n
+P:Most Frantic\n=Hektischster\n
+# Most Honorable\n
+P:Most Honorable\n=Ehrenhaftester\n
+# Most Dishonorable\n
+P:Most Dishonorable\n=Unehrenhaftester\n
+# Shortest Innings\n
+P:Shortest Innings\n=Kürzestes Leben\n
+# Longest Innings\n
+P:Longest Innings\n=Längstes Leben\n
+# Double Kill\n
+P:Double Kill\n=Doppelabschuss\n
+# Triple Kill\n
+P:Triple Kill\n=Dreierabschuss\n
+# Quad Kill (Doh!)\n
+P:Quad Kill (Doh!)\n=4er-Abschuss (Doh!)\n
+# Damage Dealt\n
+P:Damage Dealt\n=Schaden zugef.\n
+# Damage Taken\n
+P:Damage Taken\n=Schaden erlitten\n
+# Accuracy\n
+P:Accuracy\n=Präzision\n
+# Head Hits\n
+P:Head Hits\n=Kopf\n
+# Body Hits\n
+P:Body Hits\n=Körper\n
+# Limb Hits\n
+P:Limb Hits\n=Gliedmaßen\n
+# Longest Life\n
+P:Longest Life\n=Max. Lebenszeit\n
+# on Your Controller\n
+P:on Your Controller\n=am Controller\n
+# Player 1 Skips\n
+P:Player 1 Skips\n=S1 überspringt\n
+# Keyboard and Mouse\n
+P:Keyboard and Mouse\n=Tastatur & Maus\n
+# Waiting\n
+P:Waiting\n=Warten\n
+# Off\n
+P:Off\n=Aus\n
+# Red\n
+P:Red\n=Rot\n
+# Random\n
+P:Random\n=Zufall\n
+# Random Set\n
+P:Random Set\n=Zufallsset\n
+# Sniper/Rocket\n
+P:Sniper/Rocket\n=Gewehr/Rakete\n
+# Enemy FF\n
+P:Enemy FF\n=Gegner-FF\n
+# Unlock Doors\n
+P:Unlock Doors\n=Türen öffnen\n
+# CHEATS\n
+P:CHEATS\n=CHEATS\n
+# PORT\n
+P:PORT\n=PORT\n
+# general control options\n
+P:general control options\n=allg. steuerung\n
+# input\n
+P:input\n=eingabe\n
+# PRESS A BUTTON\n
+P:PRESS A BUTTON\n=TASTE DRÜCKEN\n
+# mute\n
+P:mute\n=stumm\n
+# Press Start to Skip\n
+P:Press Start to Skip\n=Start: Überspringen\n

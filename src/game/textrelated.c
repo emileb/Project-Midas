@@ -576,6 +576,13 @@ Gfx *textRender(Gfx *gdl, s32 *x, s32 *y, char *text,
 #ifndef TARGET_N64
     PORT_TEXT_GLYPHS(gdl, 1);   /* every texrect until the matching 0 is a font glyph */
 #endif
+#ifdef __ANDROID__
+    {
+        /* the port's own menu strings in the launcher's language (mobile/ge_lang.c) */
+        extern const char *GE_LangPortText(const char *text);
+        text = (char *) GE_LangPortText(text);
+    }
+#endif
 
     savedx = *x;
 	savedy = *y;
@@ -850,6 +857,13 @@ Gfx *textRenderOutlined(Gfx *gdl, s32 *x, s32 *y,
 #ifndef TARGET_N64
     PORT_TEXT_GLYPHS(gdl, 1);   /* every texrect until the matching 0 is a font glyph */
 #endif
+#ifdef __ANDROID__
+    {
+        /* the port's own menu strings in the launcher's language (mobile/ge_lang.c) */
+        extern const char *GE_LangPortText(const char *text);
+        text = (char *) GE_LangPortText(text);
+    }
+#endif
 
     savedx = *x;
 	savedy = *y;
@@ -938,6 +952,13 @@ void textMeasure(s32 *textheight, s32 *textwidth, char *text, struct fontchar *f
     char prevchar;
 	s32 longest;
 	s32 tmp;
+#ifdef __ANDROID__
+    {
+        /* the port's own menu strings in the launcher's language (mobile/ge_lang.c) */
+        extern const char *GE_LangPortText(const char *text);
+        text = (char *) GE_LangPortText(text);
+    }
+#endif
 
 	prevchar = 'H';
     tmp = 0;
@@ -1042,6 +1063,13 @@ void textWrap(s32 wrapwidth, char *src, char *dst, struct fontchar *chars, struc
 	s32 i;
 	u32 stack;
 	char curword[32];
+#ifdef __ANDROID__
+    {
+        /* the port's own menu strings in the launcher's language (mobile/ge_lang.c) */
+        extern const char *GE_LangPortText(const char *text);
+        src = (char *) GE_LangPortText(src);
+    }
+#endif
 
     while (more == 1) {
 		// Load the next word

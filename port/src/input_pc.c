@@ -2118,6 +2118,10 @@ void portInputInit(void)
     SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_SYSTEM_SCALE, "0");
 #endif
 
+#ifdef __ANDROID__
+    /* the launcher drives player 1; an SDL joystick in slot 1 could make it an N64 pad (stick turns) */
+    portConLogf("ge: input: Android - SDL controllers not opened, the launcher drives player 1\n");
+#else
     if (!SDL_WasInit(SDL_INIT_GAMECONTROLLER))
     {
         inputBackendHints();
@@ -2133,6 +2137,7 @@ void portInputInit(void)
         }
         portConLogf("ge: input: controller backends up\n");
     }
+#endif
     /* the device records' first path: moves an old ./Devices under Data/ now,
      * at boot, not whenever player 1's device first changes */
     (void) inputDevRecPath("kbm");

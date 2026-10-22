@@ -436,6 +436,17 @@ u8 * langGet(s32 slotID)
         return (u8 *)"Error: Bank not loaded";
     }
 #endif
+#ifdef __ANDROID__
+    {
+        /* the launcher's language (mobile/ge_lang.c) */
+        extern const char *GE_LangGet(int slotID);
+        const char *t = GE_LangGet(slotID);
+        if (t != NULL)
+        {
+            return (u8 *)t;
+        }
+    }
+#endif
 #if !defined(TARGET_N64) && UINTPTR_MAX > 0xFFFFFFFFu
     {
         /* 64-bit: the ROM bank's own table holds 4-byte offsets; romdata.c

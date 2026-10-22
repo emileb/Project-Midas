@@ -26,7 +26,7 @@ LOCAL_PATH := $(MIDAS_PATH)
 LOCAL_MODULE := project_midas_mobile
 LOCAL_CFLAGS := -std=gnu11 -O2
 LOCAL_C_INCLUDES := $(TOP_DIR)/SDL2_OpenTouch/SDL2-2.0.12/include $(TOP_DIR)/Clibs_OpenTouch
-LOCAL_SRC_FILES := mobile/game_interface.c mobile/bionic_compat.c
+LOCAL_SRC_FILES := mobile/game_interface.c mobile/ge_lang.c mobile/bionic_compat.c
 include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)

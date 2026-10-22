@@ -5,6 +5,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <pthread.h>
@@ -306,9 +307,22 @@ static void redirectStdio(void)
 void PortableInit(int argc, const char **argv)
 {
     extern int main_mobile(int argc, char **argv);
+    extern void GE_LangSetCode(const char *code);
+    const char **args = malloc(sizeof(char *) * (argc + 1));
+    int n = 0;
 
     redirectStdio();
-    main_mobile(argc, (char **)argv);
+
+    // --lang <code> is ours (mobile/ge_lang.c); the rest go to the game
+    for (int i = 0; i < argc; i++)
+    {
+        if (strcmp(argv[i], "--lang") == 0 && i + 1 < argc)
+            GE_LangSetCode(argv[++i]);
+        else
+            args[n++] = argv[i];
+    }
+    args[n] = NULL;
+    main_mobile(n, (char **)args);
 }
 
 touchscreemode_t PortableGetScreenMode()

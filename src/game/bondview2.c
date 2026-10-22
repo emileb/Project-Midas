@@ -7794,6 +7794,14 @@ void bondviewProcessInput(s8 stick_x, s8 stick_y, u16 buttons, u16 oldbuttons)
             g_TankDamagePenaltyTicks = 0;
 
             bondviewTankModelRotationRelated();
+#ifdef __ANDROID__
+            /* touch players have no quick A press: take up the tank's cannon on entry */
+            {
+                extern void gunRequestHandWeaponChange(enum GUNHAND hand, s32 nextWeapon, s32 cycleDirection);
+                gunRequestHandWeaponChange(GUNRIGHT, ITEM_TANKSHELLS, 1);
+                gunRequestHandWeaponChange(GUNLEFT, ITEM_UNARMED, 1);
+            }
+#endif
         }
         else
         {

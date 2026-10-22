@@ -333,6 +333,14 @@ static s32 portTextScaledAdvance(s32 width)
 }
 #endif
 
+#ifdef __ANDROID__
+/* A byte above 0x7F as a letter of the launcher's language (mobile/ge_lang.c), else NULL */
+extern const void *GE_LangGlyph(const void *fontChars, int c, char *twin);
+extern int GE_LangSingleByte(void);
+#define PORT_LANG_GLYPH(chars, c, twin) \
+    (((u8) (c) >= 0x80) ? (struct fontchar *) GE_LangGlyph((chars), (u8) (c), (twin)) : NULL)
+#endif
+
 Gfx *textRenderGlyph(Gfx *gdl, s32 *x, s32 *y, struct fontchar *curchar, struct fontchar *prevchar,
 		struct font *font, s32 clipX, s32 clipY, s32 clipWidth, s32 clipHeight, s32 yOffset)
 {
@@ -571,6 +579,10 @@ Gfx *textRender(Gfx *gdl, s32 *x, s32 *y, char *text,
     s32 stack3;
     s32 stack4;
     //s32 stack5;
+#ifdef __ANDROID__
+    struct fontchar *langchar;
+    char langtwin;
+#endif
     
     g_JpnTextTlutNeedsLoad = 1;
 #ifndef TARGET_N64
@@ -629,6 +641,12 @@ Gfx *textRender(Gfx *gdl, s32 *x, s32 *y, char *text,
             
 			text++;
 			*x = savedx;
+#ifdef __ANDROID__
+		} else if ((langchar = PORT_LANG_GLYPH(chars, *text, &langtwin)) != NULL) {
+			gdl = textRenderGlyph(gdl, x, y, langchar, &chars[prevchar - 0x21], font, savedx, savedy, width, height, yOffset);
+			prevchar = langtwin;
+			text++;
+#endif
 		} else if (*text < 0x80) {
 			gdl = textRenderGlyph(gdl, x, y, &chars[*text - 0x21], &chars[prevchar - 0x21], font, savedx, savedy, width, height, yOffset);
 			prevchar = *text;
@@ -852,6 +870,10 @@ Gfx *textRenderOutlined(Gfx *gdl, s32 *x, s32 *y,
     s32 savedx;
     struct fontchar sp74;
     s32 prevchar;
+#ifdef __ANDROID__
+    struct fontchar *langchar;
+    char langtwin;
+#endif
     
     g_JpnTextTlutNeedsLoad = 1;
 #ifndef TARGET_N64
@@ -894,6 +916,12 @@ Gfx *textRenderOutlined(Gfx *gdl, s32 *x, s32 *y,
 			*x = savedx;
             *y += lineheight;
 			text++;
+#ifdef __ANDROID__
+		} else if ((langchar = PORT_LANG_GLYPH(chars, *text, &langtwin)) != NULL) {
+            gdl = textRenderGlyphOutlined(gdl, x, y, langchar, &chars[prevchar - 0x21], font, savedx, savedy, colour, colour2, width, height, yOffset);
+			prevchar = langtwin;
+			text++;
+#endif
 		} else if (*text < 0x80) {
             // Render individual characters with outline.
             gdl = textRenderGlyphOutlined(gdl, x, y, &chars[*text - 0x21], &chars[prevchar - 0x21], font, savedx, savedy, colour, colour2, width, height, yOffset);
@@ -953,6 +981,10 @@ void textMeasure(s32 *textheight, s32 *textwidth, char *text, struct fontchar *f
 	s32 longest;
 	s32 tmp;
 #ifdef __ANDROID__
+    struct fontchar *langchar;
+    char langtwin;
+#endif
+#ifdef __ANDROID__
     {
         /* the port's own menu strings in the launcher's language (mobile/ge_lang.c) */
         extern const char *GE_LangPortText(const char *text);
@@ -1009,6 +1041,15 @@ void textMeasure(s32 *textheight, s32 *textwidth, char *text, struct fontchar *f
             *textheight += lineheight;
             text++;
         }
+#ifdef __ANDROID__
+        else if ((langchar = PORT_LANG_GLYPH(font1, *text, &langtwin)) != NULL)
+        {
+            tmp = font2->kerning[font1[prevchar - 0x21].kerningindex * 13 + langchar->kerningindex] + text_spacing - 1;
+            *textwidth = portTextScaledAdvance(langchar->width) + *textwidth - portTextScaledGap(tmp);
+            prevchar = langtwin;
+            text++;
+        }
+#endif
         else if (*text < 0x80)
         {
             // Normal single-byte character
@@ -1078,6 +1119,17 @@ void textWrap(s32 wrapwidth, char *src, char *dst, struct fontchar *chars, struc
 		v1 = 0;
 
         // Read one word into the curword buffer.
+#ifdef __ANDROID__
+        /* no width sum here: a high byte's glyph isn't in chars[] (textMeasure does the widths) */
+        while (*src > ' ')
+        {
+            curword[wordlen] = *src;
+			src++;
+			wordlen++;
+
+            if (curword[wordlen - 1] >= 0x80 && !GE_LangSingleByte())
+            {
+#else
         while (*src > ' ')
         {
             curword[wordlen] = *src;
@@ -1087,6 +1139,7 @@ void textWrap(s32 wrapwidth, char *src, char *dst, struct fontchar *chars, struc
 
             if (curword[wordlen - 1] >= 0x80)
             {
+#endif
                 curword[wordlen] = *src;
                 v1 += chars[*src - 0x21].width;
                 src++;

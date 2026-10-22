@@ -8822,10 +8822,16 @@ Gfx *constructor_menu07_missionsel(Gfx *DL)
                     temp_v0_3 = strlen(sp90) - 1;
                     for (; temp_v0_3 >= 0; temp_v0_3--)
                     {
+#ifdef __ANDROID__
+                        extern int GE_LangUpper(int c);   /* knows the language's letters (mobile/ge_lang.c) */
+
+                        sp90[temp_v0_3] = (char) GE_LangUpper(sp90[temp_v0_3]);
+#else
                         if (sp90[temp_v0_3] >= 'a')
                         {
                             sp90[temp_v0_3] -= 0x20;
                         }
+#endif
                     }
                 }
 
@@ -13485,10 +13491,19 @@ static Gfx *portMpStageConstruct(Gfx *DL)
         snprintf((char *) name, sizeof(name) - 1, "%s", (char *) langGet(multi_stage_setups[i].select_screen_text_preset));
         for (len = 0; name[len] != '\0' && name[len] != '\n'; len++)
         {
+#ifdef __ANDROID__
+            extern int GE_LangUpper(int c);
+
+            if (j_text_trigger == 0)
+            {
+                name[len] = (char) GE_LangUpper(name[len]);   /* also Cyrillic (mobile/ge_lang.c) */
+            }
+#else
             if (j_text_trigger == 0 && name[len] >= 'a' && name[len] <= 'z')
             {
                 name[len] -= 0x20;   /* "Statue" -> "STATUE", like Rare's own MP names */
             }
+#endif
         }
         name[len] = '\n';
         name[len + 1] = '\0';

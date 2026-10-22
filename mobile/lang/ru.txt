@@ -1,0 +1,4218 @@
+# GoldenEye 007 text: <bank>.<slot>=<text>, \n = new line, empty = English
+# Keep each line about as long as the English: menus and boxes are a fixed size.
+
+## LameE - Library (multi)
+
+## LarchE - Archives
+# Captured by the Russians, Bond must escape their military prison.\n
+LarchE.0=Схваченный русскими, Бонд должен бежать из военной тюрьмы.\n
+# Again? Captured again? I hope you can defend your performance, 007, because there isn't a lawyer in the land who'd take on the case.\nYour only chance is to speak directly to Defense Minister Mishkin. He's a reasonable man, for a member of the Politburo.\nFailure is not an option, Bond.\n
+LarchE.1=Опять? Снова попались? Надеюсь, вы сможете оправдать свои действия, 007, потому что ни один адвокат в стране не возьмется за это дело.\nВаш единственный шанс - поговорить напрямую с министром обороны Мишкиным. Он разумный человек, для члена Политбюро.\nПровал недопустим, Бонд.\n
+# Up to you to get out of this one, 007. I can't hold your hand all the time. By the way, get that flight recorder for me, would you? Thanks.\n
+LarchE.2=Выпутывайтесь сами, 007. Не могу же я все время водить вас за руку. Кстати, достаньте мне тот черный ящик, хорошо? Спасибо.\n
+# Banged up again, James? Now you know what it's like to be trapped behind a desk, and I'm off out to the theatre with a gentleman tonight. How times change!\n
+LarchE.3=Опять за решеткой, Джеймс? Теперь вы знаете, каково сидеть взаперти за столом, а я сегодня иду в театр с одним джентльменом. Как меняются времена!\n
+# Escape from interrogation room\n
+LarchE.4=Бежать из комнаты допросов\n
+# Find Natalya\n
+LarchE.5=Найти Наталью\n
+# Recover helicopter black box\n
+LarchE.6=Добыть черный ящик вертолета\n
+# Escape with Natalya\n
+LarchE.7=Бежать с Натальей\n
+# Natalya: James!\n
+LarchE.8=Наталья: Джеймс!\n
+# Natalya: Be careful with that gun!\n
+LarchE.9=Наталья: Осторожнее с оружием!\n
+# Natalya: We could escape through the\n           library windows.\n
+LarchE.10=Наталья: Можно сбежать через\n           окна библиотеки.\n
+# Natalya: I'm scared, I'm getting out of here.\n
+LarchE.11=Наталья: Мне страшно, я ухожу отсюда.\n
+# Natalya: Aaaaargh!\n
+LarchE.12=Наталья: Аааааа!\n
+# Guard: So Mr. Bond, what do you know\n         about the theft of the\n         Goldeneye?\n
+LarchE.13=Охранник: Итак, мистер Бонд, что вам\n            известно о похищении\n            GoldenEye?\n
+# Guard: Nonsense, Mr. Bond,\n         General Ourumov is a hero\n         of the Soviet Union.\n
+LarchE.14=Охранник: Чепуха, мистер Бонд,\n            генерал Уромов - герой\n            Советского Союза.\n
+# Bond: Ourumov stole it - he's a traitor.\n
+LarchE.15=Бонд: Уромов украл его - он предатель.\n
+# Guard: Drop that weapon NOW!\n
+LarchE.16=Охранник: Бросай оружие, ЖИВО!\n
+# Bond: Perhaps, he was once, but he has\n        betrayed you now.\n
+LarchE.17=Бонд: Возможно, когда-то был, но\n        теперь он вас предал.\n
+# Guard: All lies, Mr. Bond.\n         You are nothing but a terrorist.\n
+LarchE.18=Охранник: Ложь, мистер Бонд.\n            Вы всего лишь террорист.\n
+# Guard: You will be executed along with\n         that foolish girl.\n
+LarchE.19=Охранник: Вас казнят вместе с\n            этой глупой девчонкой.\n
+# Bond: Natalya has done nothing wrong.\n        She knows what happened at\n        Severnaya.\n
+LarchE.20=Бонд: Наталья ни в чем не виновата.\n        Она знает, что произошло в\n        Северной.\n
+# Guard: Really? Well, we shall have to\n         ask her about that.\n
+LarchE.21=Охранник: Неужели? Что ж, придется\n            спросить у нее самой.\n
+# Guard: I'm sure she can be persuaded\n         to answer our questions more\n         fully.\n
+LarchE.22=Охранник: Уверен, ее можно убедить\n            отвечать на наши вопросы\n            подробнее.\n
+# Guard: HALT!\n         You're going nowhere, Mr.Bond!\n
+LarchE.23=Охранник: СТОЯТЬ!\n            Никуда вы не уйдете, мистер Бонд!\n
+# Soldier: New orders from General\n           Ourumov.\n           Kill the spy at once!\n
+LarchE.24=Солдат: Новый приказ генерала\n          Уромова.\n          Немедленно убить шпиона!\n
+# Mishkin: It appears you were correct,\n           Mr. Bond\n
+LarchE.25=Мишкин: Похоже, вы были правы,\n          мистер Бонд\n
+# Mishkin: General Ourumov is our traitor.\n
+LarchE.26=Мишкин: Генерал Уромов - наш предатель.\n
+# Bond: Even trusted friends are capable\n        of betrayal.\n
+LarchE.27=Бонд: Даже верные друзья способны\n        на предательство.\n
+# Mishkin: A costly lesson.\n
+LarchE.28=Мишкин: Дорогой урок.\n
+# Mishkin: Do you need the black box\n           from the stolen helicopter?\n
+LarchE.29=Мишкин: Вам нужен черный ящик\n          с украденного вертолета?\n
+# Bond: Yes, it proves that Janus was\n        involved in the Severnaya incident.\n
+LarchE.30=Бонд: Да, он доказывает, что Янус\n        причастен к инциденту в Северной.\n
+# Mishkin: It is in the safe.\n
+LarchE.31=Мишкин: Он в сейфе.\n
+# Mishkin: I must inform the Politburo\n           of Ourumov's deceit.\n
+LarchE.32=Мишкин: Я должен сообщить Политбюро\n          об обмане Уромова.\n
+# Mishkin: Good-bye, Mr. Bond\n
+LarchE.33=Мишкин: Прощайте, мистер Бонд\n
+# Natalya: We need to talk to Defense\n           Minister Mishkin.\n
+LarchE.34=Наталья: Нам нужно поговорить с\n           министром обороны Мишкиным.\n
+# Got safe key\n
+LarchE.35=Ключ сейфа взят\n
+# A R C H I V E S\n
+LarchE.36=А Р Х И В Ы\n
+# captured by the russians, bond must escape their military prison.\n
+LarchE.37=@lower LarchE.0
+# again? captured again? i hope you can defend your performance, 007, because there isn't a lawyer in the land who'd take on the case.\nyour only chance is to speak directly to defense minister mishkin. he's a reasonable man, for a member of the politburo.\nfailure is not an option, bond.\n
+LarchE.38=@lower LarchE.1
+# up to you to get out of this one, 007. i can't hold your hand all the time. by the way, get that flight recorder for me, would you? thanks.\n
+LarchE.39=@lower LarchE.2
+# banged up again, james? now you know what it's like to be trapped behind a desk, and i'm off out to the theatre with a gentleman tonight. how times change!\n
+LarchE.40=@lower LarchE.3
+# escape from interrogation room\n
+LarchE.41=@lower LarchE.4
+# find natalya\n
+LarchE.42=@lower LarchE.5
+# recover helicopter black box\n
+LarchE.43=@lower LarchE.6
+# escape with natalya\n
+LarchE.44=@lower LarchE.7
+# GRU Military Intelligence Archives,\nSt. Petersburg\n
+LarchE.45=Архивы военной разведки ГРУ,\nСанкт-Петербург\n
+# door key\n
+LarchE.47=ключ двери\n
+# interrogation room key\n
+LarchE.48=ключ комнаты допросов\n
+# interrogation room key\n
+LarchE.49=ключ комнаты допросов\n
+# Picked up a door key.\n
+LarchE.50=Взято: ключ от двери.\n
+# This safe is locked.\n
+LarchE.52=Этот сейф заперт.\n
+# flight\n
+LarchE.53=черный\n
+# recorder\n
+LarchE.54=ящик\n
+# flight recorder\n
+LarchE.55=черный ящик\n
+# pirate flight recorder\n
+LarchE.56=черный ящик "Пирата"\n
+# Picked up the flight recorder.\n
+LarchE.57=Взято: черный ящик.\n
+# safe key\n
+LarchE.59=ключ сейфа\n
+# safe key\n
+LarchE.60=ключ сейфа\n
+# Safe Key\n
+LarchE.61=Ключ сейфа\n
+# Picked up a safe key.\n
+LarchE.62=Взято: ключ от сейфа.\n
+
+## LarkE - Facility
+# Inside the chemical weapons facility you should quickly and efficiently proceed to the bottling area and place demolition charges on the main gas tanks.\nPolitical considerations demand that collateral damage is minimized on this mission. Non-military personnel should be disregarded.\n
+LarkE.0=Проникнув на завод химического оружия, быстро и четко пройдите в цех розлива и заложите заряды на главные газовые резервуары.\nПо политическим соображениям сопутствующий ущерб в этой миссии должен быть минимальным. На гражданский персонал не обращайте внимания.\n
+# You'll be working with 006 on this assignment, the bottling room is the rendezvous point. \nDon't forget to contact our double agent scientist before you leave, and warn him to get out. He will provide you with a decoder for the final security door. There are no women or casinos for a thousand miles, 007, so even you will be able to concentrate on this mission.\n
+LarkE.1=В этом задании вы работаете с 006, место встречи - цех розлива. \nНе забудьте перед уходом связаться с нашим двойным агентом-ученым и предупредить, чтобы он уходил. Он даст вам дешифратор для последней защитной двери. На тысячу миль вокруг нет ни женщин, ни казино, 007, так что даже вы сможете сосредоточиться на задании.\n
+# Now listen carefully, Bond. Those bombs will be armed as soon as the last one is set. Don't be too close when you set them off or you'll go up in flames as well, and while you're at it, please try and bring back that door-opener undamaged for once. Too much rough handling like the last mission and it might go wrong at a bad time.\nHonestly 007, sometimes I think you damage your equipment on purpose.\n
+LarkE.2=Теперь слушайте внимательно, Бонд. Бомбы будут взведены, как только вы установите последнюю. Не стойте слишком близко при подрыве, иначе сгорите вместе с ними. И заодно постарайтесь хоть раз вернуть дешифратор целым. Еще раз обойдетесь с ним так же грубо, как в прошлой миссии, и он может подвести в самый неподходящий момент.\nЧестное слово, 007, иногда мне кажется, что вы портите снаряжение нарочно.\n
+# These chemicals could prove to be a match even for your pheromones, James. Don't take too many risks.\n
+LarkE.3=Эти химикаты могут поспорить даже с вашими феромонами, Джеймс. Не рискуйте понапрасну.\n
+# Gain entry to laboratory area\n
+LarkE.4=Проникнуть в зону лабораторий\n
+# Contact double agent\n
+LarkE.5=Найти двойного агента\n
+# Rendezvous with 006\n
+LarkE.6=Встретиться с 006\n
+# Destroy all tanks in bottling room\n
+LarkE.7=Уничтожить все резервуары в цехе розлива\n
+# Minimize scientist casualties\n
+LarkE.8=Минимизировать потери ученых\n
+# Trevelyan: Glad you could make it, 007.\n
+LarkE.9=Тревельян: Рад, что ты добрался, 007.\n
+# Trevelyan: For England - James.\n
+LarkE.10=Тревельян: За Англию, Джеймс.\n
+# Bond: For England, Alec.\n
+LarkE.11=Бонд: За Англию, Алек.\n
+# Bond: It was too easy, Alec.\n
+LarkE.12=Бонд: Слишком просто, Алек.\n
+# Trevelyan: Half of everything is luck.\n
+LarkE.13=Тревельян: Половина всего - удача.\n
+# Bond: ...and the other half?\n
+LarkE.14=Бонд: ...а другая половина?\n
+# Trevelyan: Fate.\n
+LarkE.15=Тревельян: Судьба.\n
+# Trevelyan: Why, James?\n
+LarkE.16=Тревельян: Почему, Джеймс?\n
+# Bond: Time to leave, Dr. Doak.\n
+LarkE.17=Бонд: Пора уходить, доктор Доак.\n
+# Dr. Doak: You'll need this decoder to\n            open the bottling room door.\n            Good luck, 007.\n
+LarkE.18=Д-р Доак: Этот дешифратор откроет\n            дверь цеха розлива.\n            Удачи, 007.\n
+# Ourumov: Throw down your weapons...\n              You are surrounded!\n
+LarkE.19=Уромов: Бросайте оружие...\n              Вы окружены!\n
+# Trevelyan: Finish the job, James!\n
+LarkE.20=Тревельян: Закончи дело, Джеймс!\n
+# Trevelyan: So, you decided to come\n              back.\n
+LarkE.21=Тревельян: Значит, ты решил\n              вернуться.\n
+# Trevelyan: There's a job to do here.\n              Don't neglect your duty,\n              James!\n
+LarkE.22=Тревельян: Здесь есть работа.\n              Не забывай о долге,\n              Джеймс!\n
+# Bond: It was a bit tricky, Alec.\n
+LarkE.23=Бонд: Было непросто, Алек.\n
+# Bond: I almost killed myself getting\n        here, Alec.\n
+LarkE.24=Бонд: Я чуть не погиб, пока добирался\n        сюда, Алек.\n
+# Ourumov: Nine\n
+LarkE.25=Уромов: Девять\n
+# Ourumov: Eight\n
+LarkE.26=Уромов: Восемь\n
+# Ourumov: Seven\n
+LarkE.27=Уромов: Семь\n
+# Ourumov: Six\n
+LarkE.28=Уромов: Шесть\n
+# Ourumov: Five\n
+LarkE.29=Уромов: Пять\n
+# Ourumov: Four\n
+LarkE.30=Уромов: Четыре\n
+# Ourumov: Three\n
+LarkE.31=Уромов: Три\n
+# Ourumov: Two\n
+LarkE.32=Уромов: Два\n
+# Ourumov: One...\n
+LarkE.33=Уромов: Один...\n
+# Ourumov: 1\n
+LarkE.34=Уромов: 1\n
+# Ourumov: One... Kill him!\n
+LarkE.35=Уромов: Один... Убить его!\n
+# Ourumov: You have ten seconds...\n
+LarkE.36=Уромов: У вас десять секунд...\n
+# Trevelyan: So, the golden boy is a traitor!\n              How ironic, James.\n
+LarkE.37=Тревельян: Значит, золотой мальчик - предатель!\n              Какая ирония, Джеймс.\n
+# Trevelyan: Why can't you just be a \n              good boy and die, James?\n
+LarkE.38=Тревельян: Неужели так трудно \n              просто умереть, Джеймс?\n
+# Security door activated.\n
+LarkE.39=Защитная дверь активирована.\n
+# Gas leak detected - isolating area.\n
+LarkE.40=Утечка газа - изоляция зоны.\n
+# Security code accepted - access granted.\n
+LarkE.41=Код допуска принят - доступ открыт.\n
+# Mission Failure: Unacceptable non-military\ncasualties!\n
+LarkE.42=Миссия провалена: недопустимые потери\nсреди гражданских!\n
+# A R K A N G E L S K\n
+LarkE.43=А Р Х А Н Г Е Л Ь С К\n
+# inside the chemical weapons facility you should quickly and efficiently proceed to the bottling area and place demolition charges on the main gas tanks.\npolitical considerations demand that collateral damage is minimized on this mission. non-military personnel should be disregarded.\n
+LarkE.44=@lower LarkE.0
+# you'll be working with 006 on this assignment, the bottling room is the rendezvous point.\n\ndon't forget to contact our double agent scientist before you leave, and warn him to get out.\nhe will provide you with a decoder for the final security door.\n\nthere are no women or casinos for a thousand miles, 007, so even you will be able to concentrate on this mission.\n
+LarkE.45=в этом задании вы работаете с 006, место встречи - цех розлива.\n\nне забудьте перед уходом связаться с нашим двойным агентом-ученым и предупредить, чтобы он уходил.\nон даст вам дешифратор для последней защитной двери.\n\nна тысячу миль вокруг нет ни женщин, ни казино, 007, так что даже вы сможете сосредоточиться на задании.\n
+# now listen carefully, bond. those bombs will be armed as soon as the last one is set. don't be too close when you set them off or you'll go up in flames as well. and while you're at it, please try and bring back that door-opener undamaged for once. too much rough handling like the last mission and it might go wrong at a bad time.\nhonestly 007, sometimes i think you damage your equipment on purpose.\n
+LarkE.46=теперь слушайте внимательно, бонд. бомбы будут взведены, как только вы установите последнюю. не стойте слишком близко при подрыве, иначе сгорите вместе с ними. и заодно постарайтесь хоть раз вернуть дешифратор целым. еще раз обойдетесь с ним так же грубо, как в прошлой миссии, и он может подвести в самый неподходящий момент.\nчестное слово, 007, иногда мне кажется, что вы портите снаряжение нарочно.\n
+# these chemicals could prove to be a match even for your pheromones, james. don't take too many risks.\n
+LarkE.47=@lower LarkE.3
+# gain entry to laboratory area\n
+LarkE.48=@lower LarkE.4
+# contact double agent\n
+LarkE.49=@lower LarkE.5
+# rendezvous with 006\n
+LarkE.50=@lower LarkE.6
+# destroy all tanks in bottling\n    room\n
+LarkE.51=уничтожить все резервуары в\n    цехе розлива\n
+# minimize scientist casualties\n
+LarkE.52=@lower LarkE.8
+# decoder\n
+LarkE.54=дешифратор\n
+# door decoder\n
+LarkE.55=дешифратор\n
+# Door Decoder\n
+LarkE.56=Дешифратор\n
+# Picked up a door decoder.\n
+LarkE.57=Взято: дешифратор.\n
+# keycard A\n
+LarkE.59=ключ-карта A\n
+# keycard A\n
+LarkE.60=ключ-карта A\n
+# keycard A\n
+LarkE.61=ключ-карта A\n
+# Picked up a clearance A keycard.\n
+LarkE.62=Взято: ключ-карта допуска A.\n
+# keycard B\n
+LarkE.64=ключ-карта B\n
+# keycard B\n
+LarkE.65=ключ-карта B\n
+# keycard B\n
+LarkE.66=ключ-карта B\n
+# Picked up a clearance B keycard.\n
+LarkE.67=Взято: ключ-карта допуска B.\n
+# This is a remotely locked\nsecurity door.\n
+LarkE.69=Защитная дверь заперта\nдистанционно.\n
+# Chemical Warfare Facility #2\n
+LarkE.70=Завод химического оружия N2\n
+# Double agent contact has been killed!\n
+LarkE.71=Двойной агент убит!\n
+
+## LashE - Stack (multi)
+
+## LaztE - Aztec
+# The Drax Corporation continues to be involved in unlicensed space exploration. Many of their projects are of a military nature and constitute a threat to the new world political order.
+LaztE.0=Корпорация Дракса по-прежнему ведет нелицензированное освоение космоса. Многие ее проекты носят военный характер и угрожают новому мировому политическому порядку.
+# The Drax launch facility is located in a South American Aztec ruin. They are scheduled to launch a stolen Nasa shuttle with an unknown military payload. We're sending you in alone, 007. Penetrating the base security will be tricky, but once you're in, we believe you will be able to recover the shuttle right out from under their noses. \n
+LaztE.1=Стартовый комплекс Дракса расположен в руинах ацтеков в Южной Америке. Они собираются запустить украденный шаттл НАСА с неизвестным военным грузом. Мы отправляем вас одного, 007. Пробиться через охрану базы будет непросто, но, оказавшись внутри, вы, по нашему мнению, сможете увести шаттл прямо у них из-под носа. \n
+# Simple plan, 007. Reprogram the guidance computer with the information on this floppy - then we can take control as soon as the old girl reaches orbit. Now pay attention, one thing we don't know is the Drax launch protocol - you'll have to find that data and install it to initiate the launch. Can't be too difficult to spot, it'll be lying around in some high security area.\n
+LaztE.2=Простой план, 007. Перепрограммируйте компьютер наведения данными с этой дискеты - тогда мы сможем взять управление, как только старушка выйдет на орбиту. А теперь внимание: нам неизвестен протокол запуска Дракса - вам придется найти эти данные и установить их, чтобы начать запуск. Найти их несложно, они наверняка лежат где-то в зоне повышенной секретности.\n
+# Quetzacoatl ring any bells, James? No, I didn't think so...\n
+LaztE.3=Кетцалькоатль вам ни о чем не говорит, Джеймс? Нет, я так и думала...\n
+# Reprogram shuttle guidance\n
+LaztE.4=Перенастроить наведение шаттла\n
+# Launch shuttle\n
+LaztE.5=Запустить шаттл\n
+# Exhaust bay opening.\n
+LaztE.6=Газоотвод открывается.\n
+# Exhaust bay closing.\n
+LaztE.7=Газоотвод закрывается.\n
+# Q's guidance data has been uploaded.\n
+LaztE.8=Данные наведения от Q загружены.\n
+# This disk drive is connected to the\nguidance computer systems.\n
+LaztE.9=Этот дисковод подключен к\nкомпьютеру наведения.\n
+# This mainframe controls the shuttle\nlaunch sequence.\n
+LaztE.10=Этот главный компьютер управляет\nзапуском шаттла.\n
+# The launch protocol data has been\nuploaded.\n
+LaztE.11=Данные протокола запуска\nзагружены.\n
+# Shuttle launch sequence initiated.\n
+LaztE.12=Предстартовый отсчет начат.\n
+# Final checks cleared. Shuttle launch is go.\n
+LaztE.13=Проверки пройдены. Шаттл готов к запуску.\n
+# Shuttle exhaust bay closed!\nLaunch holding at T minus 10 seconds.\n
+LaztE.14=Газоотвод шаттла закрыт!\nЗапуск остановлен на Т минус 10 секунд.\n
+# The exhaust bay is secured for shuttle\nlaunch!\n
+LaztE.15=Газоотвод готов к запуску\nшаттла!\n
+# A Z T E C\n
+LaztE.16=А Ц Т Е К И\n
+# the drax corporation continues to be involved in unlicensed space exploration. many of their projects are of a military nature and constitute a threat to the new world political order.
+LaztE.17=@lower LaztE.0
+# the drax launch facility is located in a south american aztec ruin. they are scheduled to launch a stolen nasa shuttle with an unknown military payload. we're sending you in alone, 007. penetrating the base security will be tricky, but once you're in, we believe you will be able to recover the shuttle right out from under their noses. \n
+LaztE.18=@lower LaztE.1
+# simple plan, 007. reprogram the guidance computer with the information on this floppy - then we can take control as soon as the old girl reaches orbit. now pay attention, one thing we don't know is the drax launch protocol - you'll have to find that data and install it to initiate the launch. can't be too difficult to spot, it'll be lying around in some high security area.\n
+LaztE.19=@lower LaztE.2
+# quetzacoatl ring any bells, james? no, i didn't think so...\n
+LaztE.20=@lower LaztE.3
+# reprogram shuttle guidance\n
+LaztE.21=@lower LaztE.4
+# launch shuttle\n
+LaztE.22=@lower LaztE.5
+# Aztec Complex, Teotihuaca'n\n
+LaztE.23=Комплекс ацтеков, Теотиуакан\n
+# DAT\n
+LaztE.25=DAT\n
+# launch protocol data\n
+LaztE.26=протокол запуска\n
+# launch protocol data\n
+LaztE.27=протокол запуска\n
+# picked up a DAT\n
+LaztE.28=взято: DAT\n
+# smart card\n
+LaztE.30=смарт-карта\n
+# security smart card\n
+LaztE.31=смарт-карта охраны\n
+# -\n
+LaztE.32=-\n
+# Picked up a smart card.\n
+LaztE.33=Взято: смарт-карта.\n
+# This mainframe is inoperative.\n
+LaztE.38=Главный компьютер не работает.\n
+# This door requires\na security smart card.\n
+LaztE.43=Для этой двери нужна\nсмарт-карта охраны.\n
+
+## LcatE - Citadel (multi)
+
+## LcaveE - Caverns
+# The Janus Control Center communicates with the Goldeneye weapons system via a large satellite dish which is usually concealed underwater. The pumps which allow Janus to flood the communications dish are housed in a subterranean cave complex defended by crack Janus troops.\n
+LcaveE.0=Центр управления Януса связывается с оружием GoldenEye через большую спутниковую антенну, обычно скрытую под водой. Насосы, которыми Янус затапливает антенну, находятся в подземных пещерах, охраняемых отборными войсками Януса.\n
+# Don't jeopardize the mission by going for the man, Bond - nobody needs a dead hero. You'll be on your own but CIA combat support will be waiting. Find a radio and inform Jack Wade of the exact location of the dish and he'll send in the cavalry.\n
+LcaveE.1=Не ставьте миссию под угрозу, гоняясь за этим человеком, Бонд - мертвый герой никому не нужен. Вы будете один, но вас будет ждать поддержка ЦРУ. Найдите рацию и сообщите Джеку Уэйду точное местоположение антенны - он пришлет кавалерию.\n
+# The satellite communication dish is exposed. If you remove the water pumps, Janus will be unable to hide it again.\nDestroy the servo control consoles close to the pumps and be sure to disable the master console.\n
+LcaveE.2=Спутниковая антенна открыта. Если уничтожить насосы, Янус больше не сможет ее спрятать.\nУничтожьте пульты сервоуправления рядом с насосами и обязательно выведите из строя главный пульт.\n
+# Doing a spot of spelunking?\nWell, don't mess your trousers up, James.\n
+LcaveE.3=Решили заняться спелеологией?\nСмотрите не испачкайте брюки, Джеймс.\n
+# Destroy inlet pump controls\n
+LcaveE.4=Уничтожить пульт насосов впуска\n
+# Destroy outlet pump controls\n
+LcaveE.5=Уничтожить пульт насосов выпуска\n
+# Destroy master control console\n
+LcaveE.6=Уничтожить главный пульт\n
+# Use radio to contact Jack Wade\n
+LcaveE.7=Связаться с Джеком Уэйдом по рации\n
+# Pursue Trevelyan\n
+LcaveE.8=Догнать Тревельяна\n
+# Minimize scientist casualties\n
+LcaveE.9=Минимум жертв среди ученых\n
+# Trevelyan: So slow, James.\n              ... yet again.\n
+LcaveE.10=Тревельян: Медленно, Джеймс.\n              ... как всегда.\n
+# Radio damaged:\n      Cannot contact Jack Wade!\n
+LcaveE.11=Рация повреждена:\n      Связи с Джеком Уэйдом нет!\n
+# Jack Wade: Got your bearings Jimbo!\n                Me and my boys are on\n                our way.\n
+LcaveE.12=Джек Уэйд: Засек тебя, Джимбо!\n                Мы с парнями уже\n                в пути.\n
+# Mission Failure: Unacceptable non-military\ncasualties!\n
+LcaveE.13=Миссия провалена: недопустимые жертвы\nсреди гражданских!\n
+# W A T E R   C A V E R N S\n
+LcaveE.14=В О Д Н Ы Е   П Е Щ Е Р Ы\n
+# the janus control center communicates with the goldeneye weapons system via a large satellite dish which is usually concealed underwater. the pumps which allow janus to flood the communications dish are housed in a subterranean cave complex  defended by crack janus troops.\n
+LcaveE.15=центр управления януса связывается с оружием goldeneye через большую спутниковую антенну, обычно скрытую под водой. насосы, которыми янус затапливает антенну, находятся в подземных пещерах, охраняемых отборными войсками януса.\n
+# don't jeopardize the mission by going for the man, 007 - nobody needs a dead hero. you'll be on your own but CIA combat support will be waiting. find a radio and inform jack wade of the exact location of the dish and he'll send in the cavalry.\n
+LcaveE.16=не ставьте миссию под угрозу, гоняясь за этим человеком, 007 - мертвый герой никому не нужен. вы будете один, но вас будет ждать поддержка ЦРУ. найдите рацию и сообщите джеку уэйду точное местоположение антенны - он пришлет кавалерию.\n
+# the satellite communication dish is exposed. if you shut down the water pumps, janus will be unable to hide it again.\ndestroy the servo control consoles close to the pumps and be sure to disable the master console.\n
+LcaveE.17=спутниковая антенна открыта. если отключить насосы, янус больше не сможет ее спрятать.\nуничтожьте пульты сервоуправления рядом с насосами и обязательно выведите из строя главный пульт.\n
+# doing a spot of spelunking?\nwell, don't come back with your trousers all messed up.\n
+LcaveE.18=решили заняться спелеологией?\nсмотрите не вернитесь в грязных брюках.\n
+# destroy inlet pump controls\n
+LcaveE.19=@lower LcaveE.4
+# destroy outlet pump controls\n
+LcaveE.20=@lower LcaveE.5
+# destroy master control console\n
+LcaveE.21=@lower LcaveE.6
+# use radio to contact jack wade\n
+LcaveE.22=@lower LcaveE.7
+# pursue trevelyan\n
+LcaveE.23=@lower LcaveE.8
+# minimize scientist casualties\n
+LcaveE.24=@lower LcaveE.9
+# Subterranean Caverns\n
+LcaveE.25=Подземные пещеры\n
+# code card\n
+LcaveE.27=ключ-карта\n
+# code card a\n
+LcaveE.28=ключ-карта a\n
+# code card (blast door a)\n
+LcaveE.29=ключ-карта (бронедверь a)\n
+# Picked up a code card\n
+LcaveE.30=Взято: ключ-карта\n
+# code card\n
+LcaveE.32=ключ-карта\n
+# code card b\n
+LcaveE.33=ключ-карта b\n
+# code card (blast door b)\n
+LcaveE.34=ключ-карта (бронедверь b)\n
+# Picked up a code card\n
+LcaveE.35=Взято: ключ-карта\n
+# code card\n
+LcaveE.37=ключ-карта\n
+# code card c\n
+LcaveE.38=ключ-карта c\n
+# code card (blast door c)\n
+LcaveE.39=ключ-карта (бронедверь c)\n
+# Picked up a code card\n
+LcaveE.40=Взято: ключ-карта\n
+
+## LarecE - Control
+# The Janus Control Center has been located in an underground complex in the Cuban jungle.\n
+LarecE.0=Центр управления Януса обнаружен в подземном комплексе в кубинских джунглях.\n
+# Into the lion's den, 007. Well, just be careful. Remember that you and Miss Simonova are a team, it's critical that you protect her while she's hacking into the Janus computers. With any luck she'll be able to stop the Goldeneye from firing.\n
+LarecE.1=Прямо в логово льва, 007. Будьте осторожны. Помните, что вы с мисс Симоновой - команда, и крайне важно защищать ее, пока она взламывает компьютеры Януса. Если повезет, она сможет помешать GoldenEye выстрелить.\n
+# While you're there old boy, see if you can't erase their databases. The details of Janus' criminal bankrolls are stored on specially armored mainframe units. That information is worth millions to Janus - I'm sure you'll find some way of deleting it.\n
+LarecE.2=Раз уж вы там, старина, попробуйте стереть их базы данных. Сведения о преступных финансах Януса хранятся на особых бронированных ЭВМ. Для Януса эта информация стоит миллионы - уверен, вы найдете способ ее удалить.\n
+# You know, James, she's not the only woman who can operate a computer.\n
+LarecE.3=Знаете, Джеймс, она не единственная женщина, умеющая обращаться с компьютером.\n
+# Protect Natalya\n
+LarecE.4=Защитить Наталью\n
+# Disable Goldeneye satellite\n
+LarecE.5=Отключить спутник GoldenEye\n
+# Destroy armored mainframes\n
+LarecE.6=Уничтожить бронированные ЭВМ\n
+# Natalya: Be careful, James!\n
+LarecE.7=Наталья: Осторожнее, Джеймс!\n
+# Bond: Wait here in the lift, Natalya.\n        I'll secure the area.\n
+LarecE.8=Бонд: Жди здесь, в лифте, Наталья.\n        Я зачищу территорию.\n
+# Natalya: The blast doors have been locked\n           by the security computer.\n
+LarecE.9=Наталья: Компьютер охраны заблокировал\n           бронедвери.\n
+# Natalya: Got one open! Head for the\n           control room, James, I'll do\n           what I can from here.\n
+LarecE.10=Наталья: Одна открыта! Иди в пункт\n           управления, Джеймс, я сделаю\n           отсюда, что смогу.\n
+# Natalya: James, you were wonderful!\n
+LarecE.11=Наталья: Джеймс, ты был великолепен!\n
+# Natalya: James, you're hurt.\n
+LarecE.12=Наталья: Джеймс, ты ранен.\n
+# Natalya: Oh dear, James, that didn't\n           go so well.\n
+LarecE.13=Наталья: Ох, Джеймс, вышло не\n           очень удачно.\n
+# Natalya: The Goldeneye is set to fire\n           on London!\n
+LarecE.14=Наталья: GoldenEye нацелен\n           на Лондон!\n
+# Natalya: I'll try to override the guidance\n           controls.\n
+LarecE.15=Наталья: Попробую перехватить управление\n           наведением.\n
+# Natalya: I'm coming, James!.\n
+LarecE.16=Наталья: Иду, Джеймс!\n
+# Natalya: Did it! The satellite's orbit is\n           decaying.\n
+LarecE.17=Наталья: Получилось! Орбита спутника\n           снижается.\n
+# Bond: Get back to the surface, Natalya.\n        I'm going after Trevelyan.\n
+LarecE.18=Бонд: Возвращайся наверх, Наталья.\n        Я иду за Тревельяном.\n
+# Natalya: Good luck, James, I'll be\n           waiting for you.\n
+LarecE.19=Наталья: Удачи, Джеймс, я буду\n           ждать тебя.\n
+# Natalya: The boundary-layer temperature\n           stays pretty steady till re-entry.\n
+LarecE.20=Наталья: Температура пограничного слоя\n           стабильна до входа в атмосферу.\n
+# Natalya: If I can just get the\n           yaw oscillation above 5 degrees.\n
+LarecE.21=Наталья: Если бы только поднять\n           рыскание выше 5 градусов.\n
+# Natalya: James! I need cover while I'm\n           doing this!\n
+LarecE.22=Наталья: Джеймс! Прикрой меня, пока\n           я работаю!\n
+# Natalya: James, do you think you could\n           be a bit quieter? I can't hear\n           myself think.\n
+LarecE.23=Наталья: Джеймс, можно потише?\n           Я не слышу собственных\n           мыслей.\n
+# Natalya: James, I...\n
+LarecE.24=Наталья: Джеймс, я...\n
+# Boris: Please don't shoot!\n        Trevelyan made me do it.\n
+LarecE.25=Борис: Умоляю, не стреляйте!\n        Меня заставил Тревельян.\n
+# Boris: Aha! I am invincible!\n
+LarecE.26=Борис: Ага! Я неуязвим!\n
+# Trevelyan: Too slow, James!\n
+LarecE.27=Тревельян: Не успел, Джеймс!\n
+# Boris: Oops!\n
+LarecE.28=Борис: Ой!\n
+# Natalya: Very clever, James. Just how\n           am I going to hack into the\n           security computer now?\n
+LarecE.29=Наталья: Очень умно, Джеймс. И как\n           мне теперь взломать\n           компьютер охраны?\n
+# Natalya: Smart work, James. That was\n           the only console which had\n           access to the guidance systems.\n
+LarecE.30=Наталья: Отлично, Джеймс. Это был\n           единственный пульт с доступом\n           к системам наведения.\n
+# Natalya: I'm going to the lift. I might\n           still be there when you're\n           finished clowning around here.\n
+LarecE.31=Наталья: Я пойду к лифту. Может,\n           еще буду там, когда ты\n           закончишь валять дурака.\n
+# Natalya: I saw what you did to Boris\n           on the security monitor.\n           It wasn't very nice.\n
+LarecE.32=Наталья: Я видела на мониторе, что ты\n           сделал с Борисом.\n           Это было некрасиво.\n
+# Natalya: He was just a programmer,\n           James. You didn't need to\n           kill him.\n
+LarecE.33=Наталья: Он был просто программистом,\n           Джеймс. Не нужно было его\n           убивать.\n
+# Boris: Don't mind me, I just\n        look after the computers.\n
+LarecE.34=Борис: Я тут ни при чем, я просто\n        слежу за компьютерами.\n
+# Natalya has been killed!\n
+LarecE.35=Наталья убита!\n
+# J A N U S  C O N T R O L\n
+LarecE.36=П У Л Ь Т  Я Н У С А\n
+# the janus control center has been located in an underground complex in the cuban jungle.\n
+LarecE.37=@lower LarecE.0
+# into the lion's den, 007. well, just be careful. remember that you and miss simonova are a team, it's critical that you protect her while she's hacking into the janus computers. with any luck she'll be able to stop the goldeneye from firing.\n
+LarecE.38=@lower LarecE.1
+# while you're there old boy, see if you can't erase their databases. the details of janus' criminal bankrolls are stored on specially armored mainframe units. that information is worth millions to janus - i'm sure you'll find some way of deleting it.\n
+LarecE.39=@lower LarecE.2
+# you know, james, she's not the only woman who can operate a computer.\n
+LarecE.40=@lower LarecE.3
+# protect natalya\n
+LarecE.41=@lower LarecE.4
+# disable goldeneye satellite\n
+LarecE.42=@lower LarecE.5
+# destroy armored mainframes\n
+LarecE.43=@lower LarecE.6
+# Janus Control Center, Cuba\n
+LarecE.44=Центр управления Януса, Куба\n
+
+## LcradE - Cradle
+# Janus control communications have been jammed and the Goldeneye satellite orbit is decaying. Only Trevelyan and his personal bodyguard remain unaccounted for.\n
+LcradE.0=Связь центра управления Януса заглушена, орбита спутника GoldenEye снижается. Неизвестно, где находятся лишь Тревельян и его телохранитель.\n
+# You know my feelings about personal vendettas interfering with mission success, 007. However, in this case, I think we can turn a blind eye to whatever happens out there. \n\nBe careful, and remember,\n                   - you are licensed to kill.\n
+LcradE.1=Вы знаете, как я отношусь к личной мести, мешающей выполнению задания, 007. Но в этом случае, думаю, мы можем закрыть глаза на то, что там произойдет. \n\nБудьте осторожны и помните,\n                   - у вас есть лицензия на убийство.\n
+# Would you believe it, 007? There's another blasted control thingy actually on the antenna cradle. Trevelyan might be able to realign the antenna and get one last firing message through to the satellite. Get out there and destroy it! We don't want things going pear-shaped at the last minute.\n
+LcradE.2=Представляете, 007? На самой колыбели антенны есть еще одна чертова штуковина управления. Тревельян может перенастроить антенну и передать спутнику последнюю команду на выстрел. Идите и уничтожьте ее! Не хватало, чтобы все пошло наперекосяк в последнюю минуту.\n
+# The hand that rocks the cradle rules the world, James.\nYou know I won't sleep soundly until you get back to England in one piece.\n
+LcradE.3=Рука, качающая колыбель, правит миром, Джеймс.\nВы знаете, я не усну спокойно, пока вы не вернетесь в Англию целым и невредимым.\n
+# Destroy control console\n
+LcradE.4=Уничтожить пульт\n
+# Settle the score with Trevelyan\n
+LcradE.5=Свести счеты с Тревельяном\n
+# Trevelyan has activated the antenna\ncontrol console!\n
+LcradE.6=Тревельян включил пульт\nуправления антенной!\n
+# 3 minutes until antenna realigns!\n
+LcradE.7=До перенастройки антенны 3 минуты!\n
+# Control console destroyed!\nAntenna inoperative.\n
+LcradE.8=Пульт управления уничтожен!\nАнтенна не работает.\n
+# Antenna will signal satellite in 15 seconds!\n
+LcradE.9=Антенна даст сигнал спутнику через 15 секунд!\n
+# Mission failure: Goldeneye satellite has\nbeen reactivated!\n
+LcradE.10=Миссия провалена: спутник GoldenEye\nснова активирован!\n
+# Trevelyan: Closing time, James. Last call.\n
+LcradE.11=Тревельян: Закрываемся, Джеймс. Последний заказ.\n
+# Trevelyan: You haven't won yet!\n
+LcradE.12=Тревельян: Ты еще не победил!\n
+# Trevelyan: From the cradle to the grave\n              - your grave, James.\n
+LcradE.13=Тревельян: От колыбели до могилы\n              - твоей могилы, Джеймс.\n
+# Trevelyan: You could have joined me,\n              James, but you had to side\n              with the pen pushers.\n
+LcradE.14=Тревельян: Ты мог быть со мной,\n              Джеймс, но выбрал\n              бумажных крыс.\n
+# Trevelyan: Always loyal to the mission\n              - never to your friends.\n
+LcradE.15=Тревельян: Всегда верен заданию\n              - но не друзьям.\n
+# Trevelyan: James Bond. Her Majesty's\n              loyal terrier - you sicken me.\n
+LcradE.16=Тревельян: Джеймс Бонд. Верный терьер\n              Ее Величества - меня тошнит.\n
+# Trevelyan: What's the matter, James?\n              No glib remark?\n              No pithy comeback?\n
+LcradE.17=Тревельян: В чем дело, Джеймс?\n              Нет острот?\n              Нечем ответить?\n
+# Trevelyan: Come on! Is that the best\n              you can do?\n
+LcradE.18=Тревельян: Ну же! Это все, на что\n              ты способен?\n
+# Trevelyan: You never give up, do you?\n              Pathetic really.\n
+LcradE.19=Тревельян: Ты никогда не сдаешься, да?\n              Просто жалко.\n
+# Trevelyan: You'll never win, James.\n
+LcradE.20=Тревельян: Тебе не победить, Джеймс.\n
+# Trevelyan: Finish the job, James\n                - if you can.\n
+LcradE.21=Тревельян: Закончи дело, Джеймс\n                - если сможешь.\n
+# Trevelyan: I was always better, James.\n
+LcradE.22=Тревельян: Я всегда был лучше, Джеймс.\n
+# Trevelyan: For England, James?\n
+LcradE.23=Тревельян: За Англию, Джеймс?\n
+# Bond: No. For me.\n
+LcradE.24=Бонд: Нет. За себя.\n
+# Trevelyan: You're not looking so well, \n              James - can't take the pace?\n
+LcradE.25=Тревельян: Неважно выглядишь, \n              Джеймс - не выдерживаешь темп?\n
+# A N T E N N A   C R A D L E\n
+LcradE.26=К О Л Ы Б Е Л Ь   А Н Т Е Н Н Ы\n
+# janus control communications have been jammed and the goldeneye satellite orbit is decaying. only trevelyan and his personal bodyguard remain unaccounted for.\n
+LcradE.27=@lower LcradE.0
+# you know my feelings about personal vendettas interfering with mission success, 007. however, in this case, i think we can turn a blind eye to whatever happens out there. \n\nbe careful, and remember,\n    -you are licensed to kill.\n
+LcradE.28=вы знаете, как я отношусь к личной мести, мешающей выполнению задания, 007. но в этом случае, думаю, мы можем закрыть глаза на то, что там произойдет. \n\nбудьте осторожны и помните,\n    -у вас есть лицензия на убийство.\n
+# would you believe it, 007? there's another blasted control thingy actually on the antenna cradle. trevelyan might be able to realign the antenna and get one last firing message through to the satellite. get out there and destroy it! we don't want things going pear-shaped at the last minute.\n
+LcradE.29=@lower LcradE.2
+# the hand that rocks the cradle rules the world, james.\nyou know i won't sleep soundly until you get back to england in one piece.\n
+LcradE.30=@lower LcradE.3
+# destroy control console\n
+LcradE.31=@lower LcradE.4
+# settle the score with trevelyan\n
+LcradE.32=@lower LcradE.5
+# Antenna Cradle, Janus Base, Cuba\n
+LcradE.34=Колыбель антенны, база Януса, Куба\n
+
+## LcrypE - Egyptian
+# Scaramanga has passed into legend as the deadliest assassin of all time.\nThe current whereabouts of his golden gun are unknown...\n
+LcrypE.0=Скараманга вошел в легенду как самый опасный убийца всех времен.\nГде сейчас его золотой пистолет - неизвестно...\n
+# This is sinister, 007. We've received a message from someone claiming to be Baron Samedi, the voodoo sorcerer you crossed swords with back in Haiti. He claims to have the golden gun and wants to meet you in the ancient el-Saghira temple in the Valley of the Kings.\nObviously, it's a trap, but as a double-0 agent you know that goes with the territory.\n
+LcrypE.1=Дело скверное, 007. Мы получили сообщение от некоего человека, называющего себя Бароном Самеди, - колдуна вуду, с которым вы скрестили шпаги на Гаити. Он утверждает, что золотой пистолет у него, и хочет встретиться с вами в древнем храме Эль-Сагира в Долине Царей.\nОчевидно, это ловушка, но для агента с двумя нулями это часть работы.\n
+# Keep your wits about you, 007. Remember, the golden gun is a powerful weapon, perhaps it could even defeat Samedi.\n
+LcrypE.2=Не теряйте бдительности, 007. Помните, золотой пистолет - мощное оружие; возможно, им удастся победить даже Самеди.\n
+# Do you do voodoo, James?\n
+LcrypE.3=Балуетесь вуду, Джеймс?\n
+# Recover the golden gun\n
+LcrypE.4=Добыть золотой пистолет\n
+# Defeat Baron Samedi?\n
+LcrypE.5=Победить Барона Самеди?\n
+# Baron Samedi: Ha Ha Ha Ha...\n
+LcrypE.6=Барон Самеди: Ха Ха Ха Ха...\n
+# C R Y P T\n
+LcrypE.7=С К Л Е П\n
+# scaramanga has passed into legend as the deadliest assassin of all time.\nthe current whereabouts of his golden gun are unknown...\n
+LcrypE.8=@lower LcrypE.0
+# this is sinister, 007. we've received a message from someone claiming to be baron samedi, the voodoo sorcerer you crossed swords with back in haiti. he claims to have the golden gun and wants to meet you in the ancient el-saghira temple in the valley of the kings.\nobviously, it's a trap, but as a double-o agent you know that goes with the territory.\n
+LcrypE.9=дело скверное, 007. мы получили сообщение от некоего человека, называющего себя бароном самеди, - колдуна вуду, с которым вы скрестили шпаги на гаити. он утверждает, что золотой пистолет у него, и хочет встретиться с вами в древнем храме эль-сагира в долине царей.\nочевидно, это ловушка, но для агента с двумя нулями это часть работы.\n
+# keep your wits about you, 007. remember, the golden gun is a powerful weapon, perhaps it could even defeat samedi.\n
+LcrypE.10=@lower LcrypE.2
+# do you do voodoo, james?\n
+LcrypE.11=@lower LcrypE.3
+# recover the golden gun\n
+LcrypE.12=@lower LcrypE.4
+# defeat baron samedi?\n
+LcrypE.13=@lower LcrypE.5
+# el-Saghira Temple, Egypt\n
+LcrypE.14=Храм Эль-Сагира, Египет\n
+
+## LdamE - Dam
+# MI6 has confirmed the existence of a secret chemical warfare facility at the Byelomorye dam, USSR. Its heavily guarded location and workings are a cause for major concern. Nerve gas produced there has been turning up in the hands of hostile regimes around the world and deals with international terrorists have been rumored. This facility should be destroyed with extreme prejudice.\n
+LdamE.0=MI6 подтвердила существование секретного завода химического оружия на плотине Беломорье в СССР. Его строго охраняемое расположение и деятельность вызывают серьезную тревогу. Производимый там нервно-паралитический газ попадает в руки враждебных режимов по всему миру, ходят слухи о сделках с международными террористами. Объект должен быть уничтожен любой ценой.\n
+# The area around the dam is well defended against full scale military attack but a lone agent stands a much better chance. The easiest way to gain entrance to the weapons factory will be to get down the face of the dam. \nQ had an idea about that.\n
+LdamE.1=Район плотины хорошо защищен от полномасштабной военной атаки, но у агента-одиночки шансов гораздо больше. Проще всего проникнуть на завод оружия, спустившись по стене плотины. \nУ Q есть на этот счет идея.\n
+# Information concerning shipping and contacts is stored on a computer system in a secret ops room within the dam. With this covert modem connected to their satellite link we can intercept the data when a backup is carried out.\nAs for getting down the dam, use the bungee rope. At the bottom of the jump, use the piton gun. Simple.
+LdamE.2=Сведения о поставках и контактах хранятся в компьютерной системе в секретном оперативном зале внутри плотины. Подключив этот скрытый модем к их спутниковому каналу, мы сможем перехватить данные во время резервного копирования.\nА чтобы спуститься с плотины, прыгайте на тарзанке. В нижней точке прыжка используйте пистолет с крюком. Все просто.
+# Hardly a lover's leap, James. Be careful though, I hate to think of you falling for anyone else.\n
+LdamE.3=Вряд ли это прыжок влюбленных, Джеймс. Но будьте осторожны: не хочу, чтобы вы упали в чьи-то другие объятия.\n
+# Neutralize all alarms\n
+LdamE.4=Отключить сигнализацию\n
+# Install covert modem\n
+LdamE.5=Установить скрытый модем\n
+# Intercept data backup\n
+LdamE.6=Перехватить копию данных\n
+# Bungee jump from platform\n
+LdamE.7=Прыгнуть с вышки на тарзанке\n
+# Covert modem installed.\n
+LdamE.8=Скрытый модем установлен.\n
+# Off-site data backup initiated.\n
+LdamE.9=Резервное копирование начато.\n
+# Off-site data backup completed.\n
+LdamE.10=Резервное копирование завершено.\n
+# ... backup failed.\n
+LdamE.11=... сбой копирования.\n
+# Main computer systems damaged.\nOperational data lost.\n
+LdamE.12=Компьютерные системы повреждены.\nРабочие данные утеряны.\n
+# Covert modem not installed.\nData cannot be intercepted by MI6!\n
+LdamE.13=Скрытый модем не установлен.\nMI6 не сможет перехватить данные!\n
+# Satellite communications link destroyed.\nData cannot be intercepted by MI6!\n
+LdamE.14=Спутниковый канал связи уничтожен.\nMI6 не сможет перехватить данные!\n
+# Security gate A closing\n- please wait...\n
+LdamE.15=Ворота охраны A закрываются\n- подождите...\n
+# Security gate B closing\n- please wait...\n
+LdamE.16=Ворота охраны B закрываются\n- подождите...\n
+# B Y E L O M O R Y E  D A M\n
+LdamE.17=П Л О Т И Н А\n
+# mi6 has confirmed the existence of a secret chemical warfare facility at the byelomorye dam, ussr. its heavily guarded location and workings are a cause for major concern. nerve gas produced there has been turning up in the hands of hostile regimes around the world and deals with international terrorists have been rumored. this facility should be destroyed with extreme prejudice.\n
+LdamE.18=@lower LdamE.0
+# the area around the dam is well defended against a full scale military attack but a lone agent stands a much better chance.the easiest way to gain entrance to the weapons factory will be to get down the face of the dam. \nq had an idea about that.\n
+LdamE.19=район плотины хорошо защищен от полномасштабной военной атаки, но у агента-одиночки шансов гораздо больше. проще всего проникнуть на завод оружия, спустившись по стене плотины. \nу q есть на этот счет идея.\n
+# information concerning shipping and contacts is stored on a computer system in a secret ops room within the dam. with this covert modem connected to their satellite link we can intercept the data when a backup is carried out.\nas for getting down the dam, use the bungee rope. at the bottom of the jump, use the piton gun. simple.
+LdamE.20=@lower LdamE.2
+# hardly a lover's leap, james. be careful though, i hate to think of you falling for anyone else.\n
+LdamE.21=@lower LdamE.3
+# neutralize all alarms\n
+LdamE.22=@lower LdamE.4
+# install covert modem\n
+LdamE.23=@lower LdamE.5
+# intercept data backup\n
+LdamE.24=@lower LdamE.6
+# bungee jump from platform\n
+LdamE.25=@lower LdamE.7
+# Byelomorye Dam, Arkangelsk, USSR\n
+LdamE.26=Плотина Беломорье, Архангельск, СССР\n
+# Nine years ago\n
+LdamE.27=Девять лет назад\n
+# covert modem\n
+LdamE.29=скрытый модем\n
+# covert modem\n
+LdamE.30=скрытый модем\n
+# covert modem\n
+LdamE.31=скрытый модем\n
+# Picked up a covert modem.\n
+LdamE.32=Взято: скрытый модем.\n
+# Covert modem incorrectly installed.\n
+LdamE.33=Скрытый модем установлен неверно.\n
+
+## LdepoE - Depot
+# The Janus operations base in St. Petersburg is located in a disused military rail depot. From here the crime syndicate coordinates illegal arms deals, international terrorism and extortion.\n
+LdepoE.0=Оперативная база Януса в Санкт-Петербурге расположена в заброшенном военном железнодорожном депо. Отсюда преступный синдикат руководит незаконной торговлей оружием, международным терроризмом и вымогательством.\n
+# Quite a nest of vipers, 007 - do your best to disrupt the Janus operations. We'd be particularly interested if you could retrieve their blueprints for a modified version of the stealth helicopter, it seems they may be thinking of going into production. We also believe that Ourumov has taken Natalya to Trevelyan's converted missile train in the depot. You need to be on that train when it leaves. \n
+LdepoE.1=Настоящее змеиное гнездо, 007 - сделайте все, чтобы сорвать операции Януса. Особенно нас интересуют их чертежи модифицированной версии вертолета-невидимки: похоже, они подумывают запустить его в производство. Также мы полагаем, что Уромов увез Наталью в переоборудованный ракетный поезд Тревельяна в депо. Вы должны быть в этом поезде, когда он отправится. \n
+# They've got a pretty sophisticated computer network hidden away somewhere in that depot, 007. Be a good chap and shut it down for them.\n\nOh, and don't forget to blow up the Janus arms cache - I'm just sorry I can't be there myself to enjoy the fireworks.\n
+LdepoE.2=Где-то в депо у них спрятана весьма продвинутая компьютерная сеть, 007. Будьте любезны, отключите ее.\n\nИ не забудьте взорвать склад оружия Януса - жаль, что я не смогу лично полюбоваться фейерверком.\n
+# Don't miss your train, James.\n
+LdepoE.3=Не опоздайте на поезд, Джеймс.\n
+# Destroy illegal arms cache\n
+LdepoE.4=Уничтожить склад оружия\n
+# Destroy computer network\n
+LdepoE.5=Уничтожить компьютерную сеть\n
+# Obtain safe key\n
+LdepoE.6=Добыть ключ сейфа\n
+# Recover helicopter blueprints\n
+LdepoE.7=Добыть чертежи вертолета\n
+# Locate Trevelyan's train\n
+LdepoE.8=Найти поезд Тревельяна\n
+# M I L I T A R Y   D E P O T\n
+LdepoE.9=В О Е Н Н О Е   Д Е П О\n
+# the janus operations base in st. petersburg is located in a disused military rail depot. from here the crime syndicate coordinates illegal arms deals, international terrorism and extortion.\n
+LdepoE.10=@lower LdepoE.0
+# quite a nest of vipers, 007 - do your best to disrupt the janus operations. we'd be particularly interested if you could retrieve their blueprints for a modified version of the stealth helicopter, it seems they may be thinking of going into production.\nwe also believe that ourumov has taken natalya to trevelyan's converted missile train in the depot. you need to be on that train when it leaves. \n
+LdepoE.11=настоящее змеиное гнездо, 007 - сделайте все, чтобы сорвать операции януса. особенно нас интересуют их чертежи модифицированной версии вертолета-невидимки: похоже, они подумывают запустить его в производство.\nтакже мы полагаем, что уромов увез наталью в переоборудованный ракетный поезд тревельяна в депо. вы должны быть в этом поезде, когда он отправится. \n
+# they've got a pretty sophisticated computer network hidden away somewhere in that depot, 007. be a good chap and shut it down for them.\n\noh, and don't forget to blow up the janus arms cache - i'm just sorry i can't be there myself to enjoy the fireworks.\n
+LdepoE.12=@lower LdepoE.2
+# don't miss your train, james.\n
+LdepoE.13=@lower LdepoE.3
+# Disused Military Depot, St. Petersburg\n
+LdepoE.14=Заброшенное военное депо, Санкт-Петербург\n
+# destroy illegal arms cache\n
+LdepoE.15=@lower LdepoE.4
+# destroy computer network\n
+LdepoE.16=@lower LdepoE.5
+# obtain safe key\n
+LdepoE.17=@lower LdepoE.6
+# recover helicopter blueprints\n
+LdepoE.18=@lower LdepoE.7
+# locate trevelyan's train\n
+LdepoE.19=@lower LdepoE.8
+# This safe is locked.\n
+LdepoE.24=Этот сейф заперт.\n
+# helicopter blueprints\n
+LdepoE.26=чертежи вертолета\n
+# blueprints\n
+LdepoE.27=чертежи\n
+# Picked up the blueprints\n
+LdepoE.29=Взято: чертежи.\n
+# safe key\n
+LdepoE.31=ключ сейфа\n
+# safe key\n
+LdepoE.32=ключ сейфа\n
+# Safe Key\n
+LdepoE.33=Ключ сейфа\n
+# Picked up a safe key.\n
+LdepoE.34=Взято: ключ сейфа.\n
+
+## LdestE - Frigate
+# A demonstration of the Pirate stealth helicopter by the French military has been unexpectedly postponed. Official channels insist that nothing is wrong but unofficially MI6 has been asked to help salvage a very tricky hostage situation on board the frigate La Fayette. It seems that the Janus crime syndicate will stop at nothing in its attempt to hijack the helicopter.\n
+LdestE.0=Демонстрация вертолета-невидимки "Пират" французскими военными неожиданно отложена. Официально утверждается, что все в порядке, но неофициально MI6 попросили помочь разрешить очень непростую ситуацию с заложниками на борту фрегата "Ла Файет". Похоже, преступный синдикат "Янус" пойдет на все, чтобы захватить вертолет.\n
+# This is the best chance we've had in years to get a lead on Janus. The French are prepared to play along with an entrapment scenario. We need you to place a tracker on the Pirate so that we can trace its movements after Janus steals it.\n\nThis must go smoothly, 007. If the press get a sniff of this, we'll all have egg on our faces.\n
+LdestE.1=Это наш лучший шанс за многие годы выйти на след Януса. Французы готовы подыграть нам и устроить ловушку. Вам нужно установить на "Пират" маячок, чтобы мы могли отслеживать его перемещения после того, как Янус его угонит.\n\nВсе должно пройти гладко, 007. Если пресса что-то пронюхает, мы все окажемся в дураках.\n
+# The French have kindly given us technical details of the Pirate so I've managed to convert this tracker bug into quite a clever little chap. It's undetectable and it locks out all weapon firing commands.\nJanus is also threatening to blow up the ship. They are most likely to have placed explosives on the bridge and in the engine room. Take care, 007, and be certain to use the bomb defuser correctly.\n
+LdestE.2=Французы любезно предоставили нам технические данные "Пирата", так что я сумел превратить этот маячок в весьма смышленую штучку. Его невозможно обнаружить, и он блокирует любую стрельбу из оружия.\nКроме того, Янус угрожает взорвать корабль. Скорее всего, взрывчатка заложена на мостике и в машинном отделении. Будьте осторожны, 007, и правильно пользуйтесь обезвреживателем бомб.\n
+# Xenia Onatopp, one of Janus' main operatives, may be on board the La Fayette.\n\nThey say she has thighs of steel, James. Just be sure to stay out of their grasp.\n
+LdestE.3=Ксения Онатопп, одна из главных агентов Януса, возможно, находится на борту "Ла Файет".\n\nГоворят, у нее стальные бедра, Джеймс. Постарайтесь не попасть в их объятия.\n
+# Rescue hostages\n
+LdestE.4=Спасти заложников\n
+# Disarm bridge bomb\n
+LdestE.5=Разминировать мостик\n
+# Disarm engine room bomb\n
+LdestE.6=Разминировать машинный зал\n
+# Plant tracking bug on helicopter\n
+LdestE.7=Установить маячок на вертолет\n
+# Hostage executed!\n
+LdestE.8=Заложник казнен!\n
+# Hostage released!\n
+LdestE.9=Заложник освобожден!\n
+# Hostage escaped!\n
+LdestE.10=Заложник сбежал!\n
+# Tracker bug successfully planted on Pirate\n
+LdestE.11=Маячок успешно установлен на "Пират"\n
+# Oops! Careful with those bugs, James.\n
+LdestE.12=Ой! Осторожнее с маячками, Джеймс.\n
+# Bridge bomb successfully defused.\n
+LdestE.13=Бомба на мостике обезврежена.\n
+# Engine room bomb successfully defused.\n
+LdestE.14=Бомба в машинном зале обезврежена.\n
+# F R I G A T E\n
+LdestE.15=Ф Р Е Г А Т\n
+# a demonstration of the pirate stealth helicopter by the french military has been unexpectedly postponed. official channels insist that nothing is wrong but unofficially MI6 has been asked to help salvage a very tricky hostage situation on board the frigate la fayette. it seems that the janus crime syndicate will stop at nothing in its attempt  to hijack the helicopter.\n
+LdestE.16=демонстрация вертолета-невидимки "пират" французскими военными неожиданно отложена. официально утверждается, что все в порядке, но неофициально MI6 попросили помочь разрешить очень непростую ситуацию с заложниками на борту фрегата "ла файет". похоже, преступный синдикат "янус" пойдет на все, чтобы захватить вертолет.\n
+# this is the best chance we've had in years to get a lead on janus. the french are prepared to play along with an entrapment scenario. we need you to place a tracker on the pirate so that we can trace its movements after janus steals it.\n\nthis must go smoothly, 007. if the press get a sniff of this, we'll all have egg on our faces.\n
+LdestE.17=@lower LdestE.1
+# the french have kindly given us technical details of the pirate so i've managed to convert this tracker bug into quite a clever little chap. it's undetectable and it locks out all weapon firing commands.\njanus is also threatening to blow up the ship. they are most likely to have placed explosives on the bridge and in the engine room. take care, 007, and be certain to use the bomb defuser correctly.\n
+LdestE.18=@lower LdestE.2
+# xenia onatopp, one of janus' main operatives, may be on board the la fayette.\n\nthey say she has thighs of steel, james. just be sure to stay out of their grasp.\n
+LdestE.19=@lower LdestE.3
+# rescue hostages\n
+LdestE.20=@lower LdestE.4
+# disarm bridge bomb\n
+LdestE.21=@lower LdestE.5
+# disarm engine room bomb\n
+LdestE.22=@lower LdestE.6
+# plant tracking bug on helicopter\n
+LdestE.23=@lower LdestE.7
+# Frigate 'La Fayette', Monte Carlo\n
+LdestE.24=Фрегат "Ла Файет", Монте-Карло\n
+# tracker bug\n
+LdestE.26=маячок\n
+# tracker bug\n
+LdestE.27=маячок\n
+# tracker bug\n
+LdestE.28=маячок\n
+# Picked up a tracker bug.\n
+LdestE.29=Взято: маячок.\n
+# Mission Failure: Unacceptable hostage\ncasualties!\n
+LdestE.30=Миссия провалена: недопустимые потери\nсреди заложников!\n
+
+## LdishE - Temple (multi)
+
+## LimpE - Basement (multi)
+
+## LjunE - Jungle
+# Satellite reconnaissance has been unable to locate any installation near the coordinates recovered from the Janus computers in St. Petersburg. It seems likely that a ground search will be necessary. The CIA has provided you with a light aircraft. Underfly Janus radar and parachute in to the drop, proceed through the jungle eliminating any opposition and attempt to locate the Janus base.\n
+LjunE.0=Спутниковая разведка не обнаружила никаких объектов у координат, полученных из компьютеров Януса в Санкт-Петербурге. Похоже, придется искать с земли. ЦРУ предоставило вам легкий самолет. Пройдите под радарами Януса, прыгайте с парашютом в зону высадки, пройдите через джунгли, устраняя всех противников, и попытайтесь найти базу Януса.\n
+# Miss Simonova will be with you on this mission. If Janus is operating a Goldeneye satellite, her computing skills will be essential when you try to disable their systems.\nJack Wade has given her some basic firearms training and he thinks she'll be able to carry her weight in a combat situation. Be careful though, 007, remember she isn't an experienced operative like yourself.\n
+LjunE.1=Мисс Симонова будет с вами на этом задании. Если Янус управляет спутником GoldenEye, ее компьютерные навыки будут необходимы, чтобы отключить их системы.\nДжек Уэйд научил ее обращаться с оружием и думает, что в бою она не будет обузой. Но будьте осторожны, 007, помните, что у нее нет вашего опыта.\n
+# You'll know you're on the right trail if you encounter Janus troops or automated defenses. Be especially wary of their robotic drone guns. I'm giving you some triggered mines for their ammo dump, try not to waste them on silly things. Oh, and look out for that Xenia woman, 007, I think she's after you. You lucky devil.\n
+LjunE.2=Вы поймете, что на верном пути, если встретите солдат Януса или автоматическую защиту. Особенно опасайтесь их роботизированных турелей. Я даю вам радиомины для их склада боеприпасов, постарайтесь не тратить их на глупости. Да, и остерегайтесь этой Ксении, 007, кажется, она охотится за вами. Везунчик.\n
+# A hot date in the rainforest? With two women!\nShame on you James.\n
+LjunE.3=Жаркое свидание в тропиках? С двумя женщинами!\nКак не стыдно, Джеймс.\n
+# Destroy drone guns\n
+LjunE.4=Уничтожить турели\n
+# Eliminate Xenia\n
+LjunE.5=Устранить Ксению\n
+# Blow up ammo dump\n
+LjunE.6=Взорвать арсенал\n
+# Escort Natalya to Janus base\n
+LjunE.7=Довести Наталью до базы Януса\n
+# Natalya: Got one!\n
+LjunE.8=Наталья: Попала!\n
+# Natalya: That looked painful.\n
+LjunE.9=Наталья: Наверное, больно.\n
+# Natalya: Too slow.\n
+LjunE.10=Наталья: Не успел.\n
+# Natalya: Gotcha!\n
+LjunE.11=Наталья: Попался!\n
+# Natalya: Did you see that?\n
+LjunE.12=Наталья: Ты видел?\n
+# Natalya: This is fun.\n
+LjunE.13=Наталья: Это весело.\n
+# Natalya: Close, but no cigar.\n
+LjunE.14=Наталья: Почти, но мимо.\n
+# Natalya: Oh, that's a nice plant.\n
+LjunE.15=Наталья: О, какое милое растение.\n
+# Natalya: This gun's quite powerful.\n
+LjunE.16=Наталья: Мощная пушка.\n
+# Natalya: Who was that guy?\n
+LjunE.17=Наталья: Кто это был?\n
+# Natalya: I like this game.\n
+LjunE.18=Наталья: Мне нравится эта игра.\n
+# Natalya: Cover me.\n
+LjunE.19=Наталья: Прикрой!\n
+# Natalya: Naughty boy.\n
+LjunE.20=Наталья: Плохой мальчик.\n
+# Natalya: Unlucky.\n
+LjunE.21=Наталья: Не повезло.\n
+# Natalya: Oh, messy.\n
+LjunE.22=Наталья: Фу, грязно.\n
+# Natalya: Advantage, Natalya Simonova.\n
+LjunE.23=Наталья: Преимущество у Натальи Симоновой.\n
+# Natalya: That's one more for me.\n
+LjunE.24=Наталья: Еще один на мой счет.\n
+# Natalya: Loser.\n
+LjunE.25=Наталья: Слабак.\n
+# Natalya: Just like the movies.\n
+LjunE.26=Наталья: Прямо как в кино.\n
+# Natalya: \n
+LjunE.27=Наталья: \n
+# Natalya: Let's go to work.\n
+LjunE.28=Наталья: За работу.\n
+# Natalya: Be careful, James!\n
+LjunE.29=Наталья: Осторожнее, Джеймс!\n
+# Xenia: This time, Mr. Bond, the pleasure\n          will be all mine.\n
+LjunE.30=Ксения: На этот раз, мистер Бонд, все\n          удовольствие достанется мне.\n
+# Mission failure. Natalya has been killed.\n
+LjunE.31=Миссия провалена. Наталья убита.\n
+# C U B A N   J U N G L E\n
+LjunE.32=Д Ж У Н Г Л И   К У Б Ы\n
+# satellite reconnaissance has been unable to locate any installation near the coordinates recovered from the janus computers in st. petersburg. it seems likely that a ground search will be necessary. the cia has provided you with a light aircraft. underfly janus radar and parachute in to the drop, proceed through the jungle eliminating any opposition and attempt to locate the janus base.\n
+LjunE.33=@lower LjunE.0
+# miss simonova will be with you on this mission. if janus is operating a goldeneye satellite, her computing skills will be essential when you try to disable their systems.\njack wade has given her some basic firearms training and he thinks she'll be able to carry her weight in a combat situation. be careful though, 007, \nremember she isn't an experienced operative like yourself.\n
+LjunE.34=мисс симонова будет с вами на этом задании. если янус управляет спутником goldeneye, ее компьютерные навыки будут необходимы, чтобы отключить их системы.\nджек уэйд научил ее обращаться с оружием и думает, что в бою она не будет обузой. но будьте осторожны, 007, \nпомните, что у нее нет вашего опыта.\n
+# you'll know you're on the right trail if you encounter janus troops or automated defenses. be especially wary of their robotic drone guns. i'm giving you some triggered mines for their ammo dump, try not to waste them on silly things. oh, and look out for that xenia woman, 007, i think she's after you. you lucky devil.\n
+LjunE.35=@lower LjunE.2
+# a hot date in the rainforest? \nwith two women!\nshame on you james.\n
+LjunE.36=жаркое свидание в тропиках? \nс двумя женщинами!\nкак не стыдно, джеймс.\n
+# destroy drone guns\n
+LjunE.37=@lower LjunE.4
+# eliminate xenia\n
+LjunE.38=@lower LjunE.5
+# blow up ammo dump\n
+LjunE.39=@lower LjunE.6
+# escort natalya to janus base\n
+LjunE.40=@lower LjunE.7
+# Cuban Jungle\n
+LjunE.41=Джунгли Кубы\n
+
+## LlenE - Cuba
+# Natalya: James, are you alright?\n
+LlenE.8=Наталья: Джеймс, ты в порядке?\n
+# Bond: Yes, I'm fine thank you.\n
+LlenE.9=Бонд: Да, все хорошо, спасибо.\n
+# Natalya: Ohhh, James...\n
+LlenE.10=Наталья: Ох, Джеймс...\n
+# C U B A N   J U N G L E\n
+LlenE.11=Д Ж У Н Г Л И   К У Б Ы\n
+# The Cast\n
+LlenE.16=В ролях\n
+# James Bond\n
+LlenE.18=Джеймс Бонд\n
+# 007\n
+LlenE.19=007\n
+# Natalya Simonova\n
+LlenE.20=Наталья Симонова\n
+# Satellite Programmer\n
+LlenE.21=Программист спутника\n
+# Alec Trevelyan\n
+LlenE.22=Алек Тревельян\n
+# 006 / Janus\n
+LlenE.23=006 / Янус\n
+# Xenia Onatopp\n
+LlenE.24=Ксения Онатопп\n
+# Janus Operative\n
+LlenE.25=Агент Януса\n
+# Arkady Ourumov\n
+LlenE.26=Аркадий Уромов\n
+# Russian General\n
+LlenE.27=Русский генерал\n
+# Boris Grishenko\n
+LlenE.28=Борис Гришенко\n
+# Valentin Zukovsky\n
+LlenE.29=Валентин Жуковский\n
+# Arms Dealer\n
+LlenE.30=Контрабандист\n
+# Dimitri Mishkin\n
+LlenE.31=Дмитрий Мишкин\n
+# Defense Minister\n
+LlenE.32=Министр обороны\n
+# Produced and Directed by\n
+LlenE.33=Продюсер и режиссер\n
+# Martin Hollis\n
+LlenE.34=Martin Hollis\n
+# Director of Photography\n
+LlenE.35=Оператор-постановщик\n
+# Mark Edmonds M.A.\n
+LlenE.36=Mark Edmonds M.A.\n
+# Original Screenplay\n
+LlenE.37=Оригинальный сценарий\n
+# Dr. David Doak\n
+LlenE.38=Dr. David Doak\n
+# Scenic Art Director\n
+LlenE.39=Арт-директор сцен\n
+# Karl Hilton\n
+LlenE.40=Karl Hilton\n
+# Production Designer\n
+LlenE.41=Художник-постановщик\n
+# Duncan Botwood\n
+LlenE.42=Duncan Botwood\n
+# Costume Designer\n
+LlenE.43=Костюмер\n
+# B Jones\n
+LlenE.44=B Jones\n
+# 2nd-Unit Director\n
+LlenE.45=Режиссер 2-й группы\n
+# Stephen Ellis\n
+LlenE.46=Stephen Ellis\n
+# Original Music\n
+LlenE.47=Композиторы\n
+# Grant Kirkhope\n
+LlenE.48=Grant Kirkhope\n
+# Graeme Norgate\n
+LlenE.49=Graeme Norgate\n
+# Sound Effects\n
+LlenE.50=Звуковые эффекты\n
+# 1st Scenic Artist\n
+LlenE.51=1-й художник сцен\n
+# 2nd Scenic Artist\n
+LlenE.52=2-й художник сцен\n
+# 3rd Scenic Artist\n
+LlenE.53=3-й художник сцен\n
+# Scene Choreographer\n
+LlenE.54=Хореограф сцен\n
+# Lighting\n
+LlenE.55=Освещение\n
+# Casting\n
+LlenE.56=Кастинг\n
+# Electrical Best Boy\n
+LlenE.57=Помощник осветителя\n
+# Special Effects Supervisor\n
+LlenE.58=Руководитель спецэффектов\n
+# Stunt Capture\n
+LlenE.59=Захват трюков\n
+# Make-up Supervisor\n
+LlenE.60=Главный гример\n
+# Sound Recordist\n
+LlenE.61=Звукооператор\n
+# Elevator Music by\n
+LlenE.62=Музыка для лифтов\n
+# Robin Beanland\n
+LlenE.63=Robin Beanland\n
+# Set Decorator\n
+LlenE.64=Декоратор\n
+# Animation\n
+LlenE.65=Анимация\n
+# Weapons Consultant\n
+LlenE.66=Консультант по оружию\n
+# Dialogue Coach\n
+LlenE.67=Педагог по речи\n
+# Multiplay Director\n
+LlenE.68=Режиссер мультиплеера\n
+# Property Master\n
+LlenE.69=Реквизитор\n
+# Hairdressing\n
+LlenE.70=Прически\n
+# Dolly Grip\n
+LlenE.71=Грип тележки\n
+# Production Manager\n
+LlenE.72=Директор картины\n
+# Simon Farmer\n
+LlenE.73=Simon Farmer\n
+# System Support\n
+LlenE.74=Техподдержка\n
+# Paul Mikell\n
+LlenE.75=Paul Mikell\n
+# Additional Graphics\n
+LlenE.76=Дополнительная графика\n
+# Adrian Smith\n
+LlenE.77=Adrian Smith\n
+# Sound System and Tools\n
+LlenE.78=Звуковой движок и утилиты\n
+# Graham Smith\n
+LlenE.79=Graham Smith\n
+# Rare Testers\n
+LlenE.80=Тестеры Rare\n
+# Huw Ward\n
+LlenE.81=Huw Ward\n
+# Gary Richards\n
+LlenE.82=Gary Richards\n
+# Gavin Hood\n
+LlenE.83=Gavin Hood\n
+# Jamie Williams\n
+LlenE.84=Jamie Williams\n
+# Gareth Jones\n
+LlenE.85=Gareth Jones\n
+# Martin Penny\n
+LlenE.86=Martin Penny\n
+# David Wong\n
+LlenE.87=David Wong\n
+# Stephen Stamper\n
+LlenE.88=Stephen Stamper\n
+# NOA\n
+LlenE.89=NOA\n
+# Treehouse Staff\n
+LlenE.90=Команда Treehouse\n
+# Ken Lobb\n
+LlenE.91=Ken Lobb\n
+# Rich Richardson\n
+LlenE.92=Rich Richardson\n
+# Henry Sterchi\n
+LlenE.93=Henry Sterchi\n
+# Erich Waas\n
+LlenE.94=Erich Waas\n
+# Armond Williams Jr.\n
+LlenE.95=Armond Williams Jr.\n
+# NOA Testing\n
+LlenE.96=Тестеры NOA\n
+# Michael Kelbaugh\n
+LlenE.97=Michael Kelbaugh\n
+# Tim Bechtel\n
+LlenE.98=Tim Bechtel\n
+# David Bridgham\n
+LlenE.99=David Bridgham\n
+# Kirk Buchanan\n
+LlenE.100=Kirk Buchanan\n
+# Kyle Carlson\n
+LlenE.101=Kyle Carlson\n
+# Chris Dolan\n
+LlenE.102=Chris Dolan\n
+# Melvin Forrest\n
+LlenE.103=Melvin Forrest\n
+# Tom Hertzog\n
+LlenE.104=Tom Hertzog\n
+# Sam Hosier III\n
+LlenE.105=Sam Hosier III\n
+# Robert Johnson\n
+LlenE.106=Robert Johnson\n
+# Arnold Myers II\n
+LlenE.107=Arnold Myers II\n
+# Chris Needham\n
+LlenE.108=Chris Needham\n
+# Sara Osborne\n
+LlenE.109=Sara Osborne\n
+# Christian Phillips\n
+LlenE.110=Christian Phillips\n
+# Edward A. Ridgeway\n
+LlenE.111=Edward A. Ridgeway\n
+# Ben Smith\n
+LlenE.112=Ben Smith\n
+# Sharon Evans\n
+LlenE.113=Sharon Evans\n
+# Bill Giese\n
+LlenE.114=Bill Giese\n
+# Sam Kujath\n
+LlenE.115=Sam Kujath\n
+# Jim Holdeman\n
+LlenE.116=Jim Holdeman\n
+# David Hunziker\n
+LlenE.117=David Hunziker\n
+# The Q Branch XVI\n
+LlenE.118=Отдел Q XVI\n
+# Translation\n
+LlenE.119=Перевод\n
+# Kenji Okubo\n
+LlenE.120=Kenji Okubo\n
+# Keisuke Terasaki\n
+LlenE.121=Keisuke Terasaki\n
+# Special Thanks\n
+LlenE.122=Благодарности\n
+# Mr. Arakawa\n
+LlenE.123=Mr. Arakawa\n
+# Howard Lincoln\n
+LlenE.124=Howard Lincoln\n
+# Mr. Fukuda\n
+LlenE.125=Mr. Fukuda\n
+# Joel Hochberg\n
+LlenE.126=Joel Hochberg\n
+# Tim Stamper\n
+LlenE.127=Tim Stamper\n
+# Chris Stamper\n
+LlenE.128=Chris Stamper\n
+# Rare US Staff\n
+LlenE.129=Штат Rare US\n
+# Eileen Hochberg\n
+LlenE.130=Eileen Hochberg\n
+# Scott Hochberg\n
+LlenE.131=Scott Hochberg\n
+# Jerry Rogowski\n
+LlenE.132=Jerry Rogowski\n
+# Filmed at Twycross Studios, England\n
+LlenE.133=Снято на студии Twycross, Англия\n
+# IN NINTENDOVISION\n
+LlenE.134=В NINTENDOVISION\n
+# Produced by Rare\n
+LlenE.135=Производство Rare\n
+# Presented by Nintendo\n
+LlenE.136=Представляет Nintendo\n
+# JAMES BOND WILL RETURN\n
+LlenE.137=ДЖЕЙМС БОНД ВЕРНЕТСЯ\n
+
+## LoatE - Caves (multi)
+
+## LpeteE - Streets
+# After escaping KGB interrogation at the military archives, Natalya has been recaptured by General Ourumov. She is being taken by car to the Janus operations base in St. Petersburg.\n
+LpeteE.0=Сбежав с допроса КГБ в военных архивах, Наталья снова попала в руки генерала Уромова. Ее везут на машине на оперативную базу Януса в Санкт-Петербурге.\n
+# Get after them, 007! We can't afford to let the trail go cold and the chances are they'll lead you straight to Trevelyan. Keep a clear head though, any civilian casualties on the streets of St. Petersburg could create an unfortunate international incident.\nWe believe that Valentin Zukovsky is still in the area - he may be able to help you.\n
+LpeteE.1=За ними, 007! Мы не можем позволить следу остыть, и, скорее всего, они приведут вас прямо к Тревельяну. Но сохраняйте хладнокровие: любые жертвы среди мирных жителей на улицах Санкт-Петербурга могут вызвать неприятный международный инцидент.\nПо нашим данным, Валентин Жуковский все еще где-то рядом - он может вам помочь.\n
+# No gadgets this time, 007. Though you should be on the lookout for hardware the Russians may have left lying around. Keys in the ignition and all that, old chap.\n
+LpeteE.2=На этот раз никаких устройств, 007. Но присматривайтесь к технике, которую русские могли где-нибудь бросить. Ключи в зажигании и все такое, старина.\n
+# I don't think she's worth the trouble, James.\n\nPerhaps you should be looking closer to home for a more reliable woman?\n
+LpeteE.3=Не думаю, что она того стоит, Джеймс.\n\nМожет, вам стоит поискать женщину понадежнее поближе к дому?\n
+# Pursue Ourumov and Natalya\n
+LpeteE.4=Преследовать Уромова и Наталью\n
+# Minimize civilian casualties\n
+LpeteE.5=Беречь мирных жителей\n
+# Contact Valentin\n
+LpeteE.6=Найти Валентина\n
+# Warning: Civilian casualties high.\n
+LpeteE.7=Внимание: много жертв среди мирных.\n
+# Warning: Civilian casualties critical!\n
+LpeteE.8=Внимание: критически много жертв!\n
+# Mission Failure: Too many civilian\n                     casualties.\n
+LpeteE.9=Миссия провалена: слишком много жертв\n                     среди мирных.\n
+# Mission Failure: Ourumov has escaped\n                     with Natalya.\n
+LpeteE.10=Миссия провалена: Уромов скрылся\n                     с Натальей.\n
+# Valentin: Ah, Mr. Bond, I see you have\n           eluded the clutches of Military\n           Intelligence.\n
+LpeteE.11=Валентин: А, мистер Бонд, вижу, вы\n           ускользнули из лап военной\n           разведки.\n
+# Bond: Yes, but General Ourumov has\n        taken Natalya!\n
+LpeteE.12=Бонд: Да, но генерал Уромов\n        захватил Наталью!\n
+# Valentin: I saw the car, he's taking the\n           girl to a disused military depot\n           not far from here.\n
+LpeteE.13=Валентин: Я видел машину, он везет\n           девушку в заброшенное военное\n           депо недалеко отсюда.\n
+# Valentin: The Janus base is there.\n           A simple phone call and my\n           men will delay them.\n
+LpeteE.14=Валентин: Там база Януса.\n           Один звонок, и мои\n           люди их задержат.\n
+# Bond: What's in it for you, Valentin?\n
+LpeteE.15=Бонд: А вам-то что с этого, Валентин?\n
+# Valentin: Business is business, Mr. Bond.\n           I'd like to see my competitors\n           out of action.\n
+LpeteE.16=Валентин: Бизнес есть бизнес, мистер Бонд.\n           Хочу вывести своих\n           конкурентов из игры.\n
+# Valentin: I'm trying to help you, Mr. Bond.\n           You could at least\n           be civil enough to listen to me.\n
+LpeteE.17=Валентин: Я пытаюсь вам помочь, мистер Бонд.\n           Могли бы хоть из вежливости\n           меня выслушать.\n
+# Valentin has left.\n
+LpeteE.18=Валентин ушел.\n
+# Valentin has contacted his 'associates'.\n
+LpeteE.19=Валентин связался со своими "партнерами".\n
+# S T .  P E T E R S B U R G\n
+LpeteE.20=С А Н К Т - П Е Т Е Р Б У Р Г\n
+# after escaping kgb interrogation at the military archives, natalya has been recaptured by general ourumov. she is being taken by car to the janus operations base in st. petersburg.\n
+LpeteE.21=@lower LpeteE.0
+# get after them, 007! we can't afford to let the trail go cold and the chances are they'll lead you straight to trevelyan. keep a clear head though, any civilian casualties on the streets of st. petersburg could create an unfortunate international incident.\nwe believe that valentin zukovsky is still in the area - he may be able to help you.\n
+LpeteE.22=@lower LpeteE.1
+# no gadgets this time, 007. though you should be on the lookout for hardware the russians may have left lying around. keys in the ignition and all that, old chap.\n
+LpeteE.23=@lower LpeteE.2
+# i don't think she's worth the trouble, james.\n\nperhaps you should be looking closer to home for a more reliable woman?\n
+LpeteE.24=@lower LpeteE.3
+# pursue ourumov and natalya\n
+LpeteE.25=@lower LpeteE.4
+# minimize civilian casualties\n
+LpeteE.26=@lower LpeteE.5
+# contact valentin\n
+LpeteE.27=@lower LpeteE.6
+# St. Petersburg\n
+LpeteE.28=Санкт-Петербург\n
+
+## LrefE - Complex (multi)
+
+## LrunE - Runway
+# The service runway is the obvious escape route from the Arkangelsk chemical weapons facility.\n
+LrunE.0=Служебный аэродром - очевидный путь к бегству с завода химического оружия в Архангельске.\n
+# 006 knew this was going to be a risky mission. His sacrifice should give you enough time to find an aircraft.\n\nKeep a cool head and you'll get out alive. Just be certain to knock out the heavy gun emplacements and missile battery or they'll swat you out of the air like a silly fly.\n
+LrunE.1=006 знал, что эта миссия будет рискованной. Его жертва должна дать вам время, чтобы найти самолет.\n\nСохраняйте хладнокровие, и вы выберетесь живым. Только обязательно уничтожьте тяжелые орудийные установки и ракетную батарею, иначе они прихлопнут вас в воздухе, как глупую муху.\n
+# No time for gadgets here, 007. Just improvise with what you can find close to hand.\n
+LrunE.2=Здесь не до гаджетов, 007. Импровизируйте с тем, что найдется под рукой.\n
+# Grace under pressure, as always, James. \n
+LrunE.3=Как всегда, само спокойствие, Джеймс. \n
+# Find plane ignition key\n
+LrunE.4=Найти ключ от самолета\n
+# Destroy heavy gun emplacements\n
+LrunE.5=Уничтожить тяжелые орудия\n
+# Destroy missile battery\n
+LrunE.6=Уничтожить ракетную батарею\n
+# Escape in plane\n
+LrunE.7=Бежать на самолете\n
+# You do not have the aircraft ignition key.\n
+LrunE.8=У вас нет ключа зажигания самолета.\n
+# Plane destroyed!\n
+LrunE.9=Самолет уничтожен!\n
+# R U N W A Y\n
+LrunE.10=А Э Р О Д Р О М\n
+# the service runway is the obvious escape route from the arkangelsk chemical weapons facility.\n
+LrunE.11=@lower LrunE.0
+# 006 knew this was going to be a risky mission. his sacrifice should give you enough time to find an aircraft.\n\nkeep a cool head and you'll get out alive. just be certain to knock out the heavy gun emplacements and missile battery or they'll swat you out of the air like a silly fly.\n
+LrunE.12=@lower LrunE.1
+# no time for gadgets here, 007. just improvise with what you can find close to hand.\n
+LrunE.13=@lower LrunE.2
+# grace under pressure, as always, james. \n
+LrunE.14=@lower LrunE.3
+# find plane ignition key\n
+LrunE.15=@lower LrunE.4
+# destroy heavy gun emplacements\n
+LrunE.16=@lower LrunE.5
+# destroy missile battery\n
+LrunE.17=@lower LrunE.6
+# escape in plane\n
+LrunE.18=@lower LrunE.7
+# Runway, Chemical Weapons Facility#2\n
+LrunE.19=Аэродром, завод хим. оружия N2\n
+# ignition key\n
+LrunE.21=ключ зажигания\n
+# ignition key\n
+LrunE.22=ключ зажигания\n
+# ignition key\n
+LrunE.23=ключ зажигания\n
+# Picked up an ignition key.\n
+LrunE.24=Взято: ключ зажигания.\n
+# This door leads back\ninto the gasplant!\n
+LrunE.29=Эта дверь ведет обратно\nна газовый завод!\n
+
+## LsevbE - Bunker 2
+# Escape is the first priority. Find the staff and casualty lists, and the CCTV tape of your capture. If there are any witnesses, try and bring them out as well. \n
+LsevbE.0=Главное - побег. Найдите списки персонала и погибших, а также запись камер с вашим захватом. Если есть свидетели, постарайтесь вывести и их. \n
+# Unbelievable, 007. If this gets out we'll be the laughing stock of the international community. As soon as you get back - IF you get back - you're getting a performance review. Only completing the objectives will give you a hope of keeping your rather checkered career intact. \n
+LsevbE.1=Невероятно, 007. Если это выйдет наружу, мы станем посмешищем для всего мирового сообщества. Как только вернетесь - ЕСЛИ вернетесь - вас ждет служебная проверка. Лишь выполнив задачи, вы можете надеяться спасти свою и без того пеструю карьеру. \n
+# You've got your wits and that's about it, 007. Not much I can do to help you here. You might try to find your equipment again when you escape from the cell, though. It took me a lot of time to get all of that stuff together.\n
+LsevbE.2=У вас есть только смекалка, 007. Здесь я мало чем могу помочь. Но, выбравшись из камеры, попробуйте отыскать свое снаряжение. Я потратил уйму времени, чтобы все это собрать.\n
+# Grabbed by the Spetznaz, James? Sounds painful!\n
+LsevbE.3=Попали в лапы спецназа, Джеймс? Звучит болезненно!\n
+# Compare staff / casualty lists\n
+LsevbE.4=Сверить списки персонала / погибших\n
+# Recover CCTV tape\n
+LsevbE.5=Добыть запись камер\n
+# Disable all security cameras\n
+LsevbE.6=Отключить все камеры наблюдения\n
+# Recover Goldeneye operations manual\n
+LsevbE.7=Добыть инструкцию по GoldenEye\n
+# Escape with Natalya\n
+LsevbE.8=Бежать с Натальей\n
+# Bond: It appears that we are cellmates\n
+LsevbE.9=Бонд: Похоже, мы сокамерники\n
+# Woman: Who are you, anyway?\n
+LsevbE.10=Женщина: А вы вообще кто?\n
+# Bond: The name's Bond, James Bond.\n
+LsevbE.11=Бонд: Меня зовут Бонд. Джеймс Бонд.\n
+# Woman: Natalya Fyodorovna Simonova.\n
+LsevbE.12=Женщина: Наталья Федоровна Симонова.\n
+# Bond: Charmed to meet you, Natalya.\n        Why have you been locked up?\n
+LsevbE.13=Бонд: Очень приятно, Наталья.\n        За что вас заперли?\n
+# Natalya: They think that I am a traitor,\n           - that I betrayed my countrymen.\n
+LsevbE.14=Наталья: Они думают, что я предатель,\n           - что я предала своих.\n
+# Bond: ...and did you?\n
+LsevbE.15=Бонд: ...а это так?\n
+# Natalya: Of course not.\n           Ourumov stole the Goldeneye.\n
+LsevbE.16=Наталья: Конечно, нет.\n           Уромов похитил GoldenEye.\n
+# Bond: Colonel Arkady Grigorovich\n        Ourumov? I've met him before.\n
+LsevbE.17=Бонд: Полковник Аркадий Григорович\n        Уромов? Мы уже встречались.\n
+# Natalya: Ourumov is a general now.\n           In charge of the Space Weapon\n           program.\n
+LsevbE.18=Наталья: Уромов теперь генерал.\n           Руководит программой\n           космического оружия.\n
+# Natalya: What brings you to Siberia,\n           James Bond?\n
+LsevbE.19=Наталья: Что привело вас в Сибирь,\n           Джеймс Бонд?\n
+# Bond: I work for the British Government.\n        I'm looking for a stolen helicopter.\n
+LsevbE.20=Бонд: Я служу правительству Британии.\n        Ищу украденный вертолет.\n
+# Natalya: That doesn't matter anymore.\n
+LsevbE.21=Наталья: Это уже неважно.\n
+# Bond: Why not?\n
+LsevbE.22=Бонд: Почему?\n
+# Natalya: You are a spy and I am a\n           traitor. We will be shot.\n
+LsevbE.23=Наталья: Вы шпион, а я - предатель.\n           Нас расстреляют.\n
+# Bond: I don't think so.\n        I have a cunning plan.\n
+LsevbE.24=Бонд: Не думаю.\n        У меня есть хитрый план.\n
+# Bond: Guard! My stomach hurts.\n        I'm going to be sick.\n
+LsevbE.26=Бонд: Охрана! У меня болит живот.\n        Меня сейчас стошнит.\n
+# Jailer: <sigh> You must think\n         I was born yesterday.\n
+LsevbE.27=Тюремщик: <вздох> Думаешь, я\n           вчера родился?\n
+# Natalya: That worked well.\n
+LsevbE.28=Наталья: Отлично сработало.\n
+# Bond: I'm really ill.\n        Open the cell door!\n
+LsevbE.29=Бонд: Мне правда плохо.\n        Откройте камеру!\n
+# Jailer: Shut up!\n         Don't bother me again.\n
+LsevbE.30=Тюремщик: Заткнись!\n           Не беспокой меня больше.\n
+# Natalya: Nice work.\n
+LsevbE.31=Наталья: Молодец.\n
+# Natalya: You seem to know your way\n           around, James. Have you been\n           here before?\n
+LsevbE.32=Наталья: Вы, похоже, хорошо знаете\n           здешние места, Джеймс. Вы\n           бывали здесь раньше?\n
+# Natalya: We should go to the main\n           control room.\n
+LsevbE.33=Наталья: Нам нужно в главный\n           пункт управления.\n
+# Natalya has died.\n
+LsevbE.34=Наталья погибла.\n
+# natalya has died.\n
+LsevbE.35=@lower LsevbE.34
+# Jailer: Stop or I'll shoot!\n
+LsevbE.36=Тюремщик: Стой, стрелять буду!\n
+# Natalya: I'm going to check the control\n           console.\n
+LsevbE.38=Наталья: Я проверю пульт\n           управления.\n
+# Natalya: Ourumov has activated the\n           Goldeneye satellite!\n
+LsevbE.39=Наталья: Уромов активировал\n           спутник GoldenEye!\n
+# Natalya: It's going to fire on Severnaya!\n
+LsevbE.40=Наталья: Он ударит по Северной!\n
+# Natalya: We've got to escape!\n
+LsevbE.41=Наталья: Нужно бежать!\n
+# S E V E R N A Y A \n
+LsevbE.42=С Е В Е Р Н А Я \n
+# escape is the first priority. find the staff and casualty lists, and the CCTV tape of your capture. if there are any witnesses, try and bring them out as well. \n
+LsevbE.43=главное - побег. найдите списки персонала и погибших, а также запись камер с вашим захватом. если есть свидетели, постарайтесь вывести и их. \n
+# unbelievable, 007. if this gets out we'll be the laughing stock of the international community. as soon as you get back - IF you get back - you're getting a performance review. only completing the objectives will give you a hope of keeping your rather checkered career intact. \n
+LsevbE.44=невероятно, 007. если это выйдет наружу, мы станем посмешищем для всего мирового сообщества. как только вернетесь - ЕСЛИ вернетесь - вас ждет служебная проверка. лишь выполнив задачи, вы можете надеяться спасти свою и без того пеструю карьеру. \n
+# you've got your wits and that's about it, 007. not much I can do to help you here. you might try to find your equipment again when you escape from the cell, though. it took me a lot of time to get all of that stuff together.\n
+LsevbE.45=у вас есть только смекалка, 007. здесь я мало чем могу помочь. но, выбравшись из камеры, попробуйте отыскать свое снаряжение. я потратил уйму времени, чтобы все это собрать.\n
+# grabbed by the spetznaz, james? sounds painful!\n
+LsevbE.46=@lower LsevbE.3
+# compare staff / casualty lists\n
+LsevbE.47=@lower LsevbE.4
+# recover cctv tape\n
+LsevbE.48=@lower LsevbE.5
+# disable all security cameras\n
+LsevbE.49=@lower LsevbE.6
+# recover goldeneye ops manual\n
+LsevbE.50=добыть инструкцию по goldeneye\n
+# escape with natalya\n
+LsevbE.51=@lower LsevbE.8
+# cell key\n
+LsevbE.53=ключ камеры\n
+# cell key 2\n
+LsevbE.54=ключ камеры 2\n
+# cell key 2\n
+LsevbE.55=ключ камеры 2\n
+# Picked up a cell key.\n
+LsevbE.56=Взято: ключ от камеры.\n
+# cell key\n
+LsevbE.58=ключ камеры\n
+# cell key 1\n
+LsevbE.59=ключ камеры 1\n
+# cell key 1\n
+LsevbE.60=ключ камеры 1\n
+# Picked up a cell key.\n
+LsevbE.61=Взято: ключ от камеры.\n
+# keycard\n
+LsevbE.63=ключ-карта\n
+# keycard A\n
+LsevbE.64=ключ-карта A\n
+# Keycard (Clearance A)\n
+LsevbE.65=Ключ-карта (допуск A)\n
+# Picked up a keycard.\n
+LsevbE.66=Взято: ключ-карта.\n
+# keycard\n
+LsevbE.68=ключ-карта\n
+# keycard B\n
+LsevbE.69=ключ-карта B\n
+# Keycard (Clearance B)\n
+LsevbE.70=Ключ-карта (допуск B)\n
+# Picked up a keycard.\n
+LsevbE.71=Взято: ключ-карта.\n
+# safe key\n
+LsevbE.73=ключ сейфа\n
+# safe key 1\n
+LsevbE.74=ключ сейфа 1\n
+# Twinned Safe Key 1\n
+LsevbE.75=Парный ключ сейфа 1\n
+# Picked up a safe key.\n
+LsevbE.76=Взято: ключ от сейфа.\n
+# safe key\n
+LsevbE.78=ключ сейфа\n
+# safe key 2\n
+LsevbE.79=ключ сейфа 2\n
+# Twinned Safe Key 2\n
+LsevbE.80=Парный ключ сейфа 2\n
+# Picked up a safe key.\n
+LsevbE.81=Взято: ключ от сейфа.\n
+# severnaya\n
+LsevbE.82=северная\n
+# stafflist\n
+LsevbE.83=персонал\n
+# severnaya stafflist\n
+LsevbE.84=персонал северной\n
+# Severnaya Stafflist\n
+LsevbE.85=Персонал Северной\n
+# Picked up a document.\n
+LsevbE.86=Взято: документ.\n
+# severnaya\n
+LsevbE.87=северная\n
+# casualty list\n
+LsevbE.88=список погибших\n
+# casualty list\n
+LsevbE.89=список погибших\n
+# Severnaya Casualty List\n
+LsevbE.90=Список погибших Северной\n
+# Picked up a clipboard.\n
+LsevbE.91=Взято: планшет.\n
+# video tape\n
+LsevbE.93=видеокассета\n
+# cctv video tape\n
+LsevbE.94=видеокассета камер\n
+# Goldeneye CCTV video tape\n
+LsevbE.95=Видеозапись камер GoldenEye\n
+# Picked up a video tape.\n
+LsevbE.96=Взято: видеокассета.\n
+# This safe is locked.\n
+LsevbE.101=Этот сейф заперт.\n
+# Severnaya Bunker Complex\n
+LsevbE.102=Бункерный комплекс Северная\n
+# Goldeneye manual\n
+LsevbE.104=Инстр. GoldenEye\n
+# Goldeneye operations manual\n
+LsevbE.105=Инструкция по GoldenEye\n
+# Goldeneye operations manual\n
+LsevbE.106=Инструкция по GoldenEye\n
+# Picked up a red dossier.\n
+LsevbE.107=Взято: красное досье.\n
+
+## LsevE - Bunker 1
+# A spy satellite has detected increased levels of activity at an old observatory complex near Severnaya (62.08n, 102.58e) in Russia.\n\nOther sources have confirmed the shipment of a large amount of computer hardware to that location, and an influx of skilled personnel.\n
+LsevE.0=Спутник-шпион зафиксировал повышенную активность на старом комплексе обсерватории близ Северной (62.08 с.ш., 102.58 в.д.) в России.\n\nДругие источники подтвердили доставку туда большого количества компьютерной техники и прибытие квалифицированного персонала.\n
+# 007, I want you to infiltrate this base and find out what the devil's going on there. The satellite photographs reveal that there has been recent underground excavation. We'd like to know the exact nature and planned extent of the workings.\n\nBy the way, this is a covert operation. You may have to neutralize the security, but try not to be too obvious about it.\n
+LsevE.1=007, я хочу, чтобы вы проникли на эту базу и выяснили, что там, черт возьми, происходит. Спутниковые снимки показывают, что недавно там велись подземные работы. Нам нужно знать их точный характер и планируемый масштаб.\n\nКстати, операция секретная. Возможно, вам придется нейтрализовать охрану, но постарайтесь не привлекать внимания.\n
+# You'll be doing some computer hacking on this mission, 007. I know you'd rather be cracking open a bottle of bubbly than cracking passwords, so I've taken the liberty of putting together a little gadget which will do the hard work for you. If you attach the data thief to their mainframe it should override any computer security measures and download the information we require.\n
+LsevE.2=На этом задании вам придется взламывать компьютеры, 007. Знаю, вы предпочитаете вскрывать бутылки шампанского, а не пароли, поэтому я взял на себя смелость собрать небольшой прибор, который сделает всю тяжелую работу за вас. Если подключить похититель данных к их главному компьютеру, он обойдет любую защиту и скачает нужную нам информацию.\n
+# Underground in Siberia, James? Some of us don't get further than the Northern Line.\n
+LsevE.3=Под землей в Сибири, Джеймс? Некоторые из нас не уезжают дальше Северной линии метро.\n
+# Disrupt all surveillance equipment\n
+LsevE.4=Уничтожить всю аппаратуру слежения\n
+# Copy Goldeneye key and leave original\n
+LsevE.5=Скопировать ключ GoldenEye и оставить его\n
+# Get personnel to activate computer\n
+LsevE.6=Заставить персонал включить компьютер\n
+# Download data from computer\n
+LsevE.7=Скачать данные с компьютера\n
+# Photograph main video screen\n
+LsevE.8=Сфотографировать главный экран\n
+# hello\n
+LsevE.9=привет\n
+# Bond: Take me to the mainframe terminal!\n
+LsevE.10=Бонд: Веди меня к главному терминалу!\n
+# Programmer: Don't shoot! It's this way.\n
+LsevE.11=Программист: Не стреляйте! Сюда.\n
+# Programmer: Just through here.\n
+LsevE.12=Программист: Вот здесь.\n
+# Programmer: Let me see.\n
+LsevE.13=Программист: Посмотрим.\n
+# Programmer: Shouldn't take long.\n
+LsevE.14=Программист: Это недолго.\n
+# Programmer: Hmmh, the root password\n                  has been changed.\n
+LsevE.15=Программист: Хм, root-пароль\n                  изменили.\n
+# Programmer: 'K' 'N' 'O' 'C' 'K' 'E' 'R' 'S'\n                  <return>\n
+LsevE.16=Программист: 'K' 'N' 'O' 'C' 'K' 'E' 'R' 'S'\n                  <ввод>\n
+# Programmer: Oops!\n
+LsevE.17=Программист: Ой!\n
+# Bond: Disable the security!\n
+LsevE.18=Бонд: Отключи защиту!\n
+# The programmer has escaped without\nactivating the computer!\n
+LsevE.19=Программист сбежал, не включив\nкомпьютер!\n
+# The computer has not been\n activated.\n
+LsevE.20=Компьютер не был\n включен.\n
+# Downloading data...\n
+LsevE.21=Загрузка данных...\n
+# Finished download.\n
+LsevE.22=Загрузка завершена.\n
+# Programmer: There's no way I can fix\n                  this!\n
+LsevE.23=Программист: Я никак не смогу это\n                  починить!\n
+# S E V E R N A Y A\n
+LsevE.24=С Е В Е Р Н А Я\n
+# a spy satellite has detected increased levels of activity at an old observatory complex near severnaya (62.08n, 102.58e) in russia.\n\nother sources have confirmed the shipment of a large amount of computer hardware to that location, and an influx of skilled personnel.\n
+LsevE.25=@lower LsevE.0
+# 007, i want you to infiltrate this base and find out what the devil's going on there. the satellite photographs reveal that there has been recent underground excavation we'd like to know the exact nature and planned extent of the workings.\n\nby the way, this is a covert operation. you may have to neutralize the security, but try not to be too obvious about it.\n
+LsevE.26=007, я хочу, чтобы вы проникли на эту базу и выяснили, что там, черт возьми, происходит. спутниковые снимки показывают, что недавно там велись подземные работы. нам нужно знать их точный характер и планируемый масштаб.\n\nкстати, операция секретная. возможно, вам придется нейтрализовать охрану, но постарайтесь не привлекать внимания.\n
+# you'll be doing some computer hacking on this mission, 007. i know you'd rather be cracking open a bottle of bubbly than cracking passwords, so i've taken the liberty of putting together a little gadget which will do the hard work for you.\nif you attach the data thief to their mainframe it should override any computer security measures and download the information we require.\n
+LsevE.27=на этом задании вам придется взламывать компьютеры, 007. знаю, вы предпочитаете вскрывать бутылки шампанского, а не пароли, поэтому я взял на себя смелость собрать небольшой прибор, который сделает всю тяжелую работу за вас.\nесли подключить похититель данных к их главному компьютеру, он обойдет любую защиту и скачает нужную нам информацию.\n
+# underground in siberia, james? some of us don't get further than the northern line.\n
+LsevE.28=@lower LsevE.3
+# disrupt all surveillance\n    equipment\n
+LsevE.29=уничтожить всю аппаратуру\n    слежения\n
+# copy goldeneye key and leave\n    original\n
+LsevE.30=скопировать ключ goldeneye и\n    оставить его\n
+# get personnel to activate\n    computer\n
+LsevE.31=заставить персонал включить\n    компьютер\n
+# download data from computer\n
+LsevE.32=@lower LsevE.7
+# photograph main video screen\n
+LsevE.33=@lower LsevE.8
+# keycard\n
+LsevE.35=ключ-карта\n
+# computer room keycard\n
+LsevE.36=ключ-карта комп. зала\n
+# Computer Room Keycard\n
+LsevE.37=Ключ-карта комп. зала\n
+# Picked up a computer room\n keycard.\n
+LsevE.38=Взято: ключ-карта\n компьютерного зала.\n
+# keycard\n
+LsevE.40=ключ-карта\n
+# security keycard\n
+LsevE.41=ключ-карта охраны\n
+# Security Keycard\n
+LsevE.42=Ключ-карта охраны\n
+# Picked up a security keycard.\n
+LsevE.43=Взято: ключ-карта охраны.\n
+# Satellite Control Bunker\n
+LsevE.44=Бункер управления спутником\n
+# Present day\n
+LsevE.45=Наши дни\n
+# Mainframe destroyed!\nData cannot be downloaded.\n
+LsevE.46=Главный компьютер уничтожен!\nСкачать данные невозможно.\n
+
+## LsevxE - Surface 1
+# A spy satellite has detected increased levels of activity at an old observatory complex near Severnaya (62.08n, 102.58e) in Russia.\n\nOther sources have confirmed the shipment of a large amount of computer hardware to that location, and an influx of skilled personnel.\n
+LsevxE.0=Спутник-шпион зафиксировал повышенную активность в старом обсерваторном комплексе возле Северной (62.08 с.ш., 102.58 в.д.) в России.\n\nДругие источники подтвердили доставку туда большого количества компьютерного оборудования и прибытие квалифицированного персонала.\n
+# It might be coincidence that there is a new head of the Soviet Space Weapons Division, your old friend General Ourumov, or it might not. Penetrate the base and find out what is going on. Building plans for the underground section would be ideal. They're unlikely to be just lying around so look for a safe - there's bound to be someone you can borrow a key from. \n
+LsevxE.1=Возможно, это совпадение, что у Советского управления космических вооружений новый начальник - ваш старый друг генерал Уромов, а возможно, и нет. Проникните на базу и выясните, что там происходит. Идеально было бы добыть планы подземной части. Вряд ли они лежат на виду, так что ищите сейф - наверняка найдется кто-то, у кого можно одолжить ключ. \n
+# I've looked over the recon photographs and I advise you to stay clear of the main bunker entrance by the helipad. However, there seems to be a ventilation tower nearby which would make an excellent spot for a covert entry.\nYou ought to power down the comms dish too, no point in letting them tell the whole of Russia you've dropped in.\n
+LsevxE.2=Я изучил разведывательные снимки и советую держаться подальше от главного входа в бункер у вертолетной площадки. Однако неподалеку, похоже, есть вентиляционная башня - отличное место для скрытного проникновения.\nВам также стоит отключить антенну связи: незачем позволять им сообщать всей России о вашем визите.\n
+# It's cold in Siberia, James.\n\nMake sure you wrap up warm and take care to protect your extremities.\n
+LsevxE.3=В Сибири холодно, Джеймс.\n\nОдевайтесь потеплее и берегите самое ценное.\n
+# Power down communications dish\n
+LsevxE.4=Отключить антенну связи\n
+# Obtain safe key\n
+LsevxE.5=Добыть ключ сейфа\n
+# Steal building plans\n
+LsevxE.6=Украсть планы здания\n
+# Enter base via ventilation tower\n
+LsevxE.7=Войти на базу через вентиляцию\n
+# Communications dish powered down.\n
+LsevxE.8=Антенна связи отключена.\n
+# Dish controls destroyed!\nEmergency power systems engaged\n
+LsevxE.9=Пульт антенны уничтожен!\nВключено аварийное питание\n
+# Access Denied!\n
+LsevxE.10=Доступ запрещен!\n
+# S E V E R N A Y A\n
+LsevxE.11=С Е В Е Р Н А Я\n
+# a spy satellite has detected increased levels of activity at an old observatory complex near severnaya (62.08n, 102.58e) in russia.\n\nother sources have confirmed the shipment of a large amount of computer hardware to that location, and an influx of skilled personnel.\n
+LsevxE.12=@lower LsevxE.0
+# it might be coincidence that there is a new head of the soviet space weapons division, your old friend general ourumov, or it might not. penetrate the base and find out what is going on. building plans for the underground section would be ideal. they're unlikely to be just lying around so look for a safe - there's bound to be someone you can borrow a key from. \n
+LsevxE.13=@lower LsevxE.1
+# i've looked over the recon photographs and i advise you to stay clear of the main bunker entrance by the helipad. however, there seems to be a ventilation tower nearby which would make an excellent spot for a covert entry.\nyou ought to power down the comms dish too, no point in letting them tell the whole of russia you've dropped in.\n
+LsevxE.14=@lower LsevxE.2
+# it's cold in siberia, james.\n\nmake sure you wrap up warm and take care to protect your extremities.\n
+LsevxE.15=@lower LsevxE.3
+# power down communications dish\n
+LsevxE.16=@lower LsevxE.4
+# obtain safe key\n
+LsevxE.17=@lower LsevxE.5
+# steal building plans\n
+LsevxE.18=@lower LsevxE.6
+# enter base via ventilation tower\n
+LsevxE.19=@lower LsevxE.7
+# Severnaya Installation, Siberian Plateau\n
+LsevxE.20=Объект "Северная", Сибирское плато\n
+# Four years ago\n
+LsevxE.21=Четыре года назад\n
+# This safe is locked.\n
+LsevxE.26=Этот сейф заперт.\n
+# severnaya\n
+LsevxE.27=северная\n
+# bunker plans\n
+LsevxE.28=планы бункера\n
+# bunker plans\n
+LsevxE.29=планы бункера\n
+# Bunker Plans\n
+LsevxE.30=Планы бункера\n
+# Picked up Bunker plans.\n
+LsevxE.31=Взято: планы бункера.\n
+# safe key\n
+LsevxE.33=ключ сейфа\n
+# safe key\n
+LsevxE.34=ключ сейфа\n
+# Safe Key\n
+LsevxE.35=Ключ сейфа\n
+# Picked up a safe key.\n
+LsevxE.36=Взято: ключ сейфа.\n
+# hut door key\n
+LsevxE.38=ключ от хижины\n
+# hut door key\n
+LsevxE.39=ключ от хижины\n
+# Hut Door Key\n
+LsevxE.40=Ключ от хижины\n
+# Picked up a large key.\n
+LsevxE.41=Взято: большой ключ.\n
+
+## LsevxbE - Surface 2
+# The Pirate helicopter was tracked to Severnaya, where a Keyhole-1 ELINT satellite recorded a brief firefight.\nAfter the Pirate left, the same satellite observed a troop helicopter being made ready at a Spetznaz camp, 200 miles due south.\nThe only way that we can get you there quickly is to drop you from  a spy plane, and the Soviet Special Forces will be there before you. \n
+LsevxbE.0=Вертолет "Пират" отследили до Северной, где спутник ELINT Keyhole-1 зафиксировал короткую перестрелку.\nПосле ухода "Пирата" тот же спутник засек, как в лагере спецназа в 200 милях к югу готовят транспортный вертолет.\nБыстро доставить вас туда можно только с самолета-разведчика, и советский спецназ будет там раньше вас. \n
+# You should remember this place, 007. We need any evidence of Janus' presence there, and fast. Disable the troop helicopter so that nothing can be removed from the scene, and destroy their surveillance cameras.\nThis had to be an inside job, Bond. Find out who their contact was - the macabre way to do it would be to use their casualty list. Of course, you'd have to know who was there first.\n
+LsevxbE.1=Вы должны помнить это место, 007. Нам нужны любые следы присутствия там Януса, и быстро. Выведите из строя транспортный вертолет, чтобы ничего не вывезли, и уничтожьте их камеры наблюдения.\nЭто явно работа изнутри, Бонд. Узнайте, кто был их связным. Мрачный, но верный способ - их список погибших. Конечно, сначала нужно знать, кто там был.\n
+# Right, I've altered a standard mine to take a ten-second fuse. There's only one, so don't play around with it. That should take care of their helicopter. This is a covert op, so I've fitted a silencer to your pistol. Satisfied? No? Well, tough; that's all you're getting. \n
+LsevxbE.2=Так, я переделал обычную мину под десятисекундный запал. Она всего одна, так что не балуйтесь с ней. Этого хватит на их вертолет. Операция тайная, поэтому я поставил на ваш пистолет глушитель. Довольны? Нет? Что ж, ничего не поделаешь, больше вы ничего не получите. \n
+# Remember the saying, James? 'Never go back'? \n
+LsevxbE.3=Помните поговорку, Джеймс? "Никогда не возвращайся"? \n
+# Disrupt all surveillance equipment\n
+LsevxbE.4=Отключить всю аппаратуру наблюдения\n
+# Break communications link to bunker\n
+LsevxbE.5=Прервать связь с бункером\n
+# Disable Spetznaz support aircraft\n
+LsevxbE.6=Вывести из строя вертолет спецназа\n
+# Gain entry to bunker\n
+LsevxbE.7=Проникнуть в бункер\n
+# Communications link damaged.\n
+LsevxbE.8=Линия связи повреждена.\n
+# <<Da? What is wrong, comrade?>>\n
+LsevxbE.9=<<Да? Что такое, товарищ?>>\n
+# Surveillance camera disabled.\n
+LsevxbE.10=Камера наблюдения отключена.\n
+# Bomb placed on Hound MI-4.\n
+LsevxbE.11=Бомба заложена на Ми-4.\n
+# Bomb incorrectly placed - inactive!\n
+LsevxbE.12=Бомба заложена неверно - не активна!\n
+# Hound MI-4 destroyed.\n
+LsevxbE.13=Ми-4 уничтожен.\n
+# Welcome to Severnaya, comrade.\n
+LsevxbE.14=Северная приветствует вас, товарищ.\n
+# S E V E R N A Y A\n
+LsevxbE.15=С Е В Е Р Н А Я\n
+# the pirate helicopter was tracked to severnaya, where a keyhole-1 ELINT satellite recorded a brief firefight.\nafter the pirate left, the same satellite observed a troop helicopter being made ready at a spetznaz camp, 200 miles due south.\nthe only way we can get you there quickly is to drop you from a spy plane, and the soviet special forces will be there before you. \n
+LsevxbE.16=вертолет "пират" отследили до северной, где спутник ELINT keyhole-1 зафиксировал короткую перестрелку.\nпосле ухода "пирата" тот же спутник засек, как в лагере спецназа в 200 милях к югу готовят транспортный вертолет.\nбыстро доставить вас туда можно только с самолета-разведчика, и советский спецназ будет там раньше вас. \n
+# you should remember this place, 007. we need any evidence of janus' presence there, and fast. disable the troop helicopter so that nothing can be removed from the scene, and destroy their surveillance cameras.\nthis had to be an inside job, bond. find out who their contact was - the macabre way to do it would be to use their casualty list. of course, you'd have to know who was there first.\n
+LsevxbE.17=@lower LsevxbE.1
+# right, i've altered a standard mine to take a ten-second fuse. there's only one, so don't play around with it. that should take care of their helicopter. this is a covert operation, so i've fitted a silencer to your pistol. satisfied? no? well, tough; that's all you're getting. \n
+LsevxbE.18=так, я переделал обычную мину под десятисекундный запал. она всего одна, так что не балуйтесь с ней. этого хватит на их вертолет. операция тайная, поэтому я поставил на ваш пистолет глушитель. довольны? нет? что ж, ничего не поделаешь, больше вы ничего не получите. \n
+# remember the saying, james? 'never go back'? \n
+LsevxbE.19=@lower LsevxbE.3
+# disrupt all surveillance\n   equipment\n
+LsevxbE.20=отключить всю аппаратуру\n   наблюдения\n
+# break communications link\n   to bunker\n
+LsevxbE.21=прервать связь\n   с бункером\n
+# disable spetznaz support\n   aircraft\n
+LsevxbE.22=вывести из строя\n   вертолет спецназа\n
+# gain entry to bunker\n
+LsevxbE.23=@lower LsevxbE.7
+# Severnaya Installation, Siberian Plateau\n
+LsevxbE.24=Объект Северная, Сибирское плато\n
+# comms room key\n
+LsevxbE.26=ключ радиорубки\n
+# comms room key \n
+LsevxbE.27=ключ радиорубки \n
+# comms room key \n
+LsevxbE.28=ключ радиорубки \n
+# Picked up comms room key.\n
+LsevxbE.29=Взято: ключ радиорубки.\n
+# this access hatch has\nbeen welded shut.\n
+LsevxbE.34=этот люк доступа\nзаварен.\n
+
+## LsiloE - Silo
+# MI6 has become concerned that unscheduled test firings from a missile silo in Kirghizstan are being used to cover the launch of Goldeneye weapons satellites.\n\nDeep intelligence reports suggest that this operation may well be outside the control of the former Soviet powers in the region.
+LsiloE.0=MI6 обеспокоена тем, что внеплановые испытательные пуски из ракетной шахты в Киргизстане служат прикрытием для запуска боевых спутников GoldenEye.\n\nПо данным глубокой разведки, эта операция вполне может находиться вне контроля бывших советских властей региона.
+# Infiltrate the silo and ascertain what is being placed into orbit; if it is the satellites, recover their control circuitry and sabotage the launches. You are authorized to destroy the base if necessary.\n\nThis is a matter of international security, 007. Consider the military personnel expendable.\n
+LsiloE.1=Проникните в шахту и выясните, что выводится на орбиту; если это спутники, заберите их управляющие схемы и сорвите запуски. Вам разрешено при необходимости уничтожить базу.\n\nЭто вопрос международной безопасности, 007. Военным персоналом можно пожертвовать.\n
+# The layout of the missile silo means that a few carefully placed explosive charges will destroy the entire complex - concentrate on the fuel rooms (H4, C3, K2 and A1). 007, remember to treat the timed explosives with respect - you know what happened to 004 in Beirut.\n\nOh, and get me a picture of the satellite, there's a good chap.\n
+LsiloE.2=Устройство ракетной шахты таково, что несколько точно размещенных зарядов уничтожат весь комплекс - сосредоточьтесь на топливных отсеках (H4, C3, K2 и A1). 007, обращайтесь с минами с таймером осторожно - вы знаете, что случилось с 004 в Бейруте.\n\nИ да, сфотографируйте мне спутник, будьте добры.\n
+# You leave at 1800 hours for Bishkek.\n\nJames, just imagine those romantic nights in the steppes. Lying beneath the stars, the campfires twinkling on the hills - sounds like heaven. When you're in the arms of some dusky maiden, spare a thought for poor old me cooped up behind a desk in rainy London.
+LsiloE.3=Вы вылетаете в Бишкек в 18:00.\n\nДжеймс, только представьте эти романтические ночи в степи. Лежать под звездами, костры мерцают на холмах - просто рай. Когда будете в объятиях смуглой красавицы, вспомните обо мне, бедняжке, запертой за столом в дождливом Лондоне.
+# Plant bombs in fuel rooms\n
+LsiloE.4=Заминировать топливные отсеки\n
+# Photograph satellite\n
+LsiloE.5=Сфотографировать спутник\n
+# Obtain telemetric data\n
+LsiloE.6=Получить данные телеметрии\n
+# Retrieve satellite circuitry\n
+LsiloE.7=Добыть схемы спутника\n
+# Minimize scientist casualties\n
+LsiloE.8=Минимизировать потери ученых\n
+# Explosive charge placed -\n              6 minutes to detonation!\n
+LsiloE.9=Заряд установлен -\n              6 минут до взрыва!\n
+# Ourumov: Kill him!\n
+LsiloE.10=Уромов: Убейте его!\n
+# Caution: Detonation imminent!\n
+LsiloE.11=Внимание: взрыв неизбежен!\n
+# Mission Failure: Unacceptable non-military\ncasualties!\n
+LsiloE.12=Провал миссии: недопустимые потери\nсреди гражданских!\n
+# K I R G H I Z S T A N\n
+LsiloE.13=К И Р Г И З С Т А Н\n
+# MI6 has become concerned that unscheduled test firings from a missile silo in kirghizstan are being used to cover the launch of goldeneye weapons satellites.\n\ndeep intelligence reports suggest that this operation may well be outside the control of the former soviet powers in the region.
+LsiloE.14=MI6 обеспокоена тем, что внеплановые испытательные пуски из ракетной шахты в киргизстане служат прикрытием для запуска боевых спутников goldeneye.\n\nпо данным глубокой разведки, эта операция вполне может находиться вне контроля бывших советских властей региона.
+# infiltrate the silo and ascertain what is being placed into orbit;\nif it is the satellites, recover their control circuitry and sabotage the launches. you are authorized to destroy the base if necessary.\n\nthis is a matter of international security, 007. consider the military personnel expendable.\n
+LsiloE.15=проникните в шахту и выясните, что выводится на орбиту;\nесли это спутники, заберите их управляющие схемы и сорвите запуски. вам разрешено при необходимости уничтожить базу.\n\nэто вопрос международной безопасности, 007. военным персоналом можно пожертвовать.\n
+# the layout of the missile silo means that a few carefully placed explosive charges will destroy the entire complex -\nconcentrate on the fuel rooms\n      (H4, C3, K2 and A1).\n\n007, remember to treat the timed explosives with respect - you know what happened to 004 in beirut.\n\noh, and get me a picture of the satellite, there's a good chap.\n
+LsiloE.16=устройство ракетной шахты таково, что несколько точно размещенных зарядов уничтожат весь комплекс -\nсосредоточьтесь на топливных отсеках\n      (H4, C3, K2 и A1).\n\n007, обращайтесь с минами с таймером осторожно - вы знаете, что случилось с 004 в бейруте.\n\nи да, сфотографируйте мне спутник, будьте добры.\n
+# you leave at 1800 hours for bishkek.\n\njames, just imagine those romantic nights in the steppes. lying beneath the stars, the campfires twinkling on the hills - sounds like heaven. when you're in the arms of some dusky maiden, spare a thought for poor old me cooped up behind a desk in rainy london.
+LsiloE.17=@lower LsiloE.3
+# plant bombs in fuel rooms\n
+LsiloE.18=@lower LsiloE.4
+# photograph satellite\n
+LsiloE.19=@lower LsiloE.5
+# obtain telemetric data\n
+LsiloE.20=@lower LsiloE.6
+# retrieve satellite circuitry\n
+LsiloE.21=@lower LsiloE.7
+# minimize scientist casualties\n
+LsiloE.22=@lower LsiloE.8
+# cpu circuitry\n
+LsiloE.24=схемы cpu\n
+# cpu circuit board\n
+LsiloE.25=плата cpu\n
+# CPU Circuit Board\n
+LsiloE.26=Плата CPU\n
+# Picked up a circuit board\n
+LsiloE.27=Взято: плата.\n
+# i/o circuitry\n
+LsiloE.29=схемы в/в\n
+# i/o circuit board\n
+LsiloE.30=плата в/в\n
+# I/O Circuit Board\n
+LsiloE.31=Плата В/В\n
+# Picked up a circuit board\n
+LsiloE.32=Взято: плата.\n
+# rsp circuitry\n
+LsiloE.34=схемы rsp\n
+# rsp circuit board\n
+LsiloE.35=плата rsp\n
+# RSP Circuit Board\n
+LsiloE.36=Плата RSP\n
+# Picked up a circuit board\n
+LsiloE.37=Взято: плата.\n
+# rdp circuitry\n
+LsiloE.39=схемы rdp\n
+# rdp circuit board\n
+LsiloE.40=плата rdp\n
+# RDP Circuit Board\n
+LsiloE.41=Плата RDP\n
+# Picked up a circuit board\n
+LsiloE.42=Взято: плата.\n
+# DAT\n
+LsiloE.44=DAT\n
+# telemetry data DAT\n
+LsiloE.45=DAT телеметрии\n
+# DAT - Telemetry Data\n
+LsiloE.46=DAT - Телеметрия\n
+# Picked up a DAT\n
+LsiloE.47=Взято: DAT.\n
+# keycard\n
+LsiloE.49=ключ-карта\n
+# keycard 4-H4\n
+LsiloE.50=ключ-карта 4-H4\n
+# Keycard (Level 4-H4)\n
+LsiloE.51=Ключ-карта (ур. 4-H4)\n
+# Picked up a keycard.\n
+LsiloE.52=Взято: ключ-карта.\n
+# keycard\n
+LsiloE.54=ключ-карта\n
+# keycard 4-C3\n
+LsiloE.55=ключ-карта 4-C3\n
+# Keycard (Level 4-C3)\n
+LsiloE.56=Ключ-карта (ур. 4-C3)\n
+# Picked up a keycard.\n
+LsiloE.57=Взято: ключ-карта.\n
+# keycard\n
+LsiloE.59=ключ-карта\n
+# keycard 4-K2\n
+LsiloE.60=ключ-карта 4-K2\n
+# Keycard (Level 4-K2)\n
+LsiloE.61=Ключ-карта (ур. 4-K2)\n
+# Picked up a keycard.\n
+LsiloE.62=Взято: ключ-карта.\n
+# Ourumov's\n
+LsiloE.63=Кейс\n
+# briefcase\n
+LsiloE.64=Уромова\n
+# ourumov's briefcase\n
+LsiloE.65=кейс уромова\n
+# Ourumov's Briefcase\n
+LsiloE.66=Кейс Уромова\n
+# Picked up Ourumov's briefcase.\n
+LsiloE.67=Взято: кейс Уромова.\n
+# Soviet Missile Silo, Kirghizstan\n
+LsiloE.68=Советская ракетная шахта, Киргизстан\n
+# Two years ago\n
+LsiloE.69=Два года назад\n
+# Silo infiltrated -\nexplosive charges automatically primed!\n
+LsiloE.70=Проникновение в шахту -\nзаряды автоматически взведены!\n
+
+## LstatE - Statue
+# Following the Severnaya incident, MI6 has lost track of the Pirate helicopter. Presumably the bugging device has been located and destroyed. Natalya Simonova, who returned to St. Petersburg against our advice, has gone missing. We can only assume that she has been abducted by the Janus syndicate in a belated attempt to cover their tracks.\n
+LstatE.0=После инцидента в Северной MI6 потеряла след вертолета "Пират". Видимо, жучок обнаружили и уничтожили. Наталья Симонова, вернувшаяся в Санкт-Петербург вопреки нашим советам, пропала. Можно лишь предположить, что ее похитил синдикат "Янус", запоздало пытаясь замести следы.\n
+# The situation is critical, 007. Janus know we're on to them and they're taking control. We're going to circumvent the usual channels on this one. I've arranged contact with an ex-KGB agent, Valentin Zukovsky, in Statue Park, St. Petersburg. He claims he can set up a meeting with Janus. Apparently, the head of Janus wants to see you in person. Frankly, I'm uneasy about this but it's all we've got to go on.\n
+LstatE.1=Положение критическое, 007. Янус знает, что мы вышли на его след, и берет все под контроль. На этот раз мы обойдем обычные каналы. Я устроил вам встречу с бывшим агентом КГБ Валентином Жуковским в парке статуй в Санкт-Петербурге. Он утверждает, что может организовать встречу с Янусом. Похоже, глава "Януса" хочет увидеть вас лично. Откровенно говоря, мне это не нравится, но другой зацепки у нас нет.\n
+# No gizmos this time, old boy.\n
+LstatE.2=Без игрушек на этот раз, старина.\n
+# Hmm, a damsel in distress.\n\nJust be careful with that chopper, James.\n
+LstatE.3=Хм, дама в беде.\n\nТолько осторожнее с вертолетом, Джеймс.\n
+# Contact Valentin\n
+LstatE.4=Встретить Валентина\n
+# Confront and unmask Janus\n
+LstatE.5=Встретить и разоблачить Януса\n
+# Locate helicopter\n
+LstatE.6=Найти вертолет\n
+# Rescue Natalya\n
+LstatE.7=Спасти Наталью\n
+# Find flight recorder\n
+LstatE.8=Найти черный ящик\n
+# Valentin: Good evening, Mr. Bond.\n           These are strange times...\n
+LstatE.9=Валентин: Добрый вечер, мистер Бонд.\n           Странные нынче времена...\n
+# Bond: With an ex-KGB agent meeting\n        an MI6 operative in the middle\n        of St. Petersburg?\n
+LstatE.10=Бонд: Бывший агент КГБ встречается\n        с агентом MI6 в самом центре\n        Санкт-Петербурга?\n
+# Valentin: Ha! I never thought I'd find\n           myself helping you, but things\n           have changed in Russia.\n
+LstatE.11=Валентин: Ха! Не думал, что когда-то\n           буду вам помогать, но в России\n           все изменилось.\n
+# Valentin: Janus will meet you by Lenin's\n           statue. Beware him, he's a Lienz\n           Cossack traitor.\n
+LstatE.12=Валентин: Янус встретит вас у памятника\n           Ленину. Берегитесь его, он\n           предатель, казак из Лиенца.\n
+# Valentin: Now I must leave - the guards\n           are out in force and I fear they\n           may mistake me for a spy!\n
+LstatE.13=Валентин: Мне пора - повсюду охрана,\n           и я боюсь, что меня примут\n           за шпиона!\n
+# Valentin: I'm risking my life being here,\n           Mr Bond! You could at least\n           be civil enough to listen to me.\n
+LstatE.14=Валентин: Я рискую жизнью, мистер Бонд!\n           Могли бы хоть из вежливости\n           меня выслушать.\n
+# Valentin has left. Contact failed!\n
+LstatE.15=Валентин ушел. Контакт сорван!\n
+# null\n
+LstatE.16=null\n
+# null\n
+LstatE.17=null\n
+# Janus: Good evening, 007.\n
+LstatE.18=Янус: Добрый вечер, 007.\n
+# Janus: Put the gun away.\n         It's insulting to think I haven't\n         anticipated your every move.\n
+LstatE.19=Янус: Убери пистолет.\n         Оскорбительно думать, что я\n         не предвидел каждый твой шаг.\n
+# Janus: There's a good fellow.\n
+LstatE.20=Янус: Вот и умница.\n
+# Trevelyan: So stubborn, James.\n              You always did think you\n              knew best.\n
+LstatE.21=Тревельян: Все такой же упрямый, Джеймс.\n              Ты всегда думал, что\n              знаешь лучше всех.\n
+# Bond: Alec? You're Janus?\n
+LstatE.22=Бонд: Алек? Ты - Янус?\n
+# Trevelyan: Yes, the MI6 'hero',\n              back from the dead.\n
+LstatE.23=Тревельян: Да, 'герой' MI6,\n              вернувшийся с того света.\n
+# Bond: But why, Alec? I trusted you.\n
+LstatE.24=Бонд: Но почему, Алек? Я доверял тебе.\n
+# Trevelyan: Trust can be misplaced,\n              James. My parents trusted\n              the British government.\n
+LstatE.25=Тревельян: Доверие бывает напрасным,\n              Джеймс. Мои родители доверяли\n              британскому правительству.\n
+# Trevelyan: They were betrayed with all\n              the other Lienz Cossacks.\n              I will have my revenge.\n
+LstatE.26=Тревельян: Их предали вместе со всеми\n              казаками из Лиенца.\n              Я отомщу.\n
+# Bond: What have you done with Natalya?\n
+LstatE.27=Бонд: Что ты сделал с Натальей?\n
+# Trevelyan: The girl? I've left her with\n              the Pirate helicopter at the\n              park gates.\n
+LstatE.28=Тревельян: Девчонка? Я оставил ее\n              в вертолете "Пират" у ворот\n              парка.\n
+# Trevelyan: We've finished with them.\n              I have the Goldeneye\n              firing key now.\n
+LstatE.29=Тревельян: Они нам больше не нужны.\n              Теперь у меня есть ключ\n              запуска GoldenEye.\n
+# Trevelyan: By the way, the helicopter's\n              rigged to blow in 3 minutes.\n              I doubt she'll survive.\n
+LstatE.30=Тревельян: Кстати, вертолет взорвется\n              через 3 минуты.\n              Вряд ли она выживет.\n
+# 3 Minutes until helicopter bomb explodes.\n
+LstatE.31=3 минуты до взрыва бомбы в вертолете.\n
+# Helicopter destroyed.\n
+LstatE.32=Вертолет уничтожен.\n
+# Janus: If he won't drop the gun kill him!\n
+LstatE.33=Янус: Не бросит оружие - убейте его!\n
+# Janus: You're an impatient fool, 007, \n         and now you'll die for it.\n
+LstatE.34=Янус: Ты нетерпеливый дурак, 007, \n         и теперь ты за это умрешь.\n
+# Natalya: James!\n
+LstatE.35=Наталья: Джеймс!\n
+# Bond: Quickly, this way!\n        The helicopter's about to explode.\n
+LstatE.36=Бонд: Быстрее, сюда!\n        Вертолет сейчас взорвется.\n
+# Bond: I have to find the helicopter flight\n        recorder. Wait for me at the gates.\n
+LstatE.37=Бонд: Мне нужно найти черный ящик\n        вертолета. Жди меня у ворот.\n
+# Bond: Natalya!\n
+LstatE.38=Бонд: Наталья!\n
+# The flight recorder could not have been\nthrown this far from the helicopter\nexplosion!\n
+LstatE.39=Черный ящик не могло отбросить\nтак далеко от места взрыва\nвертолета!\n
+# Mishkin: Ah, Mr Bond. I see you've taken\n           it upon yourself to liven up the\n           nightlife in St. Petersburg.\n
+LstatE.40=Мишкин: А, мистер Бонд. Вижу, вы решили\n           сами оживить ночную жизнь\n           Санкт-Петербурга.\n
+# Mishkin: Blowing up helicopters,\n           shooting guards\n           - quite a jolly little soiree.\n
+LstatE.41=Мишкин: Взрывать вертолеты,\n           стрелять в охрану\n           - веселая вечеринка.\n
+# Mishkin: Well, it's time to stop now,\n           before any more people get\n           hurt.\n
+LstatE.42=Мишкин: Что ж, пора остановиться,\n           пока никто больше не\n           пострадал.\n
+# Mishkin: I'd like to ask you and Miss\n           Simonova some questions\n           about the Severnaya incident.\n
+LstatE.43=Мишкин: Я хотел бы задать вам и мисс\n           Симоновой пару вопросов\n           об инциденте в Северной.\n
+# Mishkin: Perhaps you'd care to lead the\n           way to Military Intelligence HQ.\n
+LstatE.44=Мишкин: Будьте любезны, проводите нас\n           в штаб военной разведки.\n
+# Mishkin: There's a truck waiting outside.\n
+LstatE.45=Мишкин: Снаружи ждет грузовик.\n
+# Mishkin: Come back Mr. Bond,\n           there's no other way out!\n
+LstatE.46=Мишкин: Вернитесь, мистер Бонд,\n           другого выхода нет!\n
+# Mishkin: Come along Mr. Bond, just step\n           through the gates and we can\n           clear up this misunderstanding.\n
+LstatE.47=Мишкин: Идемте, мистер Бонд, просто\n           выйдите за ворота, и мы\n           уладим это недоразумение.\n
+# Valentin is dead - mission failure!\n
+LstatE.48=Валентин убит - миссия провалена!\n
+# Trevelyan: Closing time, James\n              - last call.\n
+LstatE.49=Тревельян: Закрываемся, Джеймс\n              - последний заказ.\n
+# Proximity fuse triggered.\n15 seconds to helicopter detonation!\n
+LstatE.50=Сработал датчик приближения.\n15 секунд до взрыва вертолета!\n
+# Janus: No gun, 007? \n         MI6 must be cutting their budget\n         these days.\n
+LstatE.51=Янус: Без оружия, 007? \n         Видно, MI6 урезает бюджет\n         в последнее время.\n
+# S T A T U E   P A R K\n
+LstatE.52=П А Р К   С Т А Т У Й\n
+# following the severnaya incident, MI6 has lost track of the pirate helicopter. presumably the bugging device has been located and destroyed. natalya simonova, who returned to st. petersburg against our advice, has gone missing. we can only assume that she has been abducted by the janus syndicate in a belated attempt to cover their tracks.\n
+LstatE.53=после инцидента в северной MI6 потеряла след вертолета "пират". видимо, жучок обнаружили и уничтожили. наталья симонова, вернувшаяся в санкт-петербург вопреки нашим советам, пропала. можно лишь предположить, что ее похитил синдикат "янус", запоздало пытаясь замести следы.\n
+# the situation is critical, 007. janus know we're on to them and they're taking control. we're going to circumvent the usual channels on this one. i've arranged contact with an ex-kgb agent, valentin zukovsky, in statue park, st. petersburg. he claims he can set up a meeting with janus. apparently, the head of janus wants to see you in person. frankly, i'm uneasy about this but it's all we've got to go on.\n
+LstatE.54=@lower LstatE.1
+# no gizmos this time, old boy.\n
+LstatE.55=@lower LstatE.2
+# hmm, a damsel in distress, james.\njust be careful with that chopper.\n
+LstatE.56=хм, дама в беде, джеймс.\nтолько осторожнее с вертолетом.\n
+# contact valentin\n
+LstatE.57=@lower LstatE.4
+# confront and unmask janus\n
+LstatE.58=@lower LstatE.5
+# locate helicopter\n
+LstatE.59=@lower LstatE.6
+# rescue natalya\n
+LstatE.60=@lower LstatE.7
+# find flight recorder\n
+LstatE.61=@lower LstatE.8
+# Statue Park, St. Petersburg\n
+LstatE.62=Парк статуй, Санкт-Петербург\n
+# flight\n
+LstatE.63=черный\n
+# recorder\n
+LstatE.64=ящик\n
+# flight recorder\n
+LstatE.65=черный ящик\n
+# pirate flight recorder\n
+LstatE.66=черный ящик "Пирата"\n
+# Recovered the flight recorder.\n
+LstatE.67=Черный ящик найден.\n
+
+## LtraE - Train
+# The leader of Janus, Alec Trevelyan, is holding Natalya hostage on his armored train.\n
+LtraE.0=Лидер Януса, Алек Тревельян, держит Наталью в заложниках в своем бронепоезде.\n
+# We've lost experienced agents before in hostage situations. Keep a clear head, 007, and don't get sidetracked settling old scores.\n
+LtraE.1=Мы уже теряли опытных агентов в ситуациях с заложниками. Сохраняйте хладнокровие, 007, и не отвлекайтесь на сведение старых счетов.\n
+# A train, 007, pretty simple. Destroy the braking units in each carriage and the emergency \nsystems should bring it to a halt.\n
+LtraE.2=Поезд, 007, все довольно просто. Уничтожьте тормозные блоки в каждом вагоне, и аварийные \nсистемы его остановят.\n
+# That girl again, James? \n
+LtraE.3=Опять эта девушка, Джеймс? \n
+# Destroy brake units\n
+LtraE.4=Уничтожить тормоза\n
+# Rescue Natalya\n
+LtraE.5=Спасти Наталью\n
+# Locate Janus secret base\n
+LtraE.6=Найти тайную базу Януса\n
+# Crack Boris' password\n
+LtraE.7=Взломать пароль Бориса\n
+# Escape to safety\n
+LtraE.8=Спастись бегством\n
+# Trevelyan: That's close enough!\n
+LtraE.9=Тревельян: Не подходи ближе!\n
+# Trevelyan: Come on James, don't try\n              to be clever. Make your move.\n
+LtraE.10=Тревельян: Брось, Джеймс, не пытайся\n              хитрить. Твой ход.\n
+# Bond: You first.\n
+LtraE.11=Бонд: Сначала ты.\n
+# Trevelyan: Two targets. Time for one shot.\n              The girl or the mission?\n
+LtraE.12=Тревельян: Две цели. Время на один выстрел.\n              Девушка или миссия?\n
+# Trevelyan: You'll never win, James.\n
+LtraE.13=Тревельян: Тебе не победить, Джеймс.\n
+# Xenia: Wait for me Alec, I'm hit!\n
+LtraE.14=Ксения: Подожди меня, Алек, я ранена!\n
+# Trevelyan: Kill them!\n
+LtraE.15=Тревельян: Убейте их!\n
+# Trevelyan: James, what an unpleasant\n              surprise. Do come in.\n
+LtraE.16=Тревельян: Джеймс, какой неприятный\n              сюрприз. Заходи.\n
+# Trevelyan: Leaving already, James?\n              I don't think so.\n
+LtraE.17=Тревельян: Уже уходишь, Джеймс?\n              Не думаю.\n
+# Trevelyan: Good luck with the floor, \n              James.\n
+LtraE.18=Тревельян: Удачи с полом, \n              Джеймс.\n
+# Trevelyan: It shouldn't take more than\n              a minute.\n
+LtraE.19=Тревельян: Это займет не больше\n              минуты.\n
+# Natalya: Boris is still backing up his files.\n           I can find out where they're\n           going.\n
+LtraE.20=Наталья: Борис еще копирует свои файлы.\n           Я могу узнать, куда они\n           уходят.\n
+# Natalya: He's in Cuba!\n
+LtraE.21=Наталья: Он на Кубе!\n
+# Natalya: Now, if I just had time to crack \n           his password...\n
+LtraE.22=Наталья: Если бы у меня было время взломать \n           его пароль...\n
+# Natalya: Got it!\n           You're a slug-head, Boris!\n
+LtraE.23=Наталья: Есть!\n           Ты слизняк, Борис!\n
+# Natalya: I'm coming, James!\n
+LtraE.24=Наталья: Я иду, Джеймс!\n
+# Trevelyan: Too slow, 007.\n
+LtraE.25=Тревельян: Не успел, 007.\n
+# Natalya: Well done, James, that's the\n           computer out of action.\n
+LtraE.26=Наталья: Молодец, Джеймс, компьютер\n           выведен из строя.\n
+# Natalya: Just how am I supposed to\n           locate the Janus base?\n
+LtraE.27=Наталья: И как мне теперь найти\n           базу Януса?\n
+# Mission failure. Natalya has been killed.\n
+LtraE.28=Миссия провалена. Наталья погибла.\n
+# T R A I N\n
+LtraE.29=П О Е З Д\n
+# the leader of janus, alec trevelyan, is holding natalya hostage on his armored train.\n
+LtraE.30=@lower LtraE.0
+# we've lost experienced agents before in hostage situations. Keep a clear head, 007, and don't get sidetracked settling old scores.\n
+LtraE.31=мы уже теряли опытных агентов в ситуациях с заложниками. Сохраняйте хладнокровие, 007, и не отвлекайтесь на сведение старых счетов.\n
+# a train, 007, pretty simple. destroy the braking units in each carriage and the emergency \nsystems should bring it to a halt.\n
+LtraE.32=@lower LtraE.2
+# that girl again, james? \n
+LtraE.33=@lower LtraE.3
+# destroy brake units\n
+LtraE.34=@lower LtraE.4
+# rescue natalya\n
+LtraE.35=@lower LtraE.5
+# locate janus secret base\n
+LtraE.36=@lower LtraE.6
+# crack boris' password\n
+LtraE.37=@lower LtraE.7
+# escape to safety\n
+LtraE.38=@lower LtraE.8
+# door key\n
+LtraE.40=ключ двери\n
+# train door key\n
+LtraE.41=ключ от поезда\n
+# train door key\n
+LtraE.42=ключ от поезда\n
+# Picked up a door key.\n
+LtraE.43=Взято: ключ от двери.\n
+# Converted Missile Train, heading east\n
+LtraE.44=Ракетный бронепоезд, курс на восток\n
+
+## LgunE - Weapons
+#    D5K\n
+LgunE.0=   D5K\n
+#    Issue\n
+LgunE.1=   выпуск\n
+#    Mine\n
+LgunE.2=   Мина\n
+#    PP7\n
+LgunE.3=   PP7\n
+#   DD44\n
+LgunE.4=  DD44\n
+#   Gun\n
+LgunE.5= пистолет\n
+#   Knife\n
+LgunE.6=  нож\n
+#   Mine\n
+LgunE.7=  Мина\n
+#  KF7\n
+LgunE.8= KF7\n
+#  Mine\n
+LgunE.9= Мина\n
+#  Rifle\n
+LgunE.10= винтовка\n
+#  Rocket\n
+LgunE.11= Ракета\n
+#  Shotgun\n
+LgunE.12= дробовик\n
+# (Proximity)\n
+LgunE.13=(ловушка)\n
+# (Remote)\n
+LgunE.14=(радио)\n
+# (Timed)\n
+LgunE.15=(таймер)\n
+# (silenced)\n
+LgunE.16=(с глуш.)\n
+# -\n
+LgunE.17=-\n
+# Assault\n
+LgunE.18=Штурм.\n
+# Attract\n
+LgunE.19=Притяжение\n
+# Audio Tape\n
+LgunE.20=Аудиокассета\n
+# Automatic Shotgun\n
+LgunE.21=Авт. дробовик\n
+# Automatic\n
+LgunE.22=Авт.\n
+# Blackbox\n
+LgunE.23=Черный ящик\n
+# Blueprints\n
+LgunE.24=Чертежи\n
+# Bolt Key\n
+LgunE.25=Ключ засова\n
+# Bomb Case\n
+LgunE.26=Кейс-бомба\n
+# Bomb Defuser\n
+LgunE.27=Деактиватор\n
+# Briefcase\n
+LgunE.28=Кейс\n
+# Bug Detector\n
+LgunE.29=Детектор жучков\n
+# Bug\n
+LgunE.30=Жучок\n
+# Bungee\n
+LgunE.31=Банджи\n
+# Camera\n
+LgunE.32=Камера\n
+# Circuit Board\n
+LgunE.33=Плата\n
+# Clipboard\n
+LgunE.34=Планшет\n
+# Communicator\n
+LgunE.35=Коммуникатор\n
+# Controller\n
+LgunE.36=Контроллер\n
+# Cougar Magnum\n
+LgunE.37=Cougar Magnum\n
+# Cougar\n
+LgunE.38=Cougar\n
+# Credit Card\n
+LgunE.39=Кредитка\n
+# D5K (silenced)\n
+LgunE.40=D5K (с глуш.)\n
+# D5K Deutsche\n
+LgunE.41=D5K Deutsche\n
+# DD44 Dostovei\n
+LgunE.42=DD44 Dostovei\n
+# Dark Glasses\n
+LgunE.43=Темные очки\n
+# Dat Tape\n
+LgunE.44=DAT-кассета\n
+# Datathief\n
+LgunE.45=Вор данных\n
+# Detonator\n
+LgunE.46=Детонатор\n
+# Deutsche\n
+LgunE.47=Deutsche\n
+# Door Decoder\n
+LgunE.48=Дешифратор\n
+# Door Exploder\n
+LgunE.49=Взрыватель двери\n
+# Dostovei\n
+LgunE.50=Dostovei\n
+# Guidance Data\n
+LgunE.51=Данные наведения\n
+# Flare Pistol\n
+LgunE.52=Сигн. пистолет\n
+# Gas Keyring\n
+LgunE.53=Брелок с газом\n
+# Geiger Counter\n
+LgunE.54=Счетчик Гейгера\n
+# Gold Bar\n
+LgunE.55=Зол. слиток\n
+# Gold PP7\n
+LgunE.56=Золотой PP7\n
+# Golden Gun\n
+LgunE.57=Зол. пистолет\n
+# GoldenEye Key\n
+LgunE.58=Ключ GoldenEye\n
+# Golden\n
+LgunE.59=Золотой\n
+# Grenade Launcher\n
+LgunE.60=Гранатомет\n
+# Grenade\n
+LgunE.61=Граната\n
+# Hand Grenade\n
+LgunE.62=Граната\n
+# Heroine\n
+LgunE.63=Героиня\n
+# Hunting Knife\n
+LgunE.64=Охотничий нож\n
+# Identifier\n
+LgunE.65=Идентификатор\n
+# KF7 Soviet\n
+LgunE.66=KF7 Soviet\n
+# Key Analyzer Case\n
+LgunE.67=Кейс анализатора\n
+# Key Analyzer\n
+LgunE.68=Анализатор\n
+# Keycard\n
+LgunE.69=Ключ-карта\n
+# Knife\n
+LgunE.70=Нож\n
+# Laser\n
+LgunE.71=Лазер\n
+# Launcher\n
+LgunE.72=пуск. уст.\n
+# Lectre\n
+LgunE.73=Лектр\n
+# Lock Exploder\n
+LgunE.74=Взрыватель замка\n
+# Magnet Repel\n
+LgunE.75=Магнит-отталк.\n
+# Magnum\n
+LgunE.76=Magnum\n
+# Map\n
+LgunE.77=Карта\n
+# Micro Camera\n
+LgunE.78=Микрокамера\n
+# Microcode\n
+LgunE.79=Микрокод\n
+# Microfilm\n
+LgunE.80=Микрофильм\n
+# Military Laser\n
+LgunE.81=Боевой лазер\n
+# Military\n
+LgunE.82=Боевой\n
+# Money\n
+LgunE.83=Деньги\n
+# Null\n
+LgunE.84=Пусто\n
+# PP7 (silenced)\n
+LgunE.85=PP7 (с глуш.)\n
+# PP7 Special Issue\n
+LgunE.86=PP7 спец. выпуск\n
+# PP7 Special\n
+LgunE.87=PP7 спец.\n
+# Phantom\n
+LgunE.88=Phantom\n
+# Piton Gun\n
+LgunE.89=Крюкомет\n
+# Plans\n
+LgunE.90=Планы\n
+# Plastique\n
+LgunE.91=Пластид\n
+# Polarized Glasses\n
+LgunE.92=Поляризационные очки\n
+# Proximity Mine\n
+LgunE.93=Мина-ловушка\n
+# RC-P90\n
+LgunE.94=RC-P90\n
+# Red Dossier\n
+LgunE.95=Красное досье\n
+# Remote Mine\n
+LgunE.96=Радиомина\n
+# Rocket Launcher\n
+LgunE.97=Ракетница\n
+# Safecracker Case\n
+LgunE.98=Кейс медвежатника\n
+# Safecracker\n
+LgunE.99=Медвежатник\n
+# Shotgun\n
+LgunE.100=Дробовик\n
+# Silver PP7\n
+LgunE.101=Серебр. PP7\n
+# Sniper Rifle\n
+LgunE.102=Снайп. винтовка\n
+# Sniper\n
+LgunE.103=Снайп.\n
+# Soviet\n
+LgunE.104=Soviet\n
+# Spool Tape\n
+LgunE.105=Бобина\n
+# Spy File\n
+LgunE.106=Файл шпиона\n
+# Klobb\n
+LgunE.107=Klobb\n
+# Staff List\n
+LgunE.108=Список штата\n
+# Suit_lf_hand\n
+LgunE.109=Suit_lf_hand\n
+# Tank\n
+LgunE.110=Танк\n
+# Taser\n
+LgunE.111=Шокер\n
+# Throwing Knife\n
+LgunE.112=Метательный нож\n
+# Throwing\n
+LgunE.113=Метательный\n
+# Timed Mine\n
+LgunE.114=Мина-таймер\n
+# Token\n
+LgunE.115=Жетон\n
+# US AR33 Assault Rifle\n
+LgunE.116=Штурм. винтовка US AR33\n
+# US AR33\n
+LgunE.117=US AR33\n
+# Unarmed\n
+LgunE.118=Без оружия\n
+# Video Tape\n
+LgunE.119=Видеокассета\n
+# Watch Communicator\n
+LgunE.120=Часы-коммуникатор\n
+# Watch Geiger Counter\n
+LgunE.121=Часы-счетчик Гейгера\n
+# Watch Identifier\n
+LgunE.122=Часы-идентификатор\n
+# Watch Laser\n
+LgunE.123=Лазер в часах\n
+# Watch Magnet Attract\n
+LgunE.124=Часы-магнит (притяж.)\n
+# Watch Magnet Repel\n
+LgunE.125=Часы-магнит (отталк.)\n
+# Watch Magnet\n
+LgunE.126=Часы-магнит\n
+# Watch\n
+LgunE.127=Часы\n
+# Weapon Case\n
+LgunE.128=Оружейный кейс\n
+# Yale Key\n
+LgunE.129=Ключ Yale\n
+# ZMG (9mm)\n
+LgunE.130=ZMG (9mm)\n
+# ar33\n
+LgunE.132=ar33\n
+# audio tape\n
+LgunE.133=@lower LgunE.20
+# auto shotgun\n
+LgunE.134=авт. дробовик\n
+# blackbox\n
+LgunE.135=@lower LgunE.23
+# blueprints\n
+LgunE.136=@lower LgunE.24
+# bolt key\n
+LgunE.137=@lower LgunE.25
+# bomb case\n
+LgunE.138=@lower LgunE.26
+# bomb defuser\n
+LgunE.139=@lower LgunE.27
+# briefcase\n
+LgunE.140=@lower LgunE.28
+# bug detector\n
+LgunE.141=@lower LgunE.29
+# bug\n
+LgunE.142=@lower LgunE.30
+# bungee\n
+LgunE.143=@lower LgunE.31
+# camera\n
+LgunE.144=@lower LgunE.32
+# circuit board\n
+LgunE.145=@lower LgunE.33
+# clipboard\n
+LgunE.146=@lower LgunE.34
+# cougar magnum\n
+LgunE.147=@lower LgunE.37
+# credit card\n
+LgunE.148=@lower LgunE.39
+# d5k (silenced)\n
+LgunE.149=@lower LgunE.40
+# d5k\n
+LgunE.150=d5k\n
+# dark glasses\n
+LgunE.151=@lower LgunE.43
+# dat tape\n
+LgunE.152=@lower LgunE.44
+# datathief\n
+LgunE.153=@lower LgunE.45
+# dd44\n
+LgunE.154=dd44\n
+# detonator\n
+LgunE.155=@lower LgunE.46
+# door decoder\n
+LgunE.156=@lower LgunE.48
+# door exploder\n
+LgunE.157=@lower LgunE.49
+# guidance data\n
+LgunE.158=@lower LgunE.51
+# flare pistol\n
+LgunE.159=@lower LgunE.52
+# gas keyring\n
+LgunE.160=@lower LgunE.53
+# gold bar\n
+LgunE.161=@lower LgunE.55
+# gold pp7\n
+LgunE.162=@lower LgunE.56
+# golden gun\n
+LgunE.163=@lower LgunE.57
+# goldeneye key\n
+LgunE.164=@lower LgunE.58
+# grenade launcher\n
+LgunE.165=@lower LgunE.60
+# grenade\n
+LgunE.166=@lower LgunE.61
+# heroine\n
+LgunE.167=@lower LgunE.63
+# hunting knife\n
+LgunE.168=@lower LgunE.64
+# key analyzer\n
+LgunE.169=@lower LgunE.68
+# keycard\n
+LgunE.170=@lower LgunE.69
+# kf7 soviet\n
+LgunE.171=@lower LgunE.66
+# laser\n
+LgunE.172=@lower LgunE.71
+# lectre\n
+LgunE.173=@lower LgunE.73
+# lock exploder\n
+LgunE.174=@lower LgunE.74
+# map\n
+LgunE.175=@lower LgunE.77
+# micro camera\n
+LgunE.176=@lower LgunE.78
+# microcode\n
+LgunE.177=@lower LgunE.79
+# microfilm\n
+LgunE.178=@lower LgunE.80
+# money\n
+LgunE.179=@lower LgunE.83
+# phantom\n
+LgunE.180=@lower LgunE.88
+# piton gun\n
+LgunE.181=@lower LgunE.89
+# plans\n
+LgunE.182=@lower LgunE.90
+# plastique\n
+LgunE.183=@lower LgunE.91
+# polarized glasses\n
+LgunE.184=@lower LgunE.92
+# pp7 (silenced)\n
+LgunE.185=@lower LgunE.85
+# pp7\n
+LgunE.186=pp7\n
+# proximity mine\n
+LgunE.187=@lower LgunE.93
+# rc-p90\n
+LgunE.188=@lower LgunE.94
+# red dossier\n
+LgunE.189=@lower LgunE.95
+# remote mine\n
+LgunE.190=@lower LgunE.96
+# rocket launcher\n
+LgunE.191=@lower LgunE.97
+# safecracker\n
+LgunE.192=@lower LgunE.99
+# shotgun\n
+LgunE.193=@lower LgunE.100
+# silver pp7\n
+LgunE.194=@lower LgunE.101
+# sniper rifle\n
+LgunE.195=@lower LgunE.102
+# spool tape\n
+LgunE.196=@lower LgunE.105
+# spy file\n
+LgunE.197=@lower LgunE.106
+# klobb\n
+LgunE.198=@lower LgunE.107
+# staff list\n
+LgunE.199=@lower LgunE.108
+# tank\n
+LgunE.200=@lower LgunE.110
+# taser\n
+LgunE.201=@lower LgunE.111
+# throwing knife\n
+LgunE.202=@lower LgunE.112
+# timed mine\n
+LgunE.203=@lower LgunE.114
+# token\n
+LgunE.204=@lower LgunE.115
+# unarmed\n
+LgunE.205=@lower LgunE.118
+# video tape\n
+LgunE.206=@lower LgunE.119
+# watch communicator\n
+LgunE.207=@lower LgunE.120
+# watch geiger counter\n
+LgunE.208=@lower LgunE.121
+# watch identifier\n
+LgunE.209=@lower LgunE.122
+# watch laser\n
+LgunE.210=@lower LgunE.123
+# watch magnet attract\n
+LgunE.211=@lower LgunE.124
+# watch magnet repel\n
+LgunE.212=@lower LgunE.125
+# weapon case\n
+LgunE.213=@lower LgunE.128
+# yale key\n
+LgunE.214=@lower LgunE.129
+# zmg (9mm)\n
+LgunE.215=@lower LgunE.130
+# Analyzing the GoldenEye key...\n
+LgunE.216=Анализ ключа GoldenEye...\n
+# You do not have the GoldenEye\n key.\n
+LgunE.217=У вас нет ключа\n GoldenEye.\n
+# kill count
+LgunE.218=убито
+# died once\n
+LgunE.219=погиб 1 раз\n
+# died
+LgunE.220=погиб
+# times
+LgunE.221=раз(а)
+# suicide count
+LgunE.222=самоубийств
+
+## LtitleE - Stage and menu titles
+# hour
+LtitleE.0=ч
+# minute
+LtitleE.1=мин
+# second
+LtitleE.2=сек
+# s
+LtitleE.3=.
+# START\n
+LtitleE.4=СТАРТ\n
+# NEXT\n
+LtitleE.5=ДАЛЕЕ\n
+# PREVIOUS\n
+LtitleE.6=НАЗАД\n
+# TWYCROSS BOARD OF GAME CLASSIFICATION\n
+LtitleE.7=КОМИССИЯ TWYCROSS ПО ОЦЕНКЕ ИГР\n
+# This is to certify\n
+LtitleE.8=Подтверждаем, что\n
+# (c) 1997 Nintendo/Rare\n
+LtitleE.9=(c) 1997 Nintendo/Rare\n
+# (c) 1962, 1995 Danjaq, LLC. &\n
+LtitleE.10=(c) 1962, 1995 Danjaq, LLC. &\n
+# U.A.C. All Rights Reserved\n
+LtitleE.11=U.A.C. All Rights Reserved\n
+# (c) 1997 Eon Productions\n
+LtitleE.12=(c) 1997 Eon Productions\n
+# Ltd. & Mac B. Inc.\n
+LtitleE.13=Ltd. & Mac B. Inc.\n
+# Suitable only for 1-4 persons\n
+LtitleE.14=Только для 1-4 игроков\n
+# PRESIDENT\n
+LtitleE.15=ПРЕЗИДЕНТ\n
+# VICE\n
+LtitleE.16=ВИЦЕ\n
+# James Bond theme by Monty Norman.\n
+LtitleE.17=Тема Джеймса Бонда - Монти Норман.\n
+# Used by permission of EMI Unart Catalog Inc.\n
+LtitleE.18=Used by permission of EMI Unart Catalog Inc.\n
+# Agent
+LtitleE.19=Агент
+# Secret Agent
+LtitleE.20=Секретный агент
+# 00 Agent
+LtitleE.21=Агент 00
+# 007
+LtitleE.22=007
+# Erase file?\n
+LtitleE.23=Стереть файл?\n
+# cancel\n
+LtitleE.24=отмена\n
+# confirm\n
+LtitleE.25=принять\n
+# Mission 
+LtitleE.26=Миссия 
+# Copy\n
+LtitleE.27=Копия\n
+# Erase\n
+LtitleE.28=Стереть\n
+# SELECT MISSION\n
+LtitleE.29=ВЫБОР МИССИИ\n
+# MULTIPLAYER\n
+LtitleE.30=МУЛЬТИПЛЕЕР\n
+# CHEAT OPTIONS\n
+LtitleE.31=ЧИТЫ\n
+# : James Bond\n
+LtitleE.32=: Джеймс Бонд\n
+# Mission 
+LtitleE.33=Миссия 
+# Part 
+LtitleE.34=Часть 
+# DIFFICULTY:\n
+LtitleE.35=СЛОЖНОСТЬ:\n
+# Agent\n
+LtitleE.36=Агент\n
+# Secret Agent\n
+LtitleE.37=Секретный агент\n
+# 00 Agent\n
+LtitleE.38=Агент 00\n
+# 007\n
+LtitleE.39=007\n
+# SPECIAL OPTIONS:\n
+LtitleE.40=ОСОБЫЕ НАСТРОЙКИ:\n
+# Enemy reaction speed\n
+LtitleE.41=Реакция врагов\n
+# Enemy health\n
+LtitleE.42=Здоровье врагов\n
+# Enemy damage\n
+LtitleE.43=Урон врагов\n
+# Enemy accuracy\n
+LtitleE.44=Точность врагов\n
+# Unlimited
+LtitleE.45=Без лимита
+# 5 Minutes
+LtitleE.46=5 минут
+# 10 Minutes
+LtitleE.47=10 минут
+# 20 Minutes
+LtitleE.48=20 минут
+# First to 5 points
+LtitleE.49=Первым до 5 очков
+# First to 10 points
+LtitleE.50=Первым до 10 очков
+# First to 20 points
+LtitleE.51=Первым до 20 очков
+# Last person alive wins
+LtitleE.52=Побеждает последний живой
+# Normal
+LtitleE.53=Обычный
+# You Only Live Twice
+LtitleE.54=Живешь только дважды
+# The Living Daylights [Flag Tag]
+LtitleE.55=Искры из глаз [Флаг]
+# The Man With the Golden Gun
+LtitleE.56=Человек с золотым пистолетом
+# License to Kill
+LtitleE.57=Лицензия на убийство
+# Team: 2 vs 2
+LtitleE.58=Команды: 2 на 2
+# Team: 3 vs 1
+LtitleE.59=Команды: 3 на 1
+# Team: 2 vs 1
+LtitleE.60=Команды: 2 на 1
+# Health -10\n(Hero)
+LtitleE.61=Здоровье -10\n(Герой)
+# Health -4\n(Veteran)
+LtitleE.62=Здоровье -4\n(Ветеран)
+# Health -3\n(Veteran)
+LtitleE.63=Здоровье -3\n(Ветеран)
+# Health -2\n(Veteran)
+LtitleE.64=Здоровье -2\n(Ветеран)
+# Health -1\n(Veteran)
+LtitleE.65=Здоровье -1\n(Ветеран)
+# Health +0\n(Normal)
+LtitleE.66=Здоровье +0\n(Обычный)
+# Health +1\n(Novice)
+LtitleE.67=Здоровье +1\n(Новичок)
+# Health +2\n(Novice)
+LtitleE.68=Здоровье +2\n(Новичок)
+# Health +3\n(Novice)
+LtitleE.69=Здоровье +3\n(Новичок)
+# Health +4\n(Novice)
+LtitleE.70=Здоровье +4\n(Новичок)
+# Health +10\n(Rookie)
+LtitleE.71=Здоровье +10\n(Рекрут)
+# Sight OFF, Auto Aim OFF
+LtitleE.72=Прицел НЕТ, Автоприцел НЕТ
+# Sight ON, Auto Aim OFF
+LtitleE.73=Прицел ДА, Автоприцел НЕТ
+# Sight OFF, Auto Aim ON
+LtitleE.74=Прицел НЕТ, Автоприцел ДА
+# Sight ON, Auto Aim ON
+LtitleE.75=Прицел ДА, Автоприцел ДА
+# MULTIPLAYER OPTIONS:\n
+LtitleE.76=НАСТРОЙКИ МУЛЬТИПЛЕЕРА:\n
+# Players:\n
+LtitleE.77=Игроки:\n
+# Scenario:\n
+LtitleE.78=Сценарий:\n
+# Level:\n
+LtitleE.79=Уровень:\n
+# Game Length:\n
+LtitleE.80=Время игры:\n
+# Weapons:\n
+LtitleE.81=Оружие:\n
+# Characters\n
+LtitleE.82=Персонажи\n
+# Health\n
+LtitleE.83=Здоровье\n
+# Aim:\n
+LtitleE.84=Прицел:\n
+# Select Character
+LtitleE.85=Выбор персонажа
+# Select Handicap:
+LtitleE.86=Выбор форы:
+# SCENARIO:\n
+LtitleE.87=СЦЕНАРИЙ:\n
+# Select Teams
+LtitleE.88=Выбор команд
+# Red Team
+LtitleE.89=Красные
+# Blue Team
+LtitleE.90=Синие
+# Completed\n
+LtitleE.91=Выполнено\n
+# FAILED\n
+LtitleE.92=ПРОВАЛЕНО\n
+# PRIMARY OBJECTIVES:\n
+LtitleE.93=ОСНОВНЫЕ ЗАДАЧИ:\n
+# BACKGROUND:\n
+LtitleE.94=ПРЕДЫСТОРИЯ:\n
+# M BRIEFING:\n
+LtitleE.95=БРИФИНГ М:\n
+# Q BRANCH:\n
+LtitleE.96=ОТДЕЛ Q:\n
+# MONEYPENNY:\n
+LtitleE.97=МАНИПЕННИ:\n
+# REPORT:\n
+LtitleE.98=ОТЧЕТ:\n
+# Mission status:\n
+LtitleE.99=Статус миссии:\n
+#  KILLED IN ACTION\n
+LtitleE.100= ПОГИБ В БОЮ\n
+#  ABORTED\n
+LtitleE.101= ПРЕРВАНА\n
+#  Completed\n
+LtitleE.102= Выполнена\n
+#  FAILED\n
+LtitleE.103= ПРОВАЛЕНА\n
+# STATISTICS:\n
+LtitleE.104=СТАТИСТИКА:\n
+# Time:\n
+LtitleE.105=Время:\n
+# Accuracy:\n
+LtitleE.106=Точность:\n
+# Weapon of choice:\n
+LtitleE.107=Любимое оружие:\n
+# Shot total:\n
+LtitleE.108=Выстрелов:\n
+# Head hits:\n
+LtitleE.109=В голову:\n
+# Body hits:\n
+LtitleE.110=В тело:\n
+# Limb hits:\n
+LtitleE.111=В руки/ноги:\n
+# Others:\n
+LtitleE.112=Прочие:\n
+# Kill total:\n
+LtitleE.113=Всего убито:\n
+# CHEAT OPTIONS:\n
+LtitleE.114=ЧИТЫ:\n
+# ON\n
+LtitleE.115=ВКЛ\n
+# OFF\n
+LtitleE.116=ВЫКЛ\n
+# CHEAT SELECT MISSION
+LtitleE.117=ЧИТ: ВЫБОР МИССИИ
+# NO CONTROLLER IN CONTROLLER SOCKET 1
+LtitleE.118=НЕТ КОНТРОЛЛЕРА В РАЗЪЕМЕ 1
+# PLEASE POWER OFF AND ATTACH A CONTROLLER
+LtitleE.119=ВЫКЛЮЧИТЕ ПИТАНИЕ И ПОДКЛЮЧИТЕ КОНТРОЛЛЕР
+# Arkangelsk
+LtitleE.120=Архангельск
+# Dam
+LtitleE.121=Плотина
+# Facility
+LtitleE.122=Завод
+# Runway
+LtitleE.123=Аэродром
+# Severnaya
+LtitleE.124=Северная
+# Surface
+LtitleE.125=Поверхность
+# Bunker
+LtitleE.126=Бункер
+# Kirghizstan
+LtitleE.127=Киргизстан
+# Launch Silo #4
+LtitleE.128=Пусковая шахта N4
+# Silo
+LtitleE.129=Шахта
+# Monte Carlo
+LtitleE.130=Монте-Карло
+# Frigate
+LtitleE.131=Фрегат
+# St. Petersburg
+LtitleE.132=Санкт-Петербург
+# Statue Park
+LtitleE.133=Парк статуй
+# Statue
+LtitleE.134=Статуи
+# Military Archives
+LtitleE.135=Военные архивы
+# Archives
+LtitleE.136=Архивы
+# Streets
+LtitleE.137=Улицы
+# Depot
+LtitleE.138=Депо
+# Train
+LtitleE.139=Поезд
+# Cuba
+LtitleE.140=Куба
+# Jungle
+LtitleE.141=Джунгли
+# Control Center
+LtitleE.142=Центр управления
+# Control
+LtitleE.143=Пульт
+# Water Caverns
+LtitleE.144=Водные пещеры
+# Caverns
+LtitleE.145=Пещеры
+# Antenna Cradle
+LtitleE.146=Колыбель антенны
+# Cradle
+LtitleE.147=Колыбель
+# Teotihuaca'n
+LtitleE.148=Теотиуакан
+# Aztec Complex
+LtitleE.149=Комплекс ацтеков
+# Aztec
+LtitleE.150=Ацтеки
+# el-Saghira
+LtitleE.151=Эль-Сагира
+# Egyptian Temple
+LtitleE.152=Египетский храм
+# Egyptian
+LtitleE.153=Египет
+# Random
+LtitleE.154=Случайный
+# RANDOM
+LtitleE.155=СЛУЧАЙНЫЙ
+# Temple
+LtitleE.156=Храм
+# TEMPLE
+LtitleE.157=ХРАМ
+# Complex
+LtitleE.158=Комплекс
+# COMPLEX
+LtitleE.159=КОМПЛЕКС
+# Library
+LtitleE.160=Библиотека
+# LIBRARY
+LtitleE.161=БИБЛИОТЕКА
+# Caves
+LtitleE.162=Гроты
+# CAVES
+LtitleE.163=ГРОТЫ
+# Facility
+LtitleE.164=Завод
+# FACILITY
+LtitleE.165=ЗАВОД
+# Severnaya Bunker
+LtitleE.166=Бункер Северной
+# BUNKER
+LtitleE.167=БУНКЕР
+# Military Archives
+LtitleE.168=Военные архивы
+# ARCHIVES
+LtitleE.169=АРХИВЫ
+# Water Caverns
+LtitleE.170=Водные пещеры
+# CAVERNS
+LtitleE.171=ПЕЩЕРЫ
+# Egyptian Temple
+LtitleE.172=Египетский храм
+# EGYPTIAN
+LtitleE.173=ЕГИПЕТ
+# Citadel
+LtitleE.174=Цитадель
+# CITADEL
+LtitleE.175=ЦИТАДЕЛЬ
+# dest
+LtitleE.176=dest
+# dest
+LtitleE.177=dest
+# stat
+LtitleE.178=stat
+# stat
+LtitleE.179=stat
+# crad
+LtitleE.180=crad
+# cradle
+LtitleE.181=@lower LtitleE.147
+# azt
+LtitleE.182=azt
+# azt
+LtitleE.183=azt
+# Bond
+LtitleE.184=Бонд
+# Mishkin
+LtitleE.185=Мишкин
+# Boris
+LtitleE.186=Борис
+# Ourumov
+LtitleE.187=Уромов
+# Trevelyan
+LtitleE.188=Тревельян
+# Valentin
+LtitleE.189=Валентин
+# Xenia
+LtitleE.190=Ксения
+# Natalya
+LtitleE.191=Наталья
+# Baron Samedi
+LtitleE.192=Барон Самеди
+# Jaws
+LtitleE.193=Челюсти
+# Mayday
+LtitleE.194=Мэйдэй
+# Oddjob
+LtitleE.195=Оджоб
+# Rosika
+LtitleE.196=Розика
+# Karl
+LtitleE.197=Карл
+# Martin
+LtitleE.198=Мартин
+# Mark
+LtitleE.199=Марк
+# Dave
+LtitleE.200=Дэйв
+# Duncan
+LtitleE.201=Дункан
+# B
+LtitleE.202=Би
+# Steve E
+LtitleE.203=Стив И
+# Grant
+LtitleE.204=Грант
+# Graeme
+LtitleE.205=Грэм
+# Ken
+LtitleE.206=Кен
+# Alan
+LtitleE.207=Алан
+# Pete
+LtitleE.208=Пит
+# Shaun
+LtitleE.209=Шон
+# Dwayne
+LtitleE.210=Дуэйн
+# Des
+LtitleE.211=Дес
+# Chris
+LtitleE.212=Крис
+# Lee
+LtitleE.213=Ли
+# Neil
+LtitleE.214=Нил
+# Jim
+LtitleE.215=Джим
+# Robin
+LtitleE.216=Робин
+# Steve H
+LtitleE.217=Стив Эйч
+# Terrorist
+LtitleE.218=Террорист
+# Biker
+LtitleE.219=Байкер
+# Joel
+LtitleE.220=Джоэл
+# Scott
+LtitleE.221=Скотт
+# Joe
+LtitleE.222=Джо
+# Sally
+LtitleE.223=Салли
+# Marion
+LtitleE.224=Мэрион
+# Mandy
+LtitleE.225=Мэнди
+# Vivien
+LtitleE.226=Вивьен
+# The Actors\n
+LtitleE.228=Актеры\n
+# Starring\n
+LtitleE.229=В ролях\n
+# Also Featuring\n
+LtitleE.230=А также\n
+# Guest Star\n
+LtitleE.231=Особый гость\n
+# 007\n
+LtitleE.232=007\n
+# James Bond
+LtitleE.233=Джеймс Бонд
+# Natalya Simonova\n
+LtitleE.234=Наталья Симонова\n
+# 006\n
+LtitleE.235=006\n
+# Alec Trevelyan\n
+LtitleE.236=Алек Тревельян\n
+# Janus Operative\n
+LtitleE.237=Агент Януса\n
+# Xenia Onatopp\n
+LtitleE.238=Ксения Онатопп\n
+# General\n
+LtitleE.239=Генерал\n
+# Arkady Ourumov\n
+LtitleE.240=Аркадий Уромов\n
+# Boris Grishenko\n
+LtitleE.241=Борис Гришенко\n
+# Ex KGB Agent\n
+LtitleE.242=Экс-агент КГБ\n
+# Valentin Zukovsky\n
+LtitleE.243=Валентин Жуковский\n
+# Defense Minister\n
+LtitleE.244=Министр обороны\n
+# Dimitri Mishkin\n
+LtitleE.245=Дмитрий Мишкин\n
+# Mayday\n
+LtitleE.246=Мэйдэй\n
+# Jaws\n
+LtitleE.247=Челюсти\n
+# Oddjob\n
+LtitleE.248=Оджоб\n
+# Baron Samedi\n
+LtitleE.249=Барон Самеди\n
+# Jungle Commando\n
+LtitleE.250=Коммандо джунглей\n
+# St. Petersburg Guard\n
+LtitleE.251=Охранник Петербурга\n
+# Russian Infantry\n
+LtitleE.252=Русская пехота\n
+# Russian Soldier\n
+LtitleE.253=Русский солдат\n
+# Janus Marine\n
+LtitleE.254=Морпех Януса\n
+# Janus Special Forces\n
+LtitleE.255=Спецназ Януса\n
+# Russian Commandant\n
+LtitleE.256=Русский комендант\n
+# Naval Officer\n
+LtitleE.257=Морской офицер\n
+# Siberian Guard\n
+LtitleE.258=Охранник Сибири\n
+# Arctic Commando\n
+LtitleE.259=Полярный коммандо\n
+# Siberian Special Forces\n
+LtitleE.260=Сибирский спецназ\n
+# Moonraker Elite\n
+LtitleE.261=Элита Moonraker\n
+# Helicopter Pilot\n
+LtitleE.262=Пилот вертолета\n
+# Scientist\n
+LtitleE.263=Ученый\n
+# Civilian\n
+LtitleE.264=Гражданский\n
+# 1.\n
+LtitleE.265=1.\n
+# 2.\n
+LtitleE.266=2.\n
+# 3.\n
+LtitleE.267=3.\n
+# 4.\n
+LtitleE.268=4.\n
+# Basement
+LtitleE.269=Подвал
+# BASEMENT
+LtitleE.270=ПОДВАЛ
+# Stack
+LtitleE.271=Стеллажи
+# STACK
+LtitleE.272=СТЕЛЛАЖИ
+# Best Time:
+LtitleE.273=Рекорд:
+# Target:
+LtitleE.274=Цель:
+# New Cheat Available
+LtitleE.275=Новый чит доступен
+# CHEAT MULTIPLAYER\n
+LtitleE.276=ЧИТ: МУЛЬТИПЛЕЕР\n
+# 1.1 Honey\n
+LtitleE.277=1.1 Honey\n
+# 1.2 Solitaire\n
+LtitleE.278=1.2 Solitaire\n
+# 1.3 Kissy\n
+LtitleE.279=1.3 Kissy\n
+# 1.4 Goodnight\n
+LtitleE.280=1.4 Goodnight\n
+# 2.1 Plenty\n
+LtitleE.281=2.1 Plenty\n
+# 2.2 Galore\n
+LtitleE.282=2.2 Galore\n
+# 2.3 Domino\n
+LtitleE.283=2.3 Domino\n
+# 2.4 Goodhead\n
+LtitleE.284=2.4 Goodhead\n
+# Select Control Style\n
+LtitleE.285=Выбор управления\n
+# Control Style\n
+LtitleE.286=Управление\n
+
+## LmpmenuE - Multiplayer menus
+# Lemming Award
+LmpmenuE.0=Приз Лемминга
+# Where's the Ammo?
+LmpmenuE.1=Где патроны?
+# Where's the Armor?
+LmpmenuE.2=Где бронежилет?
+# AC -10 Award
+LmpmenuE.3=Приз AC -10
+# Marksmanship Award
+LmpmenuE.4=Приз за меткость
+# Most Professional
+LmpmenuE.5=Самый профи
+# Most Deadly
+LmpmenuE.6=Самый опасный
+# Mostly Harmless
+LmpmenuE.7=Почти безвреден
+# Most Cowardly
+LmpmenuE.8=Самый трусливый
+# Most Frantic
+LmpmenuE.9=Самый суетливый
+# Most Honorable
+LmpmenuE.10=Самый благородный
+# Most Dishonorable
+LmpmenuE.11=Самый бесчестный
+# Shortest Innings
+LmpmenuE.12=Кратчайшая жизнь
+# Longest Innings
+LmpmenuE.13=Самая долгая жизнь
+# Double Kill
+LmpmenuE.14=Двойной фраг
+# Triple Kill
+LmpmenuE.15=Тройной фраг
+# Quad Kill (Doh!)
+LmpmenuE.16=Четыре фрага (Ох!)
+# Rank: 1st
+LmpmenuE.17=Место: 1-е
+# Rank: 2nd
+LmpmenuE.18=Место: 2-е
+# Rank: 3rd
+LmpmenuE.19=Место: 3-е
+# Rank: 4th
+LmpmenuE.20=Место: 4-е
+# PLAY
+LmpmenuE.21=ИГРАТЬ
+# GAME OVER
+LmpmenuE.22=КОНЕЦ ИГРЫ
+# START TO EXIT
+LmpmenuE.23=START - ВЫХОД
+# PAUSED
+LmpmenuE.24=ПАУЗА
+# PAUSE
+LmpmenuE.25=ПАУЗА
+# EXIT
+LmpmenuE.26=ВЫХОД
+# SCORES
+LmpmenuE.27=СЧЕТ
+# P
+LmpmenuE.28=И
+# KILLS
+LmpmenuE.29=УБИТО
+# LOSSES
+LmpmenuE.30=СМЕРТИ
+# Weapon of choice:
+LmpmenuE.31=Любимое оружие:
+# cancel
+LmpmenuE.32=отмена
+# confirm
+LmpmenuE.33=подтв.
+# press start\n
+LmpmenuE.34=нажмите start\n
+# to continue\n
+LmpmenuE.35=для продолж.\n
+
+## LpropobjE - Pickups
+# Picked up 
+LpropobjE.0=Взято: 
+# some 
+LpropobjE.1=еще 
+# a 
+LpropobjE.2=1 
+# an 
+LpropobjE.3=1 
+# the 
+LpropobjE.4=1 
+# ammo
+LpropobjE.5=патроны
+# shotgun cartridge
+LpropobjE.6=патрон дробовика
+# magnum bullet
+LpropobjE.7=патрон Magnum
+# golden bullet
+LpropobjE.8=золотая пуля
+# hand grenade
+LpropobjE.9=граната
+# grenade round
+LpropobjE.10=гранатный заряд
+# rocket
+LpropobjE.11=ракета
+# remote mine
+LpropobjE.12=радиомина
+# proximity mine
+LpropobjE.13=мина-ловушка
+# timed mine
+LpropobjE.14=мина-таймер
+# throwing 
+LpropobjE.15=метат. 
+# knife
+LpropobjE.16=нож
+# knives
+LpropobjE.17=ножи
+# s
+LpropobjE.18=@empty
+# dart
+LpropobjE.19=дротик
+# explosive pen
+LpropobjE.20=взрывная ручка
+# explosive case
+LpropobjE.21=кейс-бомба
+# flare
+LpropobjE.22=ракета
+# piton
+LpropobjE.23=крюк
+# of dynamite
+LpropobjE.24=динамита
+# stick 
+LpropobjE.25=шашка 
+# sticks 
+LpropobjE.26=шашки 
+# bug
+LpropobjE.27=жучок
+# micro camera
+LpropobjE.28=микрокамера
+# GoldenEye key
+LpropobjE.29=ключ GoldenEye
+# token
+LpropobjE.30=жетон
+# plastique
+LpropobjE.31=пластид
+# a hunting knife.\n
+LpropobjE.32=охотничий нож.\n
+# a PP7.\n
+LpropobjE.33=PP7.\n
+# a silenced PP7.\n
+LpropobjE.34=PP7 с глушителем.\n
+# a DD44 Dostovei.\n
+LpropobjE.35=DD44 Dostovei.\n
+# a Klobb.\n
+LpropobjE.36=Klobb.\n
+# a KF7 Soviet.\n
+LpropobjE.37=KF7 Soviet.\n
+# a ZMG (9mm).\n
+LpropobjE.38=ZMG (9mm).\n
+# a D5K Deutsche.\n
+LpropobjE.39=D5K Deutsche.\n
+# a silenced D5K.\n
+LpropobjE.40=D5K с глушителем.\n
+# a Phantom.\n
+LpropobjE.41=Phantom.\n
+# an AR33 assault rifle.\n
+LpropobjE.42=штурмовая винтовка AR33.\n
+# an RC-P90.\n
+LpropobjE.43=RC-P90.\n
+# a shotgun.\n
+LpropobjE.44=дробовик.\n
+# an automatic shotgun.\n
+LpropobjE.45=автоматический дробовик.\n
+# a sniper rifle.\n
+LpropobjE.46=снайп. винтовка.\n
+# a grenade launcher.\n
+LpropobjE.47=гранатомет.\n
+# a rocket launcher.\n
+LpropobjE.48=ракетница.\n
+# a Cougar Magnum.\n
+LpropobjE.49=Cougar Magnum.\n
+# the Golden Gun.\n
+LpropobjE.50=Золотой пистолет.\n
+# a Moonraker laser.\n
+LpropobjE.51=лазер Moonraker.\n
+# a flare pistol.\n
+LpropobjE.52=сигн. пистолет.\n
+# a piton gun.\n
+LpropobjE.53=крюкомет.\n
+# a silver PP7.\n
+LpropobjE.54=серебряный PP7.\n
+# a gold PP7.\n
+LpropobjE.55=золотой PP7.\n
+# a keycard.\n
+LpropobjE.56=ключ-карта.\n
+# a yale key.\n
+LpropobjE.57=ключ Yale.\n
+# a bolt key.\n
+LpropobjE.58=ключ засова.\n
+# a new weapon.\n
+LpropobjE.59=новое оружие.\n
+# Picked up a key.\n
+LpropobjE.60=Взято: ключ.\n
+# Picked up some body armor.\n
+LpropobjE.61=Взято: бронежилет.\n
+# body armor.\n
+LpropobjE.62=бронежилет.\n
+# Picked up something.\n
+LpropobjE.63=Взято: что-то.\n
+# This door is locked.\n
+LpropobjE.64=Эта дверь заперта.\n
+
+## LmpweaponsE - Multiplayer weapon sets
+# Slappers only!
+LmpweaponsE.0=Только кулаки!
+# Pistols
+LmpweaponsE.1=Пистолеты
+# Automatics
+LmpweaponsE.2=Автоматы
+# Power Weapons
+LmpweaponsE.3=Мощное оружие
+# Sniper Rifles
+LmpweaponsE.4=Снайп. винтовки
+# Grenades
+LmpweaponsE.5=Гранаты
+# Remote Mines
+LmpweaponsE.6=Радиомины
+# Grenade Launchers
+LmpweaponsE.7=Гранатометы
+# Timed Mines
+LmpweaponsE.8=Мины-таймеры
+# Proximity Mines
+LmpweaponsE.9=Мины-ловушки
+# Rockets
+LmpweaponsE.10=Ракеты
+# Lasers
+LmpweaponsE.11=Лазеры
+# Golden Gun
+LmpweaponsE.12=Зол. пистолет
+# Throwing Knives
+LmpweaponsE.13=Метательные ножи
+
+## LoptionsE - Solo menus
+# fire\n
+LoptionsE.0=огонь\n
+# aim\n
+LoptionsE.1=прицел\n
+# action\n
+LoptionsE.2=действие\n
+# weapon\n
+LoptionsE.3=оружие\n
+# pause\n
+LoptionsE.4=пауза\n
+# move\n
+LoptionsE.5=ходьба\n
+# look\n
+LoptionsE.6=обзор\n
+# ?\n
+LoptionsE.7=?\n
+# move sight\n
+LoptionsE.8=сдвиг прицела\n
+# 1.1 honey\n
+LoptionsE.9=1.1 хани\n
+# 1.2 solitaire\n
+LoptionsE.10=1.2 солитер\n
+# 1.3 kissy\n
+LoptionsE.11=1.3 кисси\n
+# 1.4 goodnight\n
+LoptionsE.12=1.4 гуднайт\n
+# 2.1 plenty\n
+LoptionsE.13=2.1 пленти\n
+# 2.2 galore\n
+LoptionsE.14=2.2 галор\n
+# 2.3 domino\n
+LoptionsE.15=2.3 домино\n
+# 2.4 goodhead\n
+LoptionsE.16=2.4 гудхед\n
+# look up/down\n
+LoptionsE.17=вверх/вниз\n
+# auto-aim\n
+LoptionsE.18=автоприцел\n
+# look ahead\n
+LoptionsE.19=взгляд вперед\n
+# aim control\n
+LoptionsE.20=упр. прицелом\n
+# sight on-screen\n
+LoptionsE.21=прицел на экране\n
+# ammo on-screen\n
+LoptionsE.22=патроны на экране\n
+# screen\n
+LoptionsE.23=экран\n
+# hud centering\n
+LoptionsE.24=центровка hud\n
+# on\n
+LoptionsE.25=вкл\n
+# off\n
+LoptionsE.26=выкл\n
+# upright\n
+LoptionsE.27=прямо\n
+# reverse\n
+LoptionsE.28=инверсия\n
+# toggle\n
+LoptionsE.29=перекл.\n
+# hold\n
+LoptionsE.30=удерж.\n
+# full\n
+LoptionsE.31=полный\n
+# wide\n
+LoptionsE.32=широкий\n
+# cinema\n
+LoptionsE.33=кино\n
+# 4:3\n
+LoptionsE.34=4:3\n
+# wide\n
+LoptionsE.35=широкий\n
+# abort:\n
+LoptionsE.36=выход:\n
+# confirm\n
+LoptionsE.37=подтв.\n
+# cancel\n
+LoptionsE.38=отмена\n
+# mission status:\n
+LoptionsE.39=статус миссии:\n
+# complete\n
+LoptionsE.40=выполнена\n
+# incomplete\n
+LoptionsE.41=не выполнена\n
+# Left Hand\n
+LoptionsE.42=Левая рука\n
+# q watch v2.01 beta\n
+LoptionsE.43=часы q v2.01 бета\n
+# down\n
+LoptionsE.44=вниз\n
+# up\n
+LoptionsE.45=вверх\n
+# sidestep\n
+LoptionsE.46=шаг вбок\n
+# sidestep\n
+LoptionsE.47=шаг вбок\n
+# forward\n
+LoptionsE.48=вперед\n
+# back\n
+LoptionsE.49=назад\n
+# control style\n
+LoptionsE.50=раскладка\n
+# controller\n
+LoptionsE.51=контроллер\n
+# controllers\n
+LoptionsE.52=контроллеры\n
+# music\n
+LoptionsE.53=музыка\n
+# fx\n
+LoptionsE.54=звуки\n
+# failed\n
+LoptionsE.55=провалена\n
+# 2. background\n
+LoptionsE.56=2. предыстория\n
+# 3. M briefing\n
+LoptionsE.57=3. брифинг М\n
+# 4. Q branch\n
+LoptionsE.58=4. отдел Q\n
+# 5. moneypenny\n
+LoptionsE.59=5. манипенни\n
+# 1. mission objectives\n
+LoptionsE.60=1. задачи миссии\n
+
+## LmiscE - Cheats
+# Invincible
+LmiscE.0=Неуязвимость
+# All Guns
+LmiscE.1=Все оружие
+# Super x2 Health
+LmiscE.2=Здоровье x2
+# Super x2 Armor
+LmiscE.3=Бронежилет x2
+# Bond Invisible
+LmiscE.4=Бонд-невидимка
+# Bond Phase
+LmiscE.5=Бонд-призрак
+# Infinite Ammo
+LmiscE.6=Беск. патроны
+# DK Mode
+LmiscE.7=Режим DK
+# Tiny Bond
+LmiscE.8=Мини-Бонд
+# Super x10 Health
+LmiscE.9=Здоровье x10
+# Magnum
+LmiscE.10=Magnum
+# Laser
+LmiscE.11=Лазер
+# Golden Gun
+LmiscE.12=Зол. пистолет
+# Silver PP7
+LmiscE.13=Серебр. PP7
+# Gold PP7
+LmiscE.14=Золотой PP7
+# invincibility on\n
+LmiscE.15=неуязвимость вкл\n
+# all guns on\n
+LmiscE.16=все оружие вкл\n
+# maximum ammo\n
+LmiscE.17=макс. патроны\n
+# super x2 health\n
+LmiscE.18=здоровье x2\n
+# super x2 armor\n
+LmiscE.19=бронежилет x2\n
+# invisibility on\n
+LmiscE.20=невидимость вкл\n
+# bond phase on\n
+LmiscE.21=бонд-призрак вкл\n
+# infinite ammo on\n
+LmiscE.22=беск. патроны вкл\n
+# dk mode on\n
+LmiscE.23=режим dk вкл\n
+# extra weapons\n
+LmiscE.24=доп. оружие\n
+# tiny bond on\n
+LmiscE.25=мини-бонд вкл\n
+# paintball mode on\n
+LmiscE.26=режим пейнтбола вкл\n
+# super x10 health\n
+LmiscE.27=здоровье x10\n
+# happy now karl?\n
+LmiscE.28=доволен, карл?\n
+# fast mode on\n
+LmiscE.29=ускорение вкл\n
+# invincibility off\n
+LmiscE.30=неуязвимость выкл\n
+# all guns off\n
+LmiscE.31=все оружие выкл\n
+# invisibility off\n
+LmiscE.32=невидимость выкл\n
+# bond phase off\n
+LmiscE.33=бонд-призрак выкл\n
+# infinite ammo off\n
+LmiscE.34=беск. патроны выкл\n
+# dk mode off\n
+LmiscE.35=режим dk выкл\n
+# tiny bond off\n
+LmiscE.36=мини-бонд выкл\n
+# paintball mode off\n
+LmiscE.37=режим пейнтбола выкл\n
+# radar on\n
+LmiscE.38=радар вкл\n
+# fast mode off\n
+LmiscE.39=ускорение выкл\n
+# NO NAME
+LmiscE.40=БЕЗ ИМЕНИ
+# E R R O R\n
+LmiscE.41=О Ш И Б К А\n
+# no briefing for this mission\n
+LmiscE.42=нет брифинга для этой миссии\n
+# objective
+LmiscE.44=задача
+# completed\n
+LmiscE.45=выполнена\n
+# incomplete\n
+LmiscE.46=не выполнена\n
+# failed\n
+LmiscE.47=провалена\n
+# slowest motion\n
+LmiscE.48=сверхмедленно\n
+# very slow motion\n
+LmiscE.49=очень медленно\n
+# slow motion\n
+LmiscE.50=медленно\n
+# normal motion\n
+LmiscE.51=обычная скорость\n
+# fast motion\n
+LmiscE.52=быстро\n
+# very fast motion\n
+LmiscE.53=очень быстро\n
+# fastest motion\n
+LmiscE.54=сверхбыстро\n
+# Line Mode
+LmiscE.55=Режим линий
+# Paintball Mode
+LmiscE.56=Режим пейнтбола
+# Enemy Rockets
+LmiscE.57=Вражеские ракеты
+# 2x Rocket L.
+LmiscE.58=2x Ракетница
+# 2x Grenade L.
+LmiscE.59=2x Гранатомет
+# 2x RC-P90
+LmiscE.60=2x RC-P90
+# 2x Throwing Knife
+LmiscE.61=2x Метательный нож
+# 2x Hunting Knife
+LmiscE.62=2x Охотничий нож
+# 2x Laser
+LmiscE.63=2x Лазер
+# Turbo Mode
+LmiscE.64=Турборежим
+# Fast Animation
+LmiscE.65=Быстрая анимация
+# Slow Animation
+LmiscE.66=Медл. анимация
+# No Radar [Multi]
+LmiscE.67=Без радара [Мульти]
+
+## PORT - the port's own menus (keyed by the English)
+# Gameplay\n
+P:Gameplay\n=Игра\n
+# Audio Visual\n
+P:Audio Visual\n=Аудио и видео\n
+# General Settings\n
+P:General Settings\n=Общие настройки\n
+# HUD\n
+P:HUD\n=HUD\n
+# Port Options\n
+P:Port Options\n=Настройки порта\n
+# Back\n
+P:Back\n=Назад\n
+# Video\n
+P:Video\n=Видео\n
+# Audio\n
+P:Audio\n=Аудио\n
+# Crosshair Colour\n
+P:Crosshair Colour\n=Цвет прицела\n
+# High Detail Models\n
+P:High Detail Models\n=Детальные модели\n
+# Resolution\n
+P:Resolution\n=Разрешение\n
+# Classic Mode\n
+P:Classic Mode\n=Классич. режим\n
+# Music\n
+P:Music\n=Музыка\n
+# FX\n
+P:FX\n=Звуки\n
+# Move Forward\n
+P:Move Forward\n=Вперед\n
+# Move Back\n
+P:Move Back\n=Назад\n
+# Strafe Left\n
+P:Strafe Left\n=Шаг влево\n
+# Strafe Right\n
+P:Strafe Right\n=Шаг вправо\n
+# Turn Left\n
+P:Turn Left\n=Налево\n
+# Turn Right\n
+P:Turn Right\n=Направо\n
+# Look Up\n
+P:Look Up\n=Вверх\n
+# Look Down\n
+P:Look Down\n=Вниз\n
+# Fire\n
+P:Fire\n=Огонь\n
+# Aim\n
+P:Aim\n=Прицел\n
+# Use\n
+P:Use\n=Исп.\n
+# Reload\n
+P:Reload\n=Перезар.\n
+# Next Weapon\n
+P:Next Weapon\n=След. оружие\n
+# Previous Weapon\n
+P:Previous Weapon\n=Пред. оружие\n
+# Next Gadget\n
+P:Next Gadget\n=След. гаджет\n
+# Previous Gadget\n
+P:Previous Gadget\n=Пред. гаджет\n
+# Detonate\n
+P:Detonate\n=Взорвать\n
+# Zoom In\n
+P:Zoom In\n=Приблизить\n
+# Zoom Out\n
+P:Zoom Out\n=Отдалить\n
+# Crouch (Hold)\n
+P:Crouch (Hold)\n=Сесть (удерж.)\n
+# Crouch (Toggle)\n
+P:Crouch (Toggle)\n=Сесть (перекл.)\n
+# Walk\n
+P:Walk\n=Шагом\n
+# Pause\n
+P:Pause\n=Пауза\n
+# Watch Page Left\n
+P:Watch Page Left\n=Часы: стр. влево\n
+# Watch Page Right\n
+P:Watch Page Right\n=Часы: стр. вправо\n
+# Objectives\n
+P:Objectives\n=Задачи\n
+# Menu Accept\n
+P:Menu Accept\n=Меню: принять\n
+# Menu Back\n
+P:Menu Back\n=Меню: назад\n
+# Stick Up\n
+P:Stick Up\n=Стик вверх\n
+# Stick Down\n
+P:Stick Down\n=Стик вниз\n
+# Stick Left\n
+P:Stick Left\n=Стик влево\n
+# Stick Right\n
+P:Stick Right\n=Стик вправо\n
+# A Button\n
+P:A Button\n=Кнопка A\n
+# B Button\n
+P:B Button\n=Кнопка B\n
+# Z Trigger\n
+P:Z Trigger\n=Курок Z\n
+# L Button\n
+P:L Button\n=Кнопка L\n
+# R Button\n
+P:R Button\n=Кнопка R\n
+# Start\n
+P:Start\n=Start\n
+# C Up\n
+P:C Up\n=C вверх\n
+# C Down\n
+P:C Down\n=C вниз\n
+# C Left\n
+P:C Left\n=C влево\n
+# C Right\n
+P:C Right\n=C вправо\n
+# D-Pad Up\n
+P:D-Pad Up\n=D-Pad вверх\n
+# D-Pad Down\n
+P:D-Pad Down\n=D-Pad вниз\n
+# D-Pad Left\n
+P:D-Pad Left\n=D-Pad влево\n
+# D-Pad Right\n
+P:D-Pad Right\n=D-Pad вправо\n
+# Mouse Unlock\n
+P:Mouse Unlock\n=Отпустить мышь\n
+# B then Z = Next Gadget\n
+P:B then Z \= Next Gadget\n=B, затем Z = след. гаджет\n
+# Hold L+R = Classic Mode\n
+P:Hold L+R \= Classic Mode\n=Удерж. L+R = классич. режим\n
+# Input\n
+P:Input\n=Ввод\n
+# Raphnet: Use the Control Styles\n
+P:Raphnet: Use the Control Styles\n=Raphnet: см. Стиль управления\n
+# Rebind Inputs\n
+P:Rebind Inputs\n=Переназначить\n
+# Mouse and Keyboard\n
+P:Mouse and Keyboard\n=Мышь и клавиатура\n
+# Controller\n
+P:Controller\n=Контроллер\n
+# General Control Options\n
+P:General Control Options\n=Общие наст. управления\n
+# Del or Hold to Unbind\n
+P:Del or Hold to Unbind\n=Del или удерж.: сброс\n
+# Bindings\n
+P:Bindings\n=Привязки\n
+# Bind Config\n
+P:Bind Config\n=Конфиг клавиш\n
+# Connect a Controller\n
+P:Connect a Controller\n=Подключите контроллер\n
+# Confirm Reset\n
+P:Confirm Reset\n=Точно сбросить?\n
+# Reset to Default\n
+P:Reset to Default\n=Сброс по умолч.\n
+# Custom\n
+P:Custom\n=Свой\n
+# Nintendo 64\n
+P:Nintendo 64\n=Nintendo 64\n
+# Modern\n
+P:Modern\n=Соврем.\n
+# Press a Button\n
+P:Press a Button\n=Нажмите кнопку\n
+# Port\n
+P:Port\n=Порт\n
+# Press a Key\n
+P:Press a Key\n=Нажм. клавишу\n
+# display\n
+P:display\n=экран\n
+# Display\n
+P:Display\n=Экран\n
+# Mouse\n
+P:Mouse\n=Мышь\n
+# Point\n
+P:Point\n=Точечный\n
+# Bilinear\n
+P:Bilinear\n=Билинейный\n
+# 3-Point\n
+P:3-Point\n=3 точки\n
+# Trilinear\n
+P:Trilinear\n=Трилинейный\n
+# Windowed\n
+P:Windowed\n=В окне\n
+# Borderless\n
+P:Borderless\n=Без рамки\n
+# Fullscreen\n
+P:Fullscreen\n=Полный экран\n
+# OFF\n
+P:OFF\n=ВЫКЛ\n
+# Hardware\n
+P:Hardware\n=Аппаратно\n
+# Uncapped\n
+P:Uncapped\n=Без лимита\n
+# Stretch\n
+P:Stretch\n=Растянуть\n
+# Wide\n
+P:Wide\n=Широкий\n
+# Native\n
+P:Native\n=Родное\n
+# Upright\n
+P:Upright\n=Обычный\n
+# Reverse\n
+P:Reverse\n=Инверсия\n
+# Hold\n
+P:Hold\n=Удерж.\n
+# Toggle\n
+P:Toggle\n=Перекл.\n
+# Display Mode\n
+P:Display Mode\n=Режим экрана\n
+# Widescreen\n
+P:Widescreen\n=Широкий экран\n
+# VSync\n
+P:VSync\n=VSync\n
+# Max FPS\n
+P:Max FPS\n=Макс. FPS\n
+# Texture Filter\n
+P:Texture Filter\n=Фильтр текстур\n
+# Anisotropy\n
+P:Anisotropy\n=Анизотропия\n
+# MSAA\n
+P:MSAA\n=MSAA\n
+# 2D Filtering\n
+P:2D Filtering\n=2D-фильтрация\n
+# High Detail\n
+P:High Detail\n=Высок. детали\n
+# 3D Resolution\n
+P:3D Resolution\n=3D-разрешение\n
+# Mipmaps\n
+P:Mipmaps\n=Mipmaps\n
+# 4:3 Pillars\n
+P:4:3 Pillars\n=Полосы 4:3\n
+# Load Hitches\n
+P:Load Hitches\n=Рывки загрузки\n
+# N64 AA\n
+P:N64 AA\n=N64 AA\n
+# Composite Video\n
+P:Composite Video\n=Композитное видео\n
+# Field of View\n
+P:Field of View\n=Поле зрения\n
+# Mission Timer\n
+P:Mission Timer\n=Таймер миссии\n
+# Pause Pillars\n
+P:Pause Pillars\n=Полосы в паузе\n
+# Health\n
+P:Health\n=Здоровье\n
+# Steady Scope\n
+P:Steady Scope\n=Стабил. прицел\n
+# Distance Fading\n
+P:Distance Fading\n=Затухание вдали\n
+# Shoot-Through Fix\n
+P:Shoot-Through Fix\n=Фикс простреливания\n
+# True Enemy Rockets\n
+P:True Enemy Rockets\n=Реальные ракеты врага\n
+# Unlock All\n
+P:Unlock All\n=Открыть все\n
+# Always Crosshair\n
+P:Always Crosshair\n=Прицел всегда\n
+# Aim Lock\n
+P:Aim Lock\n=Захват цели\n
+# Stamina Sway\n
+P:Stamina Sway\n=Покачивание\n
+# Sight on Screen\n
+P:Sight on Screen\n=Прицел на экране\n
+# No Auto Aim\n
+P:No Auto Aim\n=Без автоприц.\n
+# Player Names\n
+P:Player Names\n=Имена игроков\n
+# Spawn with Weapon\n
+P:Spawn with Weapon\n=Старт с оружием\n
+# Random Spawns\n
+P:Random Spawns\n=Случайный старт\n
+# Unlimited Explosions\n
+P:Unlimited Explosions\n=Бесконечные взрывы\n
+# LTK Health\n
+P:LTK Health\n=Здоровье LTK\n
+# No Armor\n
+P:No Armor\n=Без брони\n
+# Friendly Fire\n
+P:Friendly Fire\n=Огонь по своим\n
+# Mouse Auto Aim\n
+P:Mouse Auto Aim\n=Автоприцел мыши\n
+# Watch Static\n
+P:Watch Static\n=Помехи часов\n
+# Invisibility\n
+P:Invisibility\n=Невидимость\n
+# DK Mode\n
+P:DK Mode\n=Режим DK\n
+# Tiny Players\n
+P:Tiny Players\n=Мини-игроки\n
+# Paintball Mode\n
+P:Paintball Mode\n=Режим пейнтбол\n
+# No Radar\n
+P:No Radar\n=Без радара\n
+# Turbo Mode\n
+P:Turbo Mode\n=Турбо-режим\n
+# Unlimited Ammo\n
+P:Unlimited Ammo\n=Беск. патроны\n
+# HUD Layout\n
+P:HUD Layout\n=Вид HUD\n
+# Pillarbox\n
+P:Pillarbox\n=Черн. полосы\n
+# Look Up/Down\n
+P:Look Up/Down\n=Вверх/вниз\n
+# Auto-Aim\n
+P:Auto-Aim\n=Автоприцел\n
+# Aim Control\n
+P:Aim Control\n=Режим прицела\n
+# Look Ahead\n
+P:Look Ahead\n=Взгляд вперед\n
+# Ammo on Screen\n
+P:Ammo on Screen\n=Патроны на экране\n
+# Mouse Look\n
+P:Mouse Look\n=Обзор мышью\n
+# Smart Mouse Lock\n
+P:Smart Mouse Lock\n=Умный захват мыши\n
+# P1 Hybrid Input\n
+P:P1 Hybrid Input\n=Гибридный ввод И1\n
+# Sensitivity X\n
+P:Sensitivity X\n=Чувств. X\n
+# Sensitivity Y\n
+P:Sensitivity Y\n=Чувств. Y\n
+# Aim Sensitivity\n
+P:Aim Sensitivity\n=Чувств. прицела\n
+# Move Deadzone\n
+P:Move Deadzone\n=Мерт. зона движ.\n
+# Look Deadzone\n
+P:Look Deadzone\n=Мерт. зона обз.\n
+# Trigger Point\n
+P:Trigger Point\n=Порог курка\n
+# Stick Sensitivity\n
+P:Stick Sensitivity\n=Чувств. стика\n
+# Controllers\n
+P:Controllers\n=Контроллеры\n
+# Rumble\n
+P:Rumble\n=Вибрация\n
+# Use+Rld Detonate\n
+P:Use+Rld Detonate\n=Исп.+Перез. взрыв\n
+# Shoot+Next = Prev\n
+P:Shoot+Next \= Prev\n=Огонь+След.=Пред.\n
+# Gadget Switch\n
+P:Gadget Switch\n=Смена гаджета\n
+# L+R Classic Mode\n
+P:L+R Classic Mode\n=L+R классич. режим\n
+# Music Volume\n
+P:Music Volume\n=Громк. музыки\n
+# Sound Volume\n
+P:Sound Volume\n=Громк. звуков\n
+# Stereo Pan\n
+P:Stereo Pan\n=Стереобаланс\n
+# ON\n
+P:ON\n=ВКЛ\n
+# 'ge: raphnet:' lines above for the interfaces that were tried.\n
+P:'ge: raphnet:' lines above for the interfaces that were tried.\n='ge: raphnet:' lines above for the interfaces that were tried.\n
+# every other controller is scaled (padN_calib = calibrated)\n
+P:every other controller is scaled (padN_calib \= calibrated)\n=every other controller is scaled (padN_calib = calibrated)\n
+# TWYCROSS BOARD OF GAME CLASSIFICATION\n
+P:TWYCROSS BOARD OF GAME CLASSIFICATION\n=TWYCROSS BOARD OF GAME CLASSIFICATION\n
+# This is to certify\n
+P:This is to certify\n=This is to certify\n
+# U.A.C. All Rights Reserved\n
+P:U.A.C. All Rights Reserved\n=U.A.C. All Rights Reserved\n
+# Ltd. & Mac B. Inc.\n
+P:Ltd. & Mac B. Inc.\n=Ltd. & Mac B. Inc.\n
+# Suitable only for 1-4 persons\n
+P:Suitable only for 1-4 persons\n=Suitable only for 1-4 persons\n
+# PRESIDENT\n
+P:PRESIDENT\n=PRESIDENT\n
+# VICE\n
+P:VICE\n=VICE\n
+# James Bond theme by Monty Norman.\n
+P:James Bond theme by Monty Norman.\n=Тема Джеймса Бонда: Monty Norman.\n
+# Used by permission of EMI Unart Catalog Inc.\n
+P:Used by permission of EMI Unart Catalog Inc.\n=Used by permission of EMI Unart Catalog Inc.\n
+# NEXT\n
+P:NEXT\n=ДАЛЕЕ\n
+# Are you sure?\n
+P:Are you sure?\n=Вы уверены?\n
+# Yes\n
+P:Yes\n=Да\n
+# No\n
+P:No\n=Нет\n
+# Mission <chapter>.<part>\n
+P:Mission <chapter>.<part>\n=Миссия <chapter>.<part>\n
+# Options\n
+P:Options\n=Настройки\n
+# Exit Game\n
+P:Exit Game\n=Выйти\n
+# GAMEPLAY\n
+P:GAMEPLAY\n=ИГРА\n
+# CONTROL\n
+P:CONTROL\n=УПРАВЛЕНИЕ\n
+# AUDIO VISUAL\n
+P:AUDIO VISUAL\n=АУДИО И ВИДЕО\n
+# CREDITS\n
+P:CREDITS\n=АВТОРЫ\n
+# PLAYER\n
+P:PLAYER\n=ИГРОК\n
+# REBIND\n
+P:REBIND\n=ПЕРЕНАЗН.\n
+# VIDEO\n
+P:VIDEO\n=ВИДЕО\n
+# AUDIO\n
+P:AUDIO\n=АУДИО\n
+# GRAPHICS\n
+P:GRAPHICS\n=ГРАФИКА\n
+# GENERAL SETTINGS\n
+P:GENERAL SETTINGS\n=ОБЩИЕ НАСТРОЙКИ\n
+# MOUSE AND KEYBOARD\n
+P:MOUSE AND KEYBOARD\n=МЫШЬ И КЛАВИАТУРА\n
+# CONTROLLER\n
+P:CONTROLLER\n=КОНТРОЛЛЕР\n
+# GENERAL CONTROL OPTIONS\n
+P:GENERAL CONTROL OPTIONS\n=ОБЩИЕ НАСТ. УПРАВЛЕНИЯ\n
+# PORT OPTIONS\n
+P:PORT OPTIONS\n=НАСТРОЙКИ ПОРТА\n
+# GAMEPLAY OPTIONS\n
+P:GAMEPLAY OPTIONS\n=НАСТРОЙКИ ИГРЫ\n
+# CLASSIC\n
+P:CLASSIC\n=КЛАССИКА\n
+# RESET ALL\n
+P:RESET ALL\n=СБРОСИТЬ ВСЕ\n
+# RESET\n
+P:RESET\n=СБРОС\n
+# Default\n
+P:Default\n=По умолч.\n
+# White\n
+P:White\n=Белый\n
+# Orange\n
+P:Orange\n=Оранжевый\n
+# Yellow\n
+P:Yellow\n=Желтый\n
+# Green\n
+P:Green\n=Зеленый\n
+# Cyan\n
+P:Cyan\n=Голубой\n
+# Blue\n
+P:Blue\n=Синий\n
+# Purple\n
+P:Purple\n=Лиловый\n
+# Magenta\n
+P:Magenta\n=Пурпурный\n
+# Grey\n
+P:Grey\n=Серый\n
+# Graphics\n
+P:Graphics\n=Графика\n
+# Press A\n
+P:Press A\n=Нажмите A\n
+# No Pad\n
+P:No Pad\n=Нет пада\n
+# Auto\n
+P:Auto\n=Авто\n
+# 1.1 Honey\n
+P:1.1 Honey\n=1.1 Honey\n
+# 1.2 Solitaire\n
+P:1.2 Solitaire\n=1.2 Solitaire\n
+# 1.3 Kissy\n
+P:1.3 Kissy\n=1.3 Kissy\n
+# 1.4 Goodnight\n
+P:1.4 Goodnight\n=1.4 Goodnight\n
+# 2.1 Plenty P1\n
+P:2.1 Plenty P1\n=2.1 Plenty P1\n
+# 2.1 Plenty P2\n
+P:2.1 Plenty P2\n=2.1 Plenty P2\n
+# 2.2 Galore P1\n
+P:2.2 Galore P1\n=2.2 Galore P1\n
+# 2.2 Galore P2\n
+P:2.2 Galore P2\n=2.2 Galore P2\n
+# 2.3 Domino P1\n
+P:2.3 Domino P1\n=2.3 Domino P1\n
+# 2.3 Domino P2\n
+P:2.3 Domino P2\n=2.3 Domino P2\n
+# 2.4 Goodhead P1\n
+P:2.4 Goodhead P1\n=2.4 Goodhead P1\n
+# 2.4 Goodhead P2\n
+P:2.4 Goodhead P2\n=2.4 Goodhead P2\n
+# Built In\n
+P:Built In\n=Встроенный\n
+# Save This Layout\n
+P:Save This Layout\n=Сохранить схему\n
+# Delete This Layout\n
+P:Delete This Layout\n=Удалить схему\n
+# Manage Config\n
+P:Manage Config\n=Упр. конфигом\n
+# Rebind Controller\n
+P:Rebind Controller\n=Кнопки контроллера\n
+# Input Device\n
+P:Input Device\n=Устройство\n
+# No Input\n
+P:No Input\n=Нет ввода\n
+# Press a Button on the Device\n
+P:Press a Button on the Device\n=Нажмите кнопку на устройстве\n
+# Input Mode\n
+P:Input Mode\n=Режим ввода\n
+# Control Style\n
+P:Control Style\n=Стиль управления\n
+# DEL\n
+P:DEL\n=УДАЛ\n
+# CAPS\n
+P:CAPS\n=ЗАГЛ\n
+# BACK\n
+P:BACK\n=НАЗАД\n
+# OK\n
+P:OK\n=OK\n
+# TYPING - PRESS TO STOP\n
+P:TYPING - PRESS TO STOP\n=ВВОД - НАЖМИТЕ ДЛЯ ВЫХОДА\n
+# TYPE WITH KEYBOARD\n
+P:TYPE WITH KEYBOARD\n=ВВОД С КЛАВИАТУРЫ\n
+# Reset All Settings?\n
+P:Reset All Settings?\n=Сбросить настройки?\n
+# Reset All Binds?\n
+P:Reset All Binds?\n=Сбросить клавиши?\n
+# Save\n
+P:Save\n=Сохр.\n
+# Delete\n
+P:Delete\n=Удалить\n
+# Cancel\n
+P:Cancel\n=Отмена\n
+# Placeholder\n
+P:Placeholder\n=Placeholder\n
+# Apply Changes\n
+P:Apply Changes\n=Применить\n
+# Pending\n
+P:Pending\n=Ожидает\n
+# OPTIONS\n
+P:OPTIONS\n=НАСТРОЙКИ\n
+# Agent\n
+P:Agent\n=Агент\n
+# Secret Agent\n
+P:Secret Agent\n=Секретный агент\n
+# 00 Agent\n
+P:00 Agent\n=Агент 00\n
+# Trevelyan (Janus)\n
+P:Trevelyan (Janus)\n=Тревельян (Янус)\n
+# Scientist (M)\n
+P:Scientist (M)\n=Ученый (М)\n
+# Scientist (F)\n
+P:Scientist (F)\n=Ученый (Ж)\n
+# Civilian (F)\n
+P:Civilian (F)\n=Гражданская (Ж)\n
+# Civilian (M) 1\n
+P:Civilian (M) 1\n=Гражданский (М) 1\n
+# Civilian (M) 2\n
+P:Civilian (M) 2\n=Гражданский (М) 2\n
+# Civilian (M) 3\n
+P:Civilian (M) 3\n=Гражданский (М) 3\n
+# Siberian Guard 1\n
+P:Siberian Guard 1\n=Сибир. охранник 1\n
+# Siberian Guard 2\n
+P:Siberian Guard 2\n=Сибир. охранник 2\n
+# Moonraker Elite (M)\n
+P:Moonraker Elite (M)\n=Элита Moonraker (М)\n
+# Moonraker Elite (F)\n
+P:Moonraker Elite (F)\n=Элита Moonraker (Ж)\n
+# Bond (Boiler Suit)\n
+P:Bond (Boiler Suit)\n=Бонд (комбинезон)\n
+# Bond (Formal)\n
+P:Bond (Formal)\n=Бонд (смокинг)\n
+# Bond (Jungle)\n
+P:Bond (Jungle)\n=Бонд (джунгли)\n
+# Bond (Parka)\n
+P:Bond (Parka)\n=Бонд (парка)\n
+# Trevelyan (006)\n
+P:Trevelyan (006)\n=Тревельян (006)\n
+# Natalya (Jungle)\n
+P:Natalya (Jungle)\n=Наталья (джунгли)\n
+# Game Limits:\n
+P:Game Limits:\n=Лимиты игры:\n
+# Player Options\n
+P:Player Options\n=Настройки игрока\n
+# Gameplay Options\n
+P:Gameplay Options\n=Настройки игры\n
+# Load / Save Settings\n
+P:Load / Save Settings\n=Загрузка/сохранение\n
+# Profile\n
+P:Profile\n=Профиль\n
+# Character\n
+P:Character\n=Персонаж\n
+# Style\n
+P:Style\n=Стиль\n
+# Config\n
+P:Config\n=Конфиг\n
+# Crosshair\n
+P:Crosshair\n=Прицел\n
+# Done\n
+P:Done\n=Готово\n
+# Ready\n
+P:Ready\n=Готов\n
+# Win Rate\n
+P:Win Rate\n=% побед\n
+# Time Played\n
+P:Time Played\n=Время в игре\n
+# Lemming Award\n
+P:Lemming Award\n=Приз Лемминга\n
+# Where's the Ammo?\n
+P:Where's the Ammo?\n=Где патроны?\n
+# Where's the Armor?\n
+P:Where's the Armor?\n=Где броня?\n
+# AC -10 Award\n
+P:AC -10 Award\n=Приз AC -10\n
+# Marksmanship Award\n
+P:Marksmanship Award\n=Приз за меткость\n
+# Most Professional\n
+P:Most Professional\n=Самый профи\n
+# Most Deadly\n
+P:Most Deadly\n=Самый опасный\n
+# Mostly Harmless\n
+P:Mostly Harmless\n=Почти безвреден\n
+# Most Cowardly\n
+P:Most Cowardly\n=Самый трусливый\n
+# Most Frantic\n
+P:Most Frantic\n=Самый суетливый\n
+# Most Honorable\n
+P:Most Honorable\n=Самый честный\n
+# Most Dishonorable\n
+P:Most Dishonorable\n=Самый бесчестный\n
+# Shortest Innings\n
+P:Shortest Innings\n=Кратчайшая жизнь\n
+# Longest Innings\n
+P:Longest Innings\n=Длиннейшая жизнь\n
+# Double Kill\n
+P:Double Kill\n=2 убийства\n
+# Triple Kill\n
+P:Triple Kill\n=3 убийства\n
+# Quad Kill (Doh!)\n
+P:Quad Kill (Doh!)\n=4 убийства (Ой!)\n
+# Damage Dealt\n
+P:Damage Dealt\n=Нанесено урона\n
+# Damage Taken\n
+P:Damage Taken\n=Получено урона\n
+# Accuracy\n
+P:Accuracy\n=Точность\n
+# Head Hits\n
+P:Head Hits\n=В голову\n
+# Body Hits\n
+P:Body Hits\n=В тело\n
+# Limb Hits\n
+P:Limb Hits\n=В конечности\n
+# Longest Life\n
+P:Longest Life\n=Рекорд жизни\n
+# on Your Controller\n
+P:on Your Controller\n=на вашем контроллере\n
+# Player 1 Skips\n
+P:Player 1 Skips\n=Пропуск: игрок 1\n
+# Keyboard and Mouse\n
+P:Keyboard and Mouse\n=Клавиатура и мышь\n
+# Waiting\n
+P:Waiting\n=Ожидание\n
+# Off\n
+P:Off\n=Выкл\n
+# Red\n
+P:Red\n=Красный\n
+# Random\n
+P:Random\n=Случайно\n
+# Random Set\n
+P:Random Set\n=Случ. набор\n
+# Sniper/Rocket\n
+P:Sniper/Rocket\n=Снайпер/ракеты\n
+# Enemy FF\n
+P:Enemy FF\n=FF врагов\n
+# Unlock Doors\n
+P:Unlock Doors\n=Открыть двери\n
+# CHEATS\n
+P:CHEATS\n=ЧИТЫ\n
+# PORT\n
+P:PORT\n=ПОРТ\n
+# general control options\n
+P:general control options\n=общие наст. управления\n
+# input\n
+P:input\n=ввод\n
+# PRESS A BUTTON\n
+P:PRESS A BUTTON\n=НАЖМИТЕ КНОПКУ\n
+# mute\n
+P:mute\n=без зв.\n
+# Press Start to Skip\n
+P:Press Start to Skip\n=Start - пропустить\n

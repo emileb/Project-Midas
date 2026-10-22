@@ -9,6 +9,8 @@
 
 #include <android/log.h>
 
+#include "ge_glyphs_ru.h"
+
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "GOLDENEYE", __VA_ARGS__))
 
 #define LANG_BANKS 45   // language.c LnameX_lookuptable
@@ -19,6 +21,7 @@ extern const char *portRootPath(const char *name);
 
 static char sCode[16];
 static int sUmlautE; // German writes ä as ae when it can't show the umlaut
+static int sCyrillic; // Russian: А..я are bytes 0xC0..0xFF (CP1251), drawn with ge_glyphs_ru.h
 static int sLoaded;
 static char **sText[LANG_BANKS];
 
@@ -35,6 +38,24 @@ void GE_LangSetCode(const char *code)
 {
     snprintf(sCode, sizeof(sCode), "%s", code);
     sUmlautE = strcmp(code, "de") == 0;
+    sCyrillic = strcmp(code, "ru") == 0;
+}
+
+// Case changes that know the language's letters above ASCII
+int GE_LangUpper(int c)
+{
+    c &= 0xFF;
+    if (sCyrillic && c >= 0xE0)
+        return c - 0x20;
+    return (c >= 'a' && c <= 'z') ? c - 0x20 : c;
+}
+
+static int langLower(int c)
+{
+    c &= 0xFF;
+    if (sCyrillic && c >= 0xC0 && c < 0xE0)
+        return c + 0x20;
+    return (c >= 'A' && c <= 'Z') ? c + 0x20 : c;
 }
 
 // The fonts only have ASCII glyphs (0x21..0x7E): accented letters lose the accent for now
@@ -71,6 +92,7 @@ static const char *foldLatin(unsigned cp)
         case 0x2013: case 0x2014: return "-";
         case 0x2026: return "...";
         case 0xA0: case 0x202F: return " ";
+        case 0x2116: return "N";  // №
         case 0x152: return "OE";
         case 0x153: return "oe";
     }
@@ -106,6 +128,17 @@ static char *decodeValue(const char *v)
             cp = *p++ & (0x3F >> n);
             for (int i = 0; i < n && (*p & 0xC0) == 0x80; i++)
                 cp = (cp << 6) | (*p++ & 0x3F);
+            if (sCyrillic && cp >= 0x401 && cp <= 0x451)
+            {
+                // Ё is written Е, as Russian print often does
+                if (cp == 0x401 || cp == 0x451)
+                    cp = (cp == 0x401) ? 0x415 : 0x435;
+                if (cp >= 0x410 && cp <= 0x44F)
+                {
+                    *o++ = (char)(0xC0 + cp - 0x410);
+                    continue;
+                }
+            }
             // In capitals Ä is AE and ß is SS, not Ae and ss
             caps = isupper(*p) || (o > out && isupper((unsigned char)o[-1]) && !islower(*p));
             fold = foldLatin(cp);
@@ -181,9 +214,9 @@ static void portAdd(char *english, char *text)
     sPort[h].lower = strdup(text);
     sPort[h].upper = strdup(text);
     for (char *c = sPort[h].lower; *c; c++)
-        *c = (char)tolower((unsigned char)*c);
+        *c = (char)langLower(*c);
     for (char *c = sPort[h].upper; *c; c++)
-        *c = (char)toupper((unsigned char)*c);
+        *c = (char)GE_LangUpper(*c);
 }
 
 static int hasCase(const char *s, int (*is)(int))
@@ -252,7 +285,8 @@ static void langLoad(void)
         if ((slot = slotFor(line, 1)) != NULL)
         {
             free(*slot);
-            *slot = decodeValue(eq + 1);
+            // "@empty": nothing, where an empty value would mean English (a plural "s" Russian has no use for)
+            *slot = strcmp(eq + 1, "@empty") == 0 ? strdup("") : decodeValue(eq + 1);
             count++;
         }
     }
@@ -267,7 +301,7 @@ static void langLoad(void)
             continue;
         *dst = strdup(*src);
         for (char *c = *dst; *c; c++)
-            *c = (char)tolower((unsigned char)*c);
+            *c = (char)langLower(*c);
         count++;
     }
     LOGI("lang: %s, %d lines", name, count);
@@ -318,4 +352,48 @@ const char *GE_LangPortText(const char *text)
     if (!hasCase(text, islower))
         return sPort[other].upper;
     return sPort[other].text;
+}
+
+// Same layout as the game's struct fontchar (bondtypes.h)
+struct GeFontChar
+{
+    int index, baseline, height, width, kerningindex;
+    unsigned char *pixeldata;
+};
+
+// textrelated.c, for a byte above 0x7F: the glyph in the language's letters, or NULL (the game's
+// own handling). *twin is a Latin letter with the same kerning, to kern the next letter against.
+const void *GE_LangGlyph(const void *fontChars, int c, char *twin)
+{
+    static struct GeFontChar sDrawn[2][64];
+    const struct GeFontChar *chars = fontChars;
+    const struct GeGlyph *g;
+    int f;
+
+    c &= 0xFF;
+    if (!sCyrillic || c < 0xC0)
+        return NULL;
+    f = chars['A' - 0x21].height >= 10; // Zurich Bold's capitals are 12 rows, Bank Gothic's 8
+    g = &sRuGlyphs[f][c - 0xC0];
+    *twin = g->twin;
+    if (g->alias)
+        return &chars[g->alias - 0x21];
+    if (sDrawn[f][c - 0xC0].pixeldata == NULL)
+    {
+        struct GeFontChar *d = &sDrawn[f][c - 0xC0];
+
+        d->index = c - 0x80; // below 0x80: drawn as an I8 glyph, like the Latin ones
+        d->baseline = g->baseline;
+        d->height = g->height;
+        d->width = g->width;
+        d->kerningindex = g->kern;
+        d->pixeldata = (unsigned char *)sRuPixels + g->offset;
+    }
+    return &sDrawn[f][c - 0xC0];
+}
+
+// textrelated.c textWrap: high bytes are one letter each, not half of a two-byte Japanese one
+int GE_LangSingleByte(void)
+{
+    return sCyrillic;
 }

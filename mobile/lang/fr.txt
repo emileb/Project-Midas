@@ -3927,7 +3927,7 @@ P:Mission <chapter>.<part>\n=Mission <chapter>.<part>\n
 # Options\n
 P:Options\n=Options\n
 # Exit Game\n
-P:Exit Game\n=Quitter le jeu\n
+P:Exit Game\n=Quitter\n
 # GAMEPLAY\n
 P:GAMEPLAY\n=JEU\n
 # CONTROL\n

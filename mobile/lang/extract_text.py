@@ -10,6 +10,7 @@ One entry per text slot, keyed <bank>.<slot> as langGet sees it (slot = index in
 
 \\n is a new line. An empty value, or a missing line, falls back to English in game.
 "@lower <key>" reuses another entry lower-cased (the banks keep lower-case copies).
+"@empty" is an empty string (an empty value means English).
 Banks the game never loads are left out.
 
 The port's own menus are C strings, not bank slots: they are keyed by the English itself,

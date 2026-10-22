@@ -103,10 +103,16 @@ static const char *const sMsaaText[] = { "OFF\n", "2x\n", "4x\n", "8x\n" };
 
 /* -1 = "hardware": the N64's own frame pacing on the 60 Hz sim (tickhz=hw in the ini) */
 /* includes common extra values such as 40 and 320 */
+#ifdef __ANDROID__
+/* video.c caps Android at 60 */
+static const s32 sMaxFpsVals[] = { -1, 30, 40, 50, 60 };
+static const char *const sMaxFpsText[] = { "Hardware\n", "30\n", "40\n", "50\n", "60\n" };
+#else
 static const s32 sMaxFpsVals[] = { -1, 0, 30, 40, 50, 60, 75, 90, 100, 120, 144, 165, 180, 200, 240, 280, 300, 320, 360 };
 static const char *const sMaxFpsText[] = { "Hardware\n", "Uncapped\n", "30\n", "40\n", "50\n", "60\n", "75\n", "90\n",
                                            "100\n", "120\n", "144\n", "165\n", "180\n", "200\n", "240\n", "280\n",
                                            "300\n", "320\n", "360\n" };
+#endif
 
 /* Widescreen: Stretch (4:3 picture stretched to the window, the old Off), Wide (the old On),
  * or 4:3 (pillarboxed to a centred 4:3 by video.c portPillarboxFrame) */

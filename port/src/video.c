@@ -148,7 +148,11 @@ static int s_CfgScopeSteady = 0; /* [display] scope_steady: 1 = anchor the head
                                   * cloud slide, but also kills the head sway while
                                   * scoped). 0 = authentic sway at every zoom. */
 static int s_CfgMsaa = 1;             /* 1 = off; 2/4/8 = MSAA samples */
+#ifdef __ANDROID__
+static int s_CfgMaxFps = 60;          /* render pace cap; at most 60 on Android (a faster tick jams the Dam truck in its gate) */
+#else
 static int s_CfgMaxFps = 120;         /* render pace cap; 0 = uncapped */
+#endif
 static int s_CfgVsync = 1;            /* 0 = never wait for vblank */
 #ifdef __ANDROID__
 static int s_CfgAnisotropy = 4;       /* mips for every texture: distant ones alias at phone resolutions */
@@ -1122,7 +1126,18 @@ static int videoSetDisplayOption(const char *key, const char *value)
         }
         return 1;
     }
-    if (SDL_strcasecmp(key, "maxfps") == 0)        { s_CfgMaxFps = SDL_atoi(value); videoCoupleTickToMaxFps(); return 1; }
+    if (SDL_strcasecmp(key, "maxfps") == 0)
+    {
+        s_CfgMaxFps = SDL_atoi(value);
+#ifdef __ANDROID__
+        if (s_CfgMaxFps == 0 || s_CfgMaxFps > 60)
+        {
+            s_CfgMaxFps = 60; // uncapped and the higher rates tick above 60
+        }
+#endif
+        videoCoupleTickToMaxFps();
+        return 1;
+    }
     if (SDL_strcasecmp(key, "vsync") == 0)         { s_CfgVsync = SDL_atoi(value); return 1; }
     if (SDL_strcasecmp(key, "tickhz") == 0)        {
         /* "hw" / -1: the console's frame pacing on the 60 Hz sim
@@ -1174,6 +1189,13 @@ static int videoSetDisplayOption(const char *key, const char *value)
          * one-frame-per-vblank 60 Hz cadence. */
         if (s_CfgTickHz != 60) {
             portConLogf("ge: xbox: tickhz=%d ignored - the console runs at 60 (one frame per vblank)\n", s_CfgTickHz);
+            s_CfgTickHz = 60;
+        }
+#endif
+#ifdef __ANDROID__
+        if (s_CfgTickHz == 0 || s_CfgTickHz > 60)
+        {
+            portConLogf("ge: video: tickhz=%d capped to 60 on Android\n", s_CfgTickHz);
             s_CfgTickHz = 60;
         }
 #endif

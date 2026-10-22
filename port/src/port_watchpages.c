@@ -2615,7 +2615,11 @@ static const struct PortPresetEntry sPreset[] = {
     { "filter_2d",      1,            0    },
     { "high_lod",       1,            1    },
     { "hfov_wide",      90,           90   },  /* 90 = vertical 60, vanilla (videoHfovWide) */
+#ifdef __ANDROID__
+    { "maxfps",         60,           60   },  /* video.c caps Android at 60 */
+#else
     { "maxfps",         60,           120  },
+#endif
 };
 
 #define PORTPRESET_COUNT ((s32)(sizeof(sPreset) / sizeof(sPreset[0])))

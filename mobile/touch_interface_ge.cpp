@@ -89,6 +89,7 @@ void TouchInterface::createControls(std::string filesPath)
     tcGameMain->addControl(new touchcontrols::Button("back", touchcontrols::RectF(0, 0, 2, 2), "back_button", KEY_BACK_BUTTON, false, false, "Watch (pause)"));
     tcGameMain->addControl(new touchcontrols::Button("objectives", touchcontrols::RectF(2, 0, 4, 2), "notebook", PORT_ACT_MAP, false, false, "Objectives"));
     tcGameMain->addControl(new touchcontrols::Button("attack", touchcontrols::RectF(20, 7, 23, 10), "shoot", KEY_SHOOT, false, false, "Fire"));
+    tcGameMain->addControl(new touchcontrols::Button("attack2", touchcontrols::RectF(3, 5, 6, 8), "shoot", KEY_SHOOT, false, true, "Fire (duplicate)"));
     tcGameMain->addControl(new touchcontrols::Button("b_button", touchcontrols::RectF(23, 6, 26, 9), "n64_b_button", PORT_ACT_N64_BUTTON_B, false, false, "Use / open (B)"));
 
     // Far Cry's scope slider: tap to aim, slide up or down to zoom (sniper rifle, camera)

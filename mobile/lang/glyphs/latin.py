@@ -19,7 +19,7 @@ MARKS = {
         "tilde": [".#=.#", "#.=#."],
         "diaer": ["#  #"],
         "ring": [".#.", "#.#", ".#."],
-        "cedilla": [" :#", "##."],
+        "cedilla": [" #:"],   # one row: the watch clips glyphs at the line height
     },
 }
 
@@ -105,7 +105,7 @@ def build(fname):
         bot = lat(fname, 'H')['bl'] + len(lat(fname, 'H')['rows'])
         rows = flip(g)['rows'][::-1]
         # mirrored about the cap middle, then lowered to hang below the line as in print
-        g = dict(g, rows=rows, bl=top + bot - (g['bl'] + len(g['rows'])) + (2 if 'Zurich' in fname else 1))
+        g = dict(g, rows=rows, bl=top + bot - (g['bl'] + len(g['rows'])) + (2 if 'Zurich' in fname else 0))
         G[b] = g
 
     # œ Œ: o and e joined, sharing the touching stroke column

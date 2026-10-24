@@ -3349,15 +3349,15 @@ LoptionsE.29=перекл.\n
 # hold\n
 LoptionsE.30=удерж.\n
 # full\n
-LoptionsE.31=полный\n
+LoptionsE.31=полн.\n
 # wide\n
-LoptionsE.32=широкий\n
+LoptionsE.32=шир.\n
 # cinema\n
 LoptionsE.33=кино\n
 # 4:3\n
 LoptionsE.34=4:3\n
 # wide\n
-LoptionsE.35=широкий\n
+LoptionsE.35=шир.\n
 # abort:\n
 LoptionsE.36=выход:\n
 # confirm\n
@@ -3369,7 +3369,7 @@ LoptionsE.39=статус миссии:\n
 # complete\n
 LoptionsE.40=выполнена\n
 # incomplete\n
-LoptionsE.41=не выполнена\n
+LoptionsE.41=в работе\n
 # Left Hand\n
 LoptionsE.42=Левая рука\n
 # q watch v2.01 beta\n

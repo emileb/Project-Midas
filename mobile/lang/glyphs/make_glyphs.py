@@ -30,6 +30,19 @@ def twin(fname, kern):
     return 'H'
 
 
+def fit(fname, g, label):
+    """Trim faint rows below the line height: text clipped to its line (the watch's menu rows) drops a
+    glyph that reaches past it entirely (textRenderGlyph's partial clip draws an empty rect)."""
+    br = lat(fname, '[')
+    limit = br['bl'] + len(br['rows'])
+    rows = list(g['rows'])
+    while g['bl'] + len(rows) > limit and max(rows[-1]) < 100:
+        rows.pop()
+    if g['bl'] + len(rows) > limit:
+        raise SystemExit("%s %s reaches row %d, past the line height %d" % (fname, label, g['bl'] + len(rows), limit))
+    return dict(g, rows=rows)
+
+
 def pages():
     """[page][font] -> {byte: glyph or alias char}."""
     lat_pages = [latin.build(f) for f in FONTS]
@@ -54,6 +67,7 @@ def main():
                 elif isinstance(g, str):
                     rows.append("{'%s', '%s'}" % (g, g))
                 else:
+                    g = fit(f, g, "0x%02X" % b)
                     w, h = width(g), len(g['rows'])
                     stride = (w + 7) & ~7
                     off = len(pixels)
